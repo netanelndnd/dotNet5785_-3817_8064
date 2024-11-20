@@ -10,11 +10,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DalFacade", "DalFacade\DalFacade.csproj", "{F3CE9B51-F2DF-4BFD-9E13-A5202060B2DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DalFacade", "DalFacade\DalFacade.csproj", "{F3CE9B51-F2DF-4BFD-9E13-A5202060B2DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DalList", "DalList\DalList.csproj", "{53F95952-9FBE-458C-96D4-DE91D4C40DF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DalList", "DalList\DalList.csproj", "{53F95952-9FBE-458C-96D4-DE91D4C40DF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DalTes", "DalTes\DalTes.csproj", "{FA44819B-F343-4518-86F1-878DEC200499}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DalTest", "DalTes\DalTest.csproj", "{FA44819B-F343-4518-86F1-878DEC200499}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

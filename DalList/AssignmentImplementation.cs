@@ -5,31 +5,43 @@ public class AssignmentImplementation : IAssignment
 {
     public void Create(Assignment item)
     {
-        throw new NotImplementedException();
+        int id = Config.NextAssigmentId;
+        Assignment copy = item with { Id = id };
+        DataSource.Assignments.Add(copy);
     }
 
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        if (Read(id) is null)
+            throw new Exception($"Volunteer with ID={id} not exists");
+        else
+            DataSource.Assignments.Remove(Read(id));
     }
 
     public void DeleteAll()
     {
-        throw new NotImplementedException();
+        DataSource.Assignments.Clear();
     }
 
     public Assignment? Read(int id)
     {
-        throw new NotImplementedException();
+        foreach (var item in DataSource.Assignments)
+        {
+            if (item.Id == id)
+                return item;
+        }
+        return null;
     }
 
     public List<Assignment> ReadAll()
     {
-        throw new NotImplementedException();
+       return new List<Assignment>(DataSource.Assignments);
+
     }
 
     public void Update(Assignment item)
     {
-        throw new NotImplementedException();
+        Delete(item.Id);
+        Create(item);
     }
 }

@@ -7,31 +7,45 @@ public class CallImplementation : ICall
 {
     public void Create(Call item)
     {
-        throw new NotImplementedException();
+
+        //for entities with auto id
+        int id = Config.NextCallId;
+        Call copy = item with { Id = id };
+        DataSource.Calls.Add(copy);
+
     }
 
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        if (Read(id) is null)
+            throw new Exception($"Volunteer with ID={id} not exists");
+        else
+            DataSource.Calls.Remove(Read(id));
     }
 
     public void DeleteAll()
     {
-        throw new NotImplementedException();
+        DataSource.Calls.Clear();
     }
 
     public Call? Read(int id)
     {
-        throw new NotImplementedException();
+        foreach (var item in DataSource.Calls)
+        {
+            if (item.Id == id)
+                return item;
+        }
+        return null;
     }
 
     public List<Call> ReadAll()
     {
-        throw new NotImplementedException();
+       return new List<Call>(DataSource.Calls);
     }
 
     public void Update(Call item)
     {
-        throw new NotImplementedException();
+        Delete(item.Id);
+        Create(item);
     }
 }

@@ -10,34 +10,44 @@ public class VolunteerImplementation : IVolunteer
     public void Create(Volunteer item)
     {
 
-        if (DataSource.Volunteers.Contains(item))
-            throw new Exception("This volunteer exists in the database");
-        else
-            DataSource.Volunteers.Add(item);
+        //for entities with normal id (not auto id)
+        if (Read(item.Id) is not null)
+            throw new Exception($"Volunteer with ID={item.Id} already exists");
+        DataSource.Volunteers.Add(item);
+
     }
 
     public void Delete(int id)
     {
-       
+        if (Read(id) is null)
+            throw new Exception($"Volunteer with ID={id} not exists");
+        else
+            DataSource.Volunteers.Remove(Read(id));
     }
 
     public void DeleteAll()
     {
-        throw new NotImplementedException();
+        DataSource.Volunteers.Clear();
     }
 
     public Volunteer? Read(int id)
     {
-        throw new NotImplementedException();
+        foreach (var item in DataSource.Volunteers)
+        {
+            if (item.Id == id)
+                return item;
+        }
+        return null;
     }
 
     public List<Volunteer> ReadAll()
     {
-        throw new NotImplementedException();
+        return new List<Volunteer>(DataSource.Volunteers);
     }
 
     public void Update(Volunteer item)
     {
-        throw new NotImplementedException();
+        Delete(item.Id);
+        Create(item);
     }
 }

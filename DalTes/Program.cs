@@ -1,4 +1,4 @@
-﻿namespace DalTes
+﻿namespace DalTest
 {
     internal class Program
     {
