@@ -1,20 +1,26 @@
 ﻿namespace DO;
-
-
-public record Assignment
+/// <summary>
+/// Represents an assignment of a volunteer to a call.
+/// </summary>
+/// <param name="Id">Unique identifier for the assignment, auto-incremented</param>
+/// <param name="CallId">ID of the call the volunteer chose to handle</param>
+/// <param name="VolunteerId">ID of the volunteer handling the call</param>
+/// <param name="EntryTime">Entry time - date and time when the volunteer started handling the call</param>
+/// <param name="CompletionTime">Actual completion time - date and time when the volunteer finished handling the call, can be null if not completed</param>
+/// <param name="CompletionStatus">Type of completion - ENUM, can be null if the call is still active</param>
+public record Assignment(
+    int Id,
+    int CallId,
+    int VolunteerId,
+    DateTime EntryTime,
+    DateTime? CompletionTime,
+    CompletionType? CompletionStatus
+)
 {
-    public int Id { get; set; }  // Unique identifier for the assignment, auto-incremented
-    public int CallId { get; set; }  // ID of the call the volunteer chose to handle
-    public int VolunteerId { get; set; }  // ID of the volunteer handling the call
-
-    public DateTime EntryTime { get; set; }  // Entry time - date and time when the volunteer started handling the call
-    public DateTime? CompletionTime { get; set; }  // Actual completion time - date and time when the volunteer finished handling the call, can be null if not completed
-
-    public CompletionType? CompletionStatus { get; set; }  // Type of completion - ENUM, can be null if the call is still active
-
-    public Assignment()
-    {
-        EntryTime = DateTime.Now;  // Set the entry time to the current system time
-    }
+    /// <summary>
+    /// Default constructor for the assignment record.
+    /// </summary>
+    //לשנות את זמן הכניסה
+    public Assignment() : this(0, 0, 0, DateTime.Now, null, null) { }
 }
 

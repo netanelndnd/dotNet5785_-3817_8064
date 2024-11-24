@@ -10,7 +10,14 @@
     private static void Welcome_8064()
     {
         Console.WriteLine("Enter your name: ");
-        string name = Console.ReadLine();
-        Console.WriteLine("{0} Welcome to my first console application", name);
+        string? name = Console.ReadLine();
+        if (name != null)
+        {
+            Console.WriteLine("{0} Welcome to my first console application", name);
+        }
+        else
+        {
+            Console.WriteLine("Name cannot be null. Please enter a valid name.");
+        }
     }
 }

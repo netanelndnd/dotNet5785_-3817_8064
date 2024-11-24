@@ -1,22 +1,26 @@
 ﻿namespace DO;
 
-
-
-public record Call
+/// <summary>
+/// Represents a call record with details such as type, address, coordinates, and timestamps.
+/// </summary>
+/// <param name="Id">Unique identifier for the call, auto-incremented</param>
+/// <param name="CallType">Type of the call - ENUM with specific values for different types of calls</param>
+/// <param name="Address">Full address of the call - must be a valid format, cannot be null</param>
+/// <param name="Latitude">Latitude - calculated by logic layer based on address, used for distance calculations</param>
+/// <param name="Longitude">Longitude - calculated by logic layer based on address, used for distance calculations</param>
+/// <param name="OpenTime">Opening time - the date and time when the call was created</param>
+/// <param name="Description">Description of the call - additional details about the call, can be null</param>
+/// <param name="MaxCompletionTime">Maximum completion time - deadline for the call to be completed, can be null</param>
+public record Call(
+    int Id,
+    CallType CallType,
+    string Address,
+    double Latitude,
+    double Longitude,
+    DateTime OpenTime,
+    string? Description = null,
+    DateTime? MaxCompletionTime = null
+)
 {
-    public int Id { get; set; }  // Unique identifier for the call, auto-incremented
-    public CallType CallType { get; set; }  // Type of the call - ENUM with specific values for different types of calls
-    public string? Description { get; set; }  // Description of the call - additional details about the call, can be null
-
-    public string Address { get; set; }  // Full address of the call - must be a valid format, cannot be null
-    public double Latitude { get; set; }  // Latitude - calculated by logic layer based on address, used for distance calculations
-    public double Longitude { get; set; }  // Longitude - calculated by logic layer based on address, used for distance calculations
-
-    public DateTime OpenTime { get; set; }  // Opening time - the date and time when the call was created
-    public DateTime? MaxCompletionTime { get; set; }  // Maximum completion time - deadline for the call to be completed, can be null
-
-    public Call()
-    {
-        OpenTime = DateTime.Now;  // Set default opening time to current system time
-    }
+    public Call() : this(0, default, string.Empty, 0.0, 0.0, DateTime.Now) { }
 }

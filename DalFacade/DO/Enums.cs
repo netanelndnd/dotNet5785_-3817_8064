@@ -1,10 +1,14 @@
 ﻿namespace DO;
+
+
 public enum CallType
 {
+    //לשנות אחר כך
     FoodPreparation,
     FoodTransport,
     // Add other call types as needed
 }
+
 public enum CompletionType
 {
     Treated,            // The call was treated on time, before the maximum completion time

@@ -1,27 +1,35 @@
 ﻿namespace DO;
 
-
-public record Volunteer
+/// <summary>
+/// Represents a volunteer with various attributes such as ID, full name, phone number, email, etc.
+/// </summary>
+/// <param name="Id">ID - must be numeric and unique</param>
+/// <param name="FullName">Full name - cannot be null or empty</param>
+/// <param name="PhoneNumber">Mobile phone - must be 10 digits and start with 0</param>
+/// <param name="Email">Email - must be in a valid format</param>
+/// <param name="Password">Password - can be null, will be validated in the logic layer</param>
+/// <param name="CurrentAddress">Current full address - can be null</param>
+/// <param name="Latitude">Latitude - updated by the logic layer based on the volunteer's address</param>
+/// <param name="Longitude">Longitude - updated by the logic layer based on the volunteer's address</param>
+/// <param name="MaxDistance">Maximum distance to accept a call - can be null (no distance limit)</param>
+/// <param name="VolunteerRole">Role - ENUM with values: "Manager" or "Volunteer"</param>
+/// <param name="IsActive">Active status - indicates if the volunteer is active or retired</param>
+/// <param name="DistanceType">Distance type - ENUM with default: Air distance</param>
+public record Volunteer(
+  int Id,
+  string FullName,
+  string PhoneNumber,
+  string Email,
+  string? Password,
+  string? CurrentAddress,
+  double? Latitude,
+  double? Longitude,
+  double? MaxDistance,
+  Role VolunteerRole = Role.Volunteer,
+  bool IsActive = true,
+  DistanceType DistanceType = DistanceType.AirDistance
+)
 {
-    public int Id { get; set; }  // ID - must be numeric and unique
-    public string FullName { get; set; }  // Full name - cannot be null or empty
-    public string PhoneNumber { get; set; }  // Mobile phone - must be 10 digits and start with 0
-    public string Email { get; set; }  // Email - must be in a valid format
-    public string? Password { get; set; }  // Password - can be null, will be validated in the logic layer
-
-    public string? CurrentAddress { get; set; }  // Current full address - can be null
-    public double? Latitude { get; set; }  // Latitude - updated by the logic layer based on the volunteer's address
-    public double? Longitude { get; set; }  // Longitude - updated by the logic layer based on the volunteer's address
-
-    public Role VolunteerRole { get; set; }  // Role - ENUM with values: "Manager" or "Volunteer"
-    public bool IsActive { get; set; }  // Active status - indicates if the volunteer is active or retired
-    public double? MaxDistance { get; set; }  // Maximum distance to accept a call - can be null (no distance limit)
-    public DistanceType DistanceType { get; set; }  // Distance type - ENUM with default: Air distance
-
-    public Volunteer()
-    {
-        VolunteerRole = Role.Volunteer;  // Default role: Volunteer
-        IsActive = true;  // Default: volunteer is active
-        DistanceType = DistanceType.AirDistance;  // Default: Air distance
-    }
+    public Volunteer() : this(0, string.Empty, "0000000000", string.Empty, null, null, null, null, null, Role.Volunteer, true, DistanceType.AirDistance) { }
 }
+
