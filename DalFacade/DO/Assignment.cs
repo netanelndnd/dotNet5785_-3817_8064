@@ -1,4 +1,5 @@
 ﻿namespace DO;
+using DalApi;
 /// <summary>
 /// Represents an assignment of a volunteer to a call.
 /// </summary>
@@ -22,5 +23,6 @@ public record Assignment(
     /// </summary>
     //לשנות את זמן הכניסה
     public Assignment() : this(0, 0, 0, DateTime.Now, null, null) { }
+
 }
 

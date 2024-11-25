@@ -2,7 +2,7 @@
 
 public interface IConfig
 {
-    void reset();
+    void Reset();
     DateTime Clock { get; set; }
     TimeSpan RiskRange { get; set; }
 }
