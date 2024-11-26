@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Security.Cryptography.X509Certificates;
 
-public class VolunteerImplementation : IVolunteer
+internal class VolunteerImplementation : IVolunteer
 {
     /// <summary>
     /// Create new Volunteer

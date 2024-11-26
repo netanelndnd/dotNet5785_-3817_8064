@@ -45,7 +45,7 @@ internal static class Config
     /// <summary>
     /// Method to reset the configuration to its initial state
     /// </summary>
-    internal static void Rest()
+    internal static void Reset()
     {
         // Reset the simulated clock to the current system time
         Clock = DateTime.Now;

@@ -7,10 +7,12 @@ using DO;
 /// </summary>
 public static class Initialization
 {
-    private static IAssignment? s_dalAssignment;
-    private static IVolunteer? s_dalVolunteer;
-    private static ICall? s_dalCall;
-    private static IConfig? s_dalConfig;
+    //private static IAssignment? s_dalAssignment;//stage 1
+    //private static IVolunteer? s_dalVolunteer;//stage 1
+    //private static ICall? s_dalCall;//stage 1
+    //private static IConfig? s_dalConfig;//stage 1
+
+    private static IDal? s_dal; //stage 2
 
     private static readonly Random s_rand = new();
 
@@ -44,7 +46,7 @@ public static class Initialization
                 DistanceType.AirDistance
             );
 
-            s_dalVolunteer?.Create(volunteer);
+            s_dal?.Volunteer.Create(volunteer);
         }
     }
     /// <summary>
@@ -117,8 +119,8 @@ public static class Initialization
         for (int i = 0; i < 50; i++)
         {
             int addressIndex = i;
-            DateTime openTime = s_dalConfig?.Clock.AddMinutes(-s_rand.Next(1, 10000)) ?? throw new InvalidOperationException("s_dalConfig is null");
-            DateTime? maxCompletionTime = openTime + s_dalConfig?.RiskRange;
+            DateTime openTime = s_dal?.Config.Clock.AddMinutes(-s_rand.Next(1, 10000)) ?? throw new InvalidOperationException("s_dalConfig is null");
+            DateTime? maxCompletionTime = openTime + s_dal?.Config.RiskRange;
 
             Call call = new Call(
                 0, // ID will be auto-generated
@@ -131,7 +133,7 @@ public static class Initialization
                 maxCompletionTime
             );
 
-            s_dalCall?.Create(call);
+            s_dal?.Call.Create(call);
         }
     }
     /// <summary>
@@ -141,8 +143,8 @@ public static class Initialization
     private static void CreateAssignments()
     {
         // Retrieve all volunteers and calls from the DAL
-        List<Volunteer> volunteers = s_dalVolunteer?.ReadAll() ?? throw new InvalidOperationException("s_dalVolunteer is null");
-        List<Call> calls = s_dalCall?.ReadAll() ?? throw new InvalidOperationException("s_dalCall is null");
+        List<Volunteer> volunteers = s_dal?.Volunteer.ReadAll() ?? throw new InvalidOperationException("s_dalVolunteer is null");
+        List<Call> calls = s_dal?.Call.ReadAll() ?? throw new InvalidOperationException("s_dalCall is null");
 
         // Ensure there are volunteers and calls available
         if (volunteers.Count == 0 || calls.Count == 0)
@@ -253,30 +255,37 @@ public static class Initialization
         // Add all assignments to the DAL
         foreach (var assignment in assignments)
         {
-            s_dalAssignment?.Create(assignment);
+            s_dal?.Assignment.Create(assignment);
         }
     }
 
-    public static void Do(IAssignment? s_dalAssignment, IVolunteer? s_dalVolunteer, ICall? s_dalCall, IConfig? s_dalConfig)
+    public static void Do(IDal dal) //stage 2
     {
-        Initialization.s_dalAssignment = s_dalAssignment ?? throw new NullReferenceException("DAL object can not be null!"); //stage 1
-        Initialization.s_dalVolunteer = s_dalVolunteer ?? throw new NullReferenceException("DAL object can not be null!"); //stage 1    
-        Initialization.s_dalCall = s_dalCall ?? throw new NullReferenceException("DAL object can not be null!"); //stage 1  
-        Initialization.s_dalConfig = s_dalConfig ?? throw new NullReferenceException("DAL object can not be null!"); //stage 1
+        //Initialization.s_dalAssignment = s_dalAssignment ?? throw new NullReferenceException("DAL object can not be null!"); //stage 1
+        //Initialization.s_dalVolunteer = s_dalVolunteer ?? throw new NullReferenceException("DAL object can not be null!"); //stage 1    
+        //Initialization.s_dalCall = s_dalCall ?? throw new NullReferenceException("DAL object can not be null!"); //stage 1  
+        //Initialization.s_dalConfig = s_dalConfig ?? throw new NullReferenceException("DAL object can not be null!"); //stage 1
+        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); // stage 2
         Console.WriteLine("Reset Configuration values and List values...");
-        s_dalConfig.Reset(); //stage 1
-        Console.WriteLine("Deleting all assignments..."); //stage 1
-        s_dalAssignment.DeleteAll(); //stage 1
-        Console.WriteLine("Deleting all volunteers..."); //stage 1
-        s_dalVolunteer.DeleteAll(); //stage 1
-        Console.WriteLine("Deleting all calls..."); //stage 1
-        s_dalCall.DeleteAll(); //stage 1
+
+        //s_dalConfig.Reset(); //stage 1
+        //Console.WriteLine("Deleting all assignments..."); //stage 1
+        //s_dalAssignment.DeleteAll(); //stage 1
+        //Console.WriteLine("Deleting all volunteers..."); //stage 1
+        //s_dalVolunteer.DeleteAll(); //stage 1
+        //Console.WriteLine("Deleting all calls..."); //stage 1
+        //s_dalCall.DeleteAll(); //stage 1
+
+        s_dal.ResetDB();//stage 2
+
         Console.WriteLine("Creating volunteers..."); //stage 1
         CreateVolunteers();//stage 1  
         Console.WriteLine("Creating calls..."); //stage 1
         CreateCalls();//stage 1  
         Console.WriteLine("Creating assignments..."); //stage 1
         CreateAssignments();//stage 1  
+
+
     }
 
 

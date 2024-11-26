@@ -3,7 +3,7 @@ using DalApi;
 using DO;
 
 
-public class AssignmentImplementation : IAssignment
+internal class AssignmentImplementation : IAssignment
 {
     /// <summary>
     /// Create a new assignment

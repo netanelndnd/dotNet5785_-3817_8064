@@ -1,15 +1,16 @@
-﻿using Dal;
-using DalApi;
+﻿using DalApi;
 using DO;
 
 namespace DalTest
 {
     public class Program
     {
-        private static IAssignment? s_dalAssignment = new AssignmentImplementation();
-        private static IVolunteer? s_dalVolunteer = new VolunteerImplementation();
-        private static ICall? s_dalCall = new CallImplementation();
-        private static IConfig? s_dalConfig = new ConfigImplementation();
+        //private static IAssignment? s_dalAssignment = new AssignmentImplementation();//stage 1
+        //private static IVolunteer? s_dal.Volunteer = new VolunteerImplementation();//stage 1
+        //private static ICall? s_dal.Call = new CallImplementation();//stage 1
+        //private static IConfig? s_dal.Config = new ConfigImplementation();//stage 1
+
+        static readonly IDal s_dal = new Dal.DalList(); //stage 2
 
         static void Main(string[] args)
         {
@@ -58,7 +59,8 @@ namespace DalTest
                         ConfigMenu();
                         break;
                     case "6":
-                        Initialization.Do(s_dalAssignment, s_dalVolunteer, s_dalCall, s_dalConfig);
+                        //Initialization.Do(s_dalAssignment, s_dal.Volunteer, s_dal.Call, s_dal.Config);// stage 1
+                        Initialization.Do(s_dal); //stage 2
                         break;
                     case "7":
                         DisplayAllData();
@@ -276,10 +278,11 @@ namespace DalTest
                 {
                     CallId = callId,
                     VolunteerId = volunteerId,
-                    EntryTime = s_dalConfig.Clock
+                    EntryTime = s_dal.Config.Clock
                 };
 
-                s_dalAssignment.Create(newAssignment);
+
+        s_dal.Assignment.Create(newAssignment);
                 Console.WriteLine("Assignment created successfully.");
             }
             catch (Exception ex)
@@ -298,7 +301,7 @@ namespace DalTest
                 Console.WriteLine("Enter Assignment ID:");
                 if (!int.TryParse(Console.ReadLine(), out int assignmentId)) throw new FormatException("Assignment ID is invalid!");
 
-                Assignment? assignment = s_dalAssignment.Read(assignmentId);
+                Assignment? assignment = s_dal.Assignment.Read(assignmentId);
                 if (assignment == null)
                 {
                     Console.WriteLine("Assignment not found.");
@@ -320,7 +323,7 @@ namespace DalTest
         {
             try
             {
-                List<Assignment> assignments = s_dalAssignment.ReadAll();
+                List<Assignment> assignments = s_dal.Assignment.ReadAll();
                 if (assignments.Count == 0)
                 {
                     Console.WriteLine("No assignments found.");
@@ -349,7 +352,7 @@ namespace DalTest
                 Console.WriteLine("Enter Assignment ID:");
                 if (!int.TryParse(Console.ReadLine(), out int assignmentId)) throw new FormatException("Assignment ID is invalid!");
 
-                Assignment? assignment = s_dalAssignment.Read(assignmentId);
+                Assignment? assignment = s_dal.Assignment.Read(assignmentId);
                 if (assignment == null)
                 {
                     Console.WriteLine("Assignment not found.");
@@ -393,7 +396,7 @@ namespace DalTest
                     assignment = assignment with { CompletionStatus = completionStatus };
                 }
 
-                s_dalAssignment.Update(assignment);
+                s_dal.Assignment.Update(assignment);
                 Console.WriteLine("Assignment updated successfully.");
             }
             catch (Exception ex)
@@ -412,7 +415,7 @@ namespace DalTest
                 Console.WriteLine("Enter Assignment ID:");
                 if (!int.TryParse(Console.ReadLine(), out int assignmentId)) throw new FormatException("Assignment ID is invalid!");
 
-                s_dalAssignment.Delete(assignmentId);
+                s_dal.Assignment.Delete(assignmentId);
                 Console.WriteLine("Assignment deleted successfully.");
             }
             catch (Exception ex)
@@ -427,7 +430,7 @@ namespace DalTest
         {
             try
             {
-                s_dalAssignment.DeleteAll();
+                s_dal.Assignment.DeleteAll();
                 Console.WriteLine("All assignments deleted successfully.");
             }
             catch (Exception ex)
@@ -459,7 +462,7 @@ namespace DalTest
                     Email = email
                 };
 
-                s_dalVolunteer.Create(newVolunteer);
+                s_dal.Volunteer.Create(newVolunteer);
                 Console.WriteLine("Volunteer created successfully.");
             }
             catch (Exception ex)
@@ -479,7 +482,7 @@ namespace DalTest
                 Console.WriteLine("Enter Volunteer ID:");
                 if (!int.TryParse(Console.ReadLine(), out int volunteerId)) throw new FormatException("Volunteer ID is invalid!");
 
-                Volunteer? volunteer = s_dalVolunteer.Read(volunteerId);
+                Volunteer? volunteer = s_dal.Volunteer.Read(volunteerId);
                 if (volunteer == null)
                 {
                     Console.WriteLine("Volunteer not found.");
@@ -502,7 +505,7 @@ namespace DalTest
         {
             try
             {
-                List<Volunteer> volunteers = s_dalVolunteer.ReadAll();
+                List<Volunteer> volunteers = s_dal.Volunteer.ReadAll();
                 if (volunteers.Count == 0)
                 {
                     Console.WriteLine("No volunteers found.");
@@ -532,7 +535,7 @@ namespace DalTest
                 Console.WriteLine("Enter Volunteer ID:");
                 if (!int.TryParse(Console.ReadLine(), out int volunteerId)) throw new FormatException("Volunteer ID is invalid!");
 
-                Volunteer? volunteer = s_dalVolunteer.Read(volunteerId);
+                Volunteer? volunteer = s_dal.Volunteer.Read(volunteerId);
                 if (volunteer == null)
                 {
                     Console.WriteLine("Volunteer not found.");
@@ -562,7 +565,7 @@ namespace DalTest
                     volunteer = volunteer with { Email = emailInput };
                 }
 
-                s_dalVolunteer.Update(volunteer);
+                s_dal.Volunteer.Update(volunteer);
                 Console.WriteLine("Volunteer updated successfully.");
             }
             catch (Exception ex)
@@ -582,7 +585,7 @@ namespace DalTest
                 Console.WriteLine("Enter Volunteer ID:");
                 if (!int.TryParse(Console.ReadLine(), out int volunteerId)) throw new FormatException("Volunteer ID is invalid!");
 
-                s_dalVolunteer.Delete(volunteerId);
+                s_dal.Volunteer.Delete(volunteerId);
                 Console.WriteLine("Volunteer deleted successfully.");
             }
             catch (Exception ex)
@@ -598,7 +601,7 @@ namespace DalTest
         {
             try
             {
-                s_dalVolunteer.DeleteAll();
+                s_dal.Volunteer.DeleteAll();
                 Console.WriteLine("All volunteers deleted successfully.");
             }
             catch (Exception ex)
@@ -625,10 +628,10 @@ namespace DalTest
                 {
                     CallType = callType,
                     Address = address,
-                    OpenTime = s_dalConfig.Clock
+                    OpenTime = s_dal.Config.Clock
                 };
 
-                s_dalCall.Create(newCall);
+                s_dal.Call.Create(newCall);
                 Console.WriteLine("Call created successfully.");
             }
             catch (Exception ex)
@@ -648,7 +651,7 @@ namespace DalTest
                 Console.WriteLine("Enter Call ID:");
                 if (!int.TryParse(Console.ReadLine(), out int callId)) throw new FormatException("Call ID is invalid!");
 
-                Call? call = s_dalCall.Read(callId);
+                Call? call = s_dal.Call.Read(callId);
                 if (call == null)
                 {
                     Console.WriteLine("Call not found.");
@@ -671,7 +674,7 @@ namespace DalTest
         {
             try
             {
-                List<Call> calls = s_dalCall.ReadAll();
+                List<Call> calls = s_dal.Call.ReadAll();
                 if (calls.Count == 0)
                 {
                     Console.WriteLine("No calls found.");
@@ -701,7 +704,7 @@ namespace DalTest
                 Console.WriteLine("Enter Call ID:");
                 if (!int.TryParse(Console.ReadLine(), out int callId)) throw new FormatException("Call ID is invalid!");
 
-                Call? call = s_dalCall.Read(callId);
+                Call? call = s_dal.Call.Read(callId);
                 if (call == null)
                 {
                     Console.WriteLine("Call not found.");
@@ -724,7 +727,7 @@ namespace DalTest
                     call = call with { Address = addressInput };
                 }
 
-                s_dalCall.Update(call);
+                s_dal.Call.Update(call);
                 Console.WriteLine("Call updated successfully.");
             }
             catch (Exception ex)
@@ -744,7 +747,7 @@ namespace DalTest
                 Console.WriteLine("Enter Call ID:");
                 if (!int.TryParse(Console.ReadLine(), out int callId)) throw new FormatException("Call ID is invalid!");
 
-                s_dalCall.Delete(callId);
+                s_dal.Call.Delete(callId);
                 Console.WriteLine("Call deleted successfully.");
             }
             catch (Exception ex)
@@ -760,7 +763,7 @@ namespace DalTest
         {
             try
             {
-                s_dalCall.DeleteAll();
+                s_dal.Call.DeleteAll();
                 Console.WriteLine("All calls deleted successfully.");
             }
             catch (Exception ex)
@@ -776,7 +779,7 @@ namespace DalTest
         {
             try
             {
-                s_dalConfig.Clock = s_dalConfig.Clock.AddMinutes(1);
+                s_dal.Config.Clock = s_dal.Config.Clock.AddMinutes(1);
                 Console.WriteLine("Clock advanced by one minute.");
             }
             catch (Exception ex)
@@ -792,7 +795,7 @@ namespace DalTest
         {
             try
             {
-                s_dalConfig.Clock = s_dalConfig.Clock.AddHours(1);
+                s_dal.Config.Clock = s_dal.Config.Clock.AddHours(1);
                 Console.WriteLine("Clock advanced by one hour.");
             }
             catch (Exception ex)
@@ -806,7 +809,7 @@ namespace DalTest
         /// </summary>
         private static void DisplayCurrentClockValue()
         {
-            Console.WriteLine($"The current time is: {s_dalConfig.Clock}");
+            Console.WriteLine($"The current time is: {s_dal.Config.Clock}");
         }
 
         /// <summary>
@@ -820,7 +823,7 @@ namespace DalTest
                 Console.WriteLine("Enter new Risk Range (in minutes):");
                 if (!int.TryParse(Console.ReadLine(), out int riskRangeMinutes)) throw new FormatException("Risk Range is invalid!");
 
-                s_dalConfig.RiskRange = TimeSpan.FromMinutes(riskRangeMinutes);
+                s_dal.Config.RiskRange = TimeSpan.FromMinutes(riskRangeMinutes);
                 Console.WriteLine("Config value updated successfully.");
             }
             catch (Exception ex)
@@ -836,7 +839,7 @@ namespace DalTest
         {
             try
             {
-                Console.WriteLine($"Current Risk Range: {s_dalConfig.RiskRange.TotalMinutes} minutes");
+                Console.WriteLine($"Current Risk Range: {s_dal.Config.RiskRange.TotalMinutes} minutes");
             }
             catch (Exception ex)
             {
@@ -848,7 +851,7 @@ namespace DalTest
         /// </summary>
         private static void ResetAllConfigValues()
         {
-            s_dalConfig.Reset();
+            s_dal.Config.Reset();
         }
 
         /// <summary>
@@ -882,10 +885,10 @@ namespace DalTest
         /// </summary>
         private static void ResetDatabaseAndConfig()
         {
-            s_dalAssignment.DeleteAll();
-            s_dalVolunteer.DeleteAll();
-            s_dalCall.DeleteAll();
-            s_dalConfig.Reset();
+            s_dal.Assignment.DeleteAll();
+            s_dal.Volunteer.DeleteAll();
+            s_dal.Call.DeleteAll();
+            s_dal.Config.Reset();
         }
     }
 }
