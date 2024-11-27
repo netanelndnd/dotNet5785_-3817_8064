@@ -46,7 +46,7 @@ public static class Initialization
                 DistanceType.AirDistance
             );
 
-            s_dal?.Volunteer.Create(volunteer);
+            s_dal?.Volunteer?.Create(volunteer);
         }
     }
     /// <summary>
@@ -183,10 +183,7 @@ public static class Initialization
         for (int i = 0; i < 10; i++)
         {
             Volunteer volunteer;
-            do
-            {
-                volunteer = volunteers[s_rand.Next(4)];
-            } while (assignedVolunteers.Contains(volunteer.Id));
+           volunteer = volunteers[10];
 
             Call call = assignableCalls[s_rand.Next(assignableCalls.Count)];
             assignableCalls.Remove(call);
