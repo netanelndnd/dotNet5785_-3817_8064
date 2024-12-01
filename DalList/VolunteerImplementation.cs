@@ -17,7 +17,7 @@ internal class VolunteerImplementation : IVolunteer
         //for entities with normal id (not auto id)
         if (Read(item.Id) is not null)
             throw new Exception($"Volunteer with ID={item.Id} already exists");
-        DataSource.Volunteers.Add(item);
+        DataSource.Volunteers.Append(item);
     }
 
     /// <summary>
@@ -77,6 +77,6 @@ internal class VolunteerImplementation : IVolunteer
             throw new Exception($"Volunteer with ID={item.Id} does not exist");
 
         DataSource.Volunteers.Remove(existingVolunteer);
-        DataSource.Volunteers.Add(item);
+        DataSource.Volunteers.Append(item);
     }
 }

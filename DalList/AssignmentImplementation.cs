@@ -13,9 +13,8 @@ internal class AssignmentImplementation : IAssignment
     {
         int id = Config.NextAssignmentId;
         Assignment copy = item with { Id = id };
-        DataSource.Assignments.Add(copy);
+        DataSource.Assignments.Append(copy);
     }
-
     /// <summary>
     /// Delete an assignment by id
     /// </summary>
@@ -23,7 +22,7 @@ internal class AssignmentImplementation : IAssignment
     /// <exception cref="Exception">Thrown when the assignment with the specified ID does not exist</exception>
     public void Delete(int id)
     {
-        var assignment = Read(id);
+        var assignment = DataSource.Assignments.FirstOrDefault(item => item.Id == id);
         if (assignment is null)
             throw new Exception($"Assignment with ID={id} does not exist");
         else
@@ -45,12 +44,7 @@ internal class AssignmentImplementation : IAssignment
     /// <returns>The assignment with the specified ID, or null if not found</returns>
     public Assignment? Read(int id)
     {
-        foreach (var item in DataSource.Assignments)
-        {
-            if (item.Id == id)
-                return item;
-        }
-        return null;
+        return DataSource.Assignments.FirstOrDefault(item => item.Id == id);
     }
 
     /// <summary>

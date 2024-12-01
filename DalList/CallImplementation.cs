@@ -14,7 +14,7 @@ internal class CallImplementation : ICall
         //for entities with auto id
         int id = Config.NextCallId;
         Call copy = item with { Id = id };
-        DataSource.Calls.Add(copy);
+        DataSource.Calls.Append(copy);
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ internal class CallImplementation : ICall
     /// <exception cref="Exception">Thrown when the call with the specified ID does not exist</exception>
     public void Delete(int id)
     {
-        var call = Read(id);
+        var call = DataSource.Calls.FirstOrDefault(c => c.Id == id);
         if (call is null)
             throw new Exception($"Call with ID={id} does not exist");
         else
@@ -46,12 +46,7 @@ internal class CallImplementation : ICall
     /// <returns>The call with the specified ID, or null if not found</returns>
     public Call? Read(int id)
     {
-        foreach (var item in DataSource.Calls)
-        {
-            if (item.Id == id)
-                return item;
-        }
-        return null;
+        return DataSource.Calls.FirstOrDefault(item => item.Id == id);
     }
 
     /// <summary>
@@ -68,13 +63,13 @@ internal class CallImplementation : ICall
     /// </summary>
     /// <param name="item">The call item to update</param>
     public void Update(Call item)
-    {
-        var existingCall = Read(item.Id);
+    { 
+        var existingCall = DataSource.Calls.FirstOrDefault(c => c.Id == item.Id);
         if (existingCall is null)
         {
             throw new Exception($"Call with ID={item.Id} does not exist");
         }
         DataSource.Calls.Remove(existingCall);
-        DataSource.Calls.Add(item);
+        DataSource.Calls.Select(c => c.Id == item.Id ? item : c);
     }
 }
