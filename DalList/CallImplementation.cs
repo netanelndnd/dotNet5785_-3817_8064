@@ -2,6 +2,7 @@
 using DalApi;
 using DO;
 using System.Collections.Generic;
+using System.Drawing;
 
 internal class CallImplementation : ICall
 {
@@ -26,7 +27,7 @@ internal class CallImplementation : ICall
     {
         var call = DataSource.Calls.FirstOrDefault(c => c.Id == id);
         if (call is null)
-            throw new Exception($"Call with ID={id} does not exist");
+            throw new DalDoesNotExistException($"Call with ID={id} does not exist");
         else
             DataSource.Calls.Remove(call);
     }
@@ -48,16 +49,23 @@ internal class CallImplementation : ICall
     {
         return DataSource.Calls.FirstOrDefault(item => item.Id == id);
     }
-
+    /// <summary>
+    /// Read an call based on a filter condition
+    /// </summary>
+    public Call? Read(Func<Call, bool> filter)
+    {
+        return DataSource.Calls.FirstOrDefault(filter);
+    }
     /// <summary>
     /// Read all calls
     /// </summary>
     /// <returns>List of all calls</returns>
-    public List<Call> ReadAll()
+    public IEnumerable<Call> ReadAll(Func<Call, bool>? filter = null)
     {
-        return new List<Call>(DataSource.Calls);
+        return filter != null
+                ? DataSource.Calls.Where(filter)
+                : DataSource.Calls;
     }
-
     /// <summary>
     /// Update an existing call
     /// </summary>
@@ -67,7 +75,7 @@ internal class CallImplementation : ICall
         var existingCall = DataSource.Calls.FirstOrDefault(c => c.Id == item.Id);
         if (existingCall is null)
         {
-            throw new Exception($"Call with ID={item.Id} does not exist");
+            throw new DalDoesNotExistException($"Call with ID={item.Id} does not exist");
         }
         DataSource.Calls.Remove(existingCall);
         DataSource.Calls.Select(c => c.Id == item.Id ? item : c);

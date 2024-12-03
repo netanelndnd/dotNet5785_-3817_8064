@@ -323,8 +323,8 @@ namespace DalTest
         {
             try
             {
-                List<Assignment> assignments = s_dal.Assignment.ReadAll();
-                if (assignments.Count == 0)
+                var assignments = s_dal.Assignment.ReadAll();
+                if (!assignments.Any())
                 {
                     Console.WriteLine("No assignments found.");
                 }
@@ -505,8 +505,8 @@ namespace DalTest
         {
             try
             {
-                List<Volunteer> volunteers = s_dal.Volunteer.ReadAll();
-                if (volunteers.Count == 0)
+                var volunteers = s_dal.Volunteer.ReadAll();
+                if (!volunteers.Any())
                 {
                     Console.WriteLine("No volunteers found.");
                 }
@@ -674,8 +674,8 @@ namespace DalTest
         {
             try
             {
-                List<Call> calls = s_dal.Call.ReadAll();
-                if (calls.Count == 0)
+                var calls = s_dal.Call.ReadAll();
+                if (!calls.Any())
                 {
                     Console.WriteLine("No calls found.");
                 }

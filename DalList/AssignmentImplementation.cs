@@ -24,7 +24,7 @@ internal class AssignmentImplementation : IAssignment
     {
         var assignment = DataSource.Assignments.FirstOrDefault(item => item.Id == id);
         if (assignment is null)
-            throw new Exception($"Assignment with ID={id} does not exist");
+            throw new DalDoesNotExistException($"Assignment with ID={id} does not exist");
         else
             DataSource.Assignments.Remove(assignment);
     }
@@ -46,14 +46,22 @@ internal class AssignmentImplementation : IAssignment
     {
         return DataSource.Assignments.FirstOrDefault(item => item.Id == id);
     }
-
+    /// <summary>
+    /// Read an assignment based on a filter condition
+    /// </summary>
+    public Assignment? Read(Func<Assignment, bool> filter)
+    {
+        return DataSource.Assignments.FirstOrDefault(filter);
+    }
     /// <summary>
     /// Read all assignments
     /// </summary>
     /// <returns>A list of all assignments</returns>
-    public List<Assignment> ReadAll()
+    public IEnumerable<Assignment> ReadAll(Func<Assignment, bool>? filter = null)
     {
-        return new List<Assignment>(DataSource.Assignments);
+        return filter != null
+            ? DataSource.Assignments.Where(filter)
+            : DataSource.Assignments;
     }
 
     /// <summary>
@@ -64,7 +72,7 @@ internal class AssignmentImplementation : IAssignment
     {
         var existingAssignment = Read(item.Id);
         if (existingAssignment is null)
-            throw new Exception($"Assignment with ID={item.Id} does not exist");
+            throw new DalDoesNotExistException($"Assignment with ID={item.Id} does not exist");
         DataSource.Assignments.Remove(existingAssignment);
         DataSource.Assignments.Add(item);
     }

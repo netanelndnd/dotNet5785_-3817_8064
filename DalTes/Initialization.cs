@@ -143,111 +143,103 @@ public static class Initialization
     private static void CreateAssignments()
     {
         // Retrieve all volunteers and calls from the DAL
-        List<Volunteer> volunteers = s_dal?.Volunteer.ReadAll() ?? throw new InvalidOperationException("s_dalVolunteer is null");
-        List<Call> calls = s_dal?.Call.ReadAll() ?? throw new InvalidOperationException("s_dalCall is null");
+        IEnumerable<Volunteer> volunteers = s_dal?.Volunteer.ReadAll() ?? throw new DalItIsNullException("s_dalVolunteer is null");
+        IEnumerable<Call> calls = s_dal?.Call.ReadAll() ?? throw new DalItIsNullException("s_dalCall is null");
 
         // Ensure there are volunteers and calls available
-        if (volunteers.Count == 0 || calls.Count == 0)
-            throw new InvalidOperationException("No volunteers or calls available");
-
-        List<Assignment> assignments = new();
+        if (!volunteers.Any() || !calls.Any())
+            throw new DalItIsNullException("No volunteers or calls available");
 
         // Ensure at least 15 calls are not assigned
-        int unassignedCallsCount = 15;
-        List<Call> unassignedCalls = calls.OrderBy(x => s_rand.Next()).Take(unassignedCallsCount).ToList();
-        List<Call> assignableCalls = calls.Except(unassignedCalls).ToList();
+        var unassignedCalls = calls.OrderBy(x => s_rand.Next()).Take(15);
+        var assignableCalls = calls.Except(unassignedCalls).ToList();
 
         // Assign 5 calls to 5 volunteers who never handled calls
-        HashSet<int> assignedVolunteers = new();
-        for (int i = 0; i < 5; i++)
+        var assignments = volunteers.Take(5).Select(volunteer =>
         {
-            Volunteer volunteer = volunteers[i];
-            Call call = assignableCalls[s_rand.Next(assignableCalls.Count)];
+            var call = assignableCalls.ElementAt(s_rand.Next(assignableCalls.Count));
             assignableCalls.Remove(call);
             DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
             DateTime? completionTime = entryTime.AddMinutes(s_rand.Next(1, (int)((call.MaxCompletionTime - entryTime)?.TotalMinutes ?? 0)));
             CompletionType? completionType = (CompletionType?)s_rand.Next(Enum.GetValues(typeof(CompletionType)).Length);
 
-            assignments.Add(new Assignment(
+            return new Assignment(
                 0, // ID will be auto-generated
                 call.Id,
                 volunteer.Id,
                 entryTime,
                 completionTime,
                 completionType
-                ));
-            assignedVolunteers.Add(volunteer.Id);
-        }
+            );
+        }).ToList();
 
         // Assign 10 calls to 4 volunteers with random CompletionType
-        for (int i = 0; i < 10; i++)
+        assignments.AddRange(Enumerable.Range(0, 10).Select(_ =>
         {
-            Volunteer volunteer;
-           volunteer = volunteers[10];
-
-            Call call = assignableCalls[s_rand.Next(assignableCalls.Count)];
+            var volunteer = volunteers.ElementAt(10);
+            var call = assignableCalls.ElementAt(s_rand.Next(assignableCalls.Count));
             assignableCalls.Remove(call);
             DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
             DateTime? completionTime = entryTime.AddMinutes(s_rand.Next(1, (int)((call.MaxCompletionTime - entryTime)?.TotalMinutes ?? 0)));
             CompletionType? completionType = (CompletionType?)s_rand.Next(Enum.GetValues(typeof(CompletionType)).Length);
 
-            assignments.Add(new Assignment(
+            return new Assignment(
                 0, // ID will be auto-generated
                 call.Id,
                 volunteer.Id,
                 entryTime,
                 completionTime,
                 completionType
-            ));
-        }
+            );
+        }));
 
         // Assign 10 calls that are still open (CompletionType is null)
-        for (int i = 0; i < 10; i++)
+        assignments.AddRange(Enumerable.Range(0, 10).Select(_ =>
         {
             Volunteer volunteer;
             do
             {
-                volunteer = volunteers[s_rand.Next(volunteers.Count)];
-            } while (assignedVolunteers.Contains(volunteer.Id));
+                volunteer = volunteers.ElementAt(s_rand.Next(volunteers.Count()));
+            } while (assignments.Any(a => a.VolunteerId == volunteer.Id));
 
-            Call call = assignableCalls[s_rand.Next(assignableCalls.Count)];
+            var call = assignableCalls.ElementAt(s_rand.Next(assignableCalls.Count));
             assignableCalls.Remove(call);
             DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
             DateTime? completionTime = entryTime.AddMinutes(s_rand.Next(1, (int)((call.MaxCompletionTime - entryTime)?.TotalMinutes ?? 0)));
 
-            assignments.Add(new Assignment(
+            return new Assignment(
                 0, // ID will be auto-generated
                 call.Id,
                 volunteer.Id,
                 entryTime,
                 completionTime,
                 null  // No completion status
-            ));
-        }
+            );
+        }));
 
         // Assign 5 calls that were closed after the maximum completion time
-        for (int i = 0; i < 5; i++)
+        assignments.AddRange(Enumerable.Range(0, 5).Select(_ =>
         {
             Volunteer volunteer;
             do
             {
-                volunteer = volunteers[s_rand.Next(volunteers.Count)];
-            } while (assignedVolunteers.Contains(volunteer.Id));
+                volunteer = volunteers.ElementAt(s_rand.Next(volunteers.Count()));
+            } while (assignments.Any(a => a.VolunteerId == volunteer.Id));
 
-            Call call = assignableCalls[s_rand.Next(assignableCalls.Count)];
+            var call = assignableCalls.ElementAt(s_rand.Next(assignableCalls.Count));
             assignableCalls.Remove(call);
             DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
             DateTime? completionTime = call.MaxCompletionTime?.AddMinutes(s_rand.Next(1, 1000));
 
-            assignments.Add(new Assignment(
+            return new Assignment(
                 0, // ID will be auto-generated
                 call.Id,
                 volunteer.Id,
                 entryTime,
                 completionTime,
                 CompletionType.Expired
-            ));
-        }
+            );
+        }));
 
         // Add all assignments to the DAL
         foreach (var assignment in assignments)
@@ -262,7 +254,7 @@ public static class Initialization
         //Initialization.s_dalVolunteer = s_dalVolunteer ?? throw new NullReferenceException("DAL object can not be null!"); //stage 1    
         //Initialization.s_dalCall = s_dalCall ?? throw new NullReferenceException("DAL object can not be null!"); //stage 1  
         //Initialization.s_dalConfig = s_dalConfig ?? throw new NullReferenceException("DAL object can not be null!"); //stage 1
-        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); // stage 2
+        s_dal = dal ?? throw new DalItIsNullException("DAL object can not be null!"); // stage 2
         Console.WriteLine("Reset Configuration values and List values...");
 
         //s_dalConfig.Reset(); //stage 1
@@ -281,9 +273,5 @@ public static class Initialization
         CreateCalls();//stage 1  
         Console.WriteLine("Creating assignments..."); //stage 1
         CreateAssignments();//stage 1  
-
-
     }
-
-
 }
