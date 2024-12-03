@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<NextAssignmentId>1000</NextAssignmentId>
+	<NextCallId>1000</NextCallId>
+	<Clock>now</Clock>
+	<MaxRange>2</MaxRange>
+</config>

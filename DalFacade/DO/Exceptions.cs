@@ -21,4 +21,9 @@ public class DalItIsNullException : Exception
 {
     public DalItIsNullException(string? message) : base(message) { }
 }
+[Serializable]
+public class DalXMLFileLoadCreateException : Exception
+{
+    public DalXMLFileLoadCreateException(string? message) : base(message) { }
+}
 
