@@ -1,6 +1,5 @@
 ﻿using DalApi;
 using DO;
-
 namespace DalTest
 {
     public class Program
@@ -10,7 +9,10 @@ namespace DalTest
         //private static ICall? s_dal.Call = new CallImplementation();//stage 1
         //private static IConfig? s_dal.Config = new ConfigImplementation();//stage 1
 
-        static readonly IDal s_dal = new Dal.DalList(); //stage 2
+        //static readonly IDal s_dal = new DalList(); //stage 2
+        static readonly IDal s_dal = new DalXml(); //stage 3
+
+
 
         static void Main(string[] args)
         {
