@@ -4,7 +4,7 @@ using DO;
 using System;
 using System.Collections.Generic;
 
-internal class AssignmentImplementation : IAssignment
+public class AssignmentImplementation : IAssignment
 {
     public void Create(Assignment item)
     {

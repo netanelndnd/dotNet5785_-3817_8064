@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-internal class VolunteerImplementation : IVolunteer
+public class VolunteerImplementation : IVolunteer
 {
     private readonly string _filePath = "volunteers.xml";
 

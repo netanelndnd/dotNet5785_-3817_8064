@@ -4,7 +4,7 @@ using DO;
 using System;
 using System.Collections.Generic;
 
-internal class CallImplementation : ICall
+public class CallImplementation : ICall
 {
     public void Create(Call item)
     {
