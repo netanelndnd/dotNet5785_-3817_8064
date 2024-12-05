@@ -1,5 +1,6 @@
 ﻿using DalApi;
 using DO;
+
 namespace DalTest
 {
     public class Program
@@ -9,8 +10,8 @@ namespace DalTest
         //private static ICall? s_dal.Call = new CallImplementation();//stage 1
         //private static IConfig? s_dal.Config = new ConfigImplementation();//stage 1
 
-        //static readonly IDal s_dal = new DalList(); //stage 2
-        static readonly IDal s_dal = new DalXml(); //stage 3
+        //static readonly IDal s_dal = new Dal.DalList(); //stage 2
+        static readonly IDal s_dal = new Dal.DalXml(); //stage 3
 
 
 
@@ -271,10 +272,10 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter Call ID:");
-                if (!int.TryParse(Console.ReadLine(), out int callId)) throw new FormatException("Call ID is invalid!");
+                if (!int.TryParse(Console.ReadLine(), out int callId)) throw new InvalidCallIdException("Call ID is invalid!");
 
                 Console.WriteLine("Enter Volunteer ID:");
-                if (!int.TryParse(Console.ReadLine(), out int volunteerId)) throw new FormatException("Volunteer ID is invalid!");
+                if (!int.TryParse(Console.ReadLine(), out int volunteerId)) throw new InvalidVolunteerIdException("Volunteer ID is invalid!");
 
                 Assignment newAssignment = new Assignment
                 {
@@ -301,7 +302,7 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter Assignment ID:");
-                if (!int.TryParse(Console.ReadLine(), out int assignmentId)) throw new FormatException("Assignment ID is invalid!");
+                if (!int.TryParse(Console.ReadLine(), out int assignmentId)) throw new InvalidAssignmentIdException("Assignment ID is invalid!");
 
                 Assignment? assignment = s_dal.Assignment.Read(assignmentId);
                 if (assignment == null)
@@ -352,7 +353,7 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter Assignment ID:");
-                if (!int.TryParse(Console.ReadLine(), out int assignmentId)) throw new FormatException("Assignment ID is invalid!");
+                if (!int.TryParse(Console.ReadLine(), out int assignmentId)) throw new InvalidAssignmentIdException("Assignment ID is invalid!");
 
                 Assignment? assignment = s_dal.Assignment.Read(assignmentId);
                 if (assignment == null)
@@ -449,13 +450,13 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter Full Name:");
-                string fullName = Console.ReadLine() ?? throw new FormatException("Full Name is invalid!");
+                string fullName = Console.ReadLine() ?? throw new InvalidFullNameException("Full Name is invalid!");
 
                 Console.WriteLine("Enter Phone Number:");
-                string phoneNumber = Console.ReadLine() ?? throw new FormatException("Phone Number is invalid!");
+                string phoneNumber = Console.ReadLine() ?? throw new InvalidPhoneNumberException("Phone Number is invalid!");
 
                 Console.WriteLine("Enter Email:");
-                string email = Console.ReadLine() ?? throw new FormatException("Email is invalid!");
+                string email = Console.ReadLine() ?? throw new InvalidEmailException("Email is invalid!");
 
                 Volunteer newVolunteer = new Volunteer
                 {
@@ -482,7 +483,7 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter Volunteer ID:");
-                if (!int.TryParse(Console.ReadLine(), out int volunteerId)) throw new FormatException("Volunteer ID is invalid!");
+                if (!int.TryParse(Console.ReadLine(), out int volunteerId)) throw new InvalidVolunteerIdException("Volunteer ID is invalid!");
 
                 Volunteer? volunteer = s_dal.Volunteer.Read(volunteerId);
                 if (volunteer == null)
@@ -535,7 +536,7 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter Volunteer ID:");
-                if (!int.TryParse(Console.ReadLine(), out int volunteerId)) throw new FormatException("Volunteer ID is invalid!");
+                if (!int.TryParse(Console.ReadLine(), out int volunteerId)) throw new InvalidVolunteerIdException("Volunteer ID is invalid!");
 
                 Volunteer? volunteer = s_dal.Volunteer.Read(volunteerId);
                 if (volunteer == null)
@@ -585,7 +586,7 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter Volunteer ID:");
-                if (!int.TryParse(Console.ReadLine(), out int volunteerId)) throw new FormatException("Volunteer ID is invalid!");
+                if (!int.TryParse(Console.ReadLine(), out int volunteerId)) throw new InvalidVolunteerIdException("Volunteer ID is invalid!");
 
                 s_dal.Volunteer.Delete(volunteerId);
                 Console.WriteLine("Volunteer deleted successfully.");
@@ -621,10 +622,10 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter Call Type:");
-                if (!Enum.TryParse(Console.ReadLine(), out CallType callType)) throw new FormatException("Call Type is invalid!");
+                if (!Enum.TryParse(Console.ReadLine(), out CallType callType)) throw new InvalidCallTypeException("Call Type is invalid!");
 
                 Console.WriteLine("Enter Address:");
-                string address = Console.ReadLine() ?? throw new FormatException("Address is invalid!");
+                string address = Console.ReadLine() ?? throw new InvalidAddressException("Address is invalid!");
 
                 Call newCall = new Call
                 {
@@ -651,7 +652,7 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter Call ID:");
-                if (!int.TryParse(Console.ReadLine(), out int callId)) throw new FormatException("Call ID is invalid!");
+                if (!int.TryParse(Console.ReadLine(), out int callId)) throw new InvalidCallIdException("Call ID is invalid!");
 
                 Call? call = s_dal.Call.Read(callId);
                 if (call == null)
@@ -704,7 +705,7 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter Call ID:");
-                if (!int.TryParse(Console.ReadLine(), out int callId)) throw new FormatException("Call ID is invalid!");
+                if (!int.TryParse(Console.ReadLine(), out int callId)) throw new InvalidCallIdException("Call ID is invalid!");
 
                 Call? call = s_dal.Call.Read(callId);
                 if (call == null)
@@ -747,7 +748,7 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter Call ID:");
-                if (!int.TryParse(Console.ReadLine(), out int callId)) throw new FormatException("Call ID is invalid!");
+                if (!int.TryParse(Console.ReadLine(), out int callId)) throw new InvalidCallIdException("Call ID is invalid!");
 
                 s_dal.Call.Delete(callId);
                 Console.WriteLine("Call deleted successfully.");
@@ -823,7 +824,7 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter new Risk Range (in minutes):");
-                if (!int.TryParse(Console.ReadLine(), out int riskRangeMinutes)) throw new FormatException("Risk Range is invalid!");
+                if (!int.TryParse(Console.ReadLine(), out int riskRangeMinutes)) throw new InvalidRiskRangeException("Risk Range is invalid!");
 
                 s_dal.Config.RiskRange = TimeSpan.FromMinutes(riskRangeMinutes);
                 Console.WriteLine("Config value updated successfully.");
@@ -894,3 +895,4 @@ namespace DalTest
         }
     }
 }
+

@@ -1,13 +1,13 @@
-﻿using DalApi;
+﻿namespace Dal;
+using DalApi;
 
-namespace Dal;
 
-sealed  class DalXml : IDal
+
+sealed public class DalXml : IDal
 {
     public IAssignment Assignment { get; } = new AssignmentImplementation();
 
     public ICall Call { get; } = new CallImplementation();
-
 
     public IConfig Config { get; } = new ConfigImplementation();
 
