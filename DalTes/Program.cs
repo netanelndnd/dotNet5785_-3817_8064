@@ -12,11 +12,9 @@ namespace DalTest
 
         //static readonly IDal s_dal = new Dal.DalList(); //stage 2
         static readonly IDal s_dal = new Dal.DalXml(); //stage 3
-
-
-
         static void Main(string[] args)
         {
+
             try
             {
                 MainMenu();
@@ -893,6 +891,7 @@ namespace DalTest
             s_dal.Call.DeleteAll();
             s_dal.Config.Reset();
         }
+        
     }
 }
 

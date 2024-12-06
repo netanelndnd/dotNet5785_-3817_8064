@@ -2,17 +2,22 @@
 
 internal static class Config
 {
-    internal const string s_data_config_xml = "data-config";
+    internal const string s_data_config_xml = "data-config.xml";
     internal const string s_assignments_xml = "assignments.xml";
     internal const string s_calls_xml = "calls.xml";
     internal const string s_volunteers_xml = "volunteers.xml";
 
-
+    /// <summary>
+    /// Gets the next assignment ID and increments it in the configuration.
+    /// </summary>
     internal static int NextAssignmentId
     {
         get => XMLTools.GetAndIncreaseConfigIntVal(s_data_config_xml, "NextAssignmentId");
         private set => XMLTools.SetConfigIntVal(s_data_config_xml, "NextAssignmentId", value);
     }
+    /// <summary>
+    /// Gets the next call ID and increments it in the configuration.
+    /// </summary>
     internal static int NextCallId
     {
         get => XMLTools.GetAndIncreaseConfigIntVal(s_data_config_xml, "NextCallId");
