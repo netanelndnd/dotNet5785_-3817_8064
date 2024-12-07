@@ -150,6 +150,9 @@ public static class Initialization
         if (!volunteers.Any() || !calls.Any())
             throw new DalItIsNullException("No volunteers or calls available");
 
+        // Remove 3 volunteers from the list to ensure they do not get assignments
+        volunteers = volunteers.OrderBy(x => s_rand.Next()).Skip(3);
+
         // Ensure at least 15 calls are not assigned
         var unassignedCalls = calls.OrderBy(x => s_rand.Next()).Take(15);
         var assignableCalls = calls.Except(unassignedCalls).ToList();
@@ -173,7 +176,7 @@ public static class Initialization
             );
         }).ToList();
 
-        // Assign 10 calls to 4 volunteers with random CompletionType
+        // Assign 10 calls to 1 volunteers with random CompletionType
         assignments.AddRange(Enumerable.Range(0, 10).Select(_ =>
         {
             var volunteer = volunteers.ElementAt(10);
@@ -196,48 +199,79 @@ public static class Initialization
         // Assign 10 calls that are still open (CompletionType is null)
         assignments.AddRange(Enumerable.Range(0, 10).Select(_ =>
         {
-            Volunteer volunteer;
-            do
-            {
-                volunteer = volunteers.ElementAt(s_rand.Next(volunteers.Count()));
-            } while (assignments.Any(a => a.VolunteerId == volunteer.Id));
+            // רשימה זמנית של מתנדבים פנויים (כאלה שלא שובצו למשימות עד כה)
+            var availableVolunteers = volunteers
+                .Where(v => !assignments.Any(a => a.VolunteerId == v.Id)) // סינון מתנדבים שכבר יש להם משימות
+                .ToList();
 
-            var call = assignableCalls.ElementAt(s_rand.Next(assignableCalls.Count));
-            assignableCalls.Remove(call);
-            DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
-            DateTime? completionTime = entryTime.AddMinutes(s_rand.Next(1, (int)((call.MaxCompletionTime - entryTime)?.TotalMinutes ?? 0)));
+            // בחירת מתנדב אקראי מרשימת המתנדבים 
+            var volunteer = volunteers.ElementAt(s_rand.Next(volunteers.Count()));
 
+            // בחירת קריאה (Call) אקראית מתוך הרשימה הזמינה
+            if (!assignableCalls.Any())
+                throw new InvalidOperationException("No assignable calls available.");
+
+            var call = assignableCalls[s_rand.Next(assignableCalls.Count)];
+            assignableCalls.Remove(call); // הסרה של הקריאה מרשימת הקריאות הזמינות
+
+            // חישוב זמן כניסה וזמן סיום למשימה
+            DateTime entryTime = call.OpenTime.AddMinutes(
+                s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0))
+            );
+
+            DateTime? completionTime = entryTime.AddMinutes(
+                s_rand.Next(1, (int)((call.MaxCompletionTime - entryTime)?.TotalMinutes ?? 0))
+            );
+
+            // יצירת משימה חדשה עם סטטוס פתוח (CompletionType = null)
             return new Assignment(
-                0, // ID will be auto-generated
-                call.Id,
-                volunteer.Id,
-                entryTime,
-                completionTime,
-                null  // No completion status
+                0, // המזהה יוגדר אוטומטית
+                call.Id, // מזהה השיחה
+                volunteer.Id, // מזהה המתנדב
+                entryTime, // זמן התחלה
+                completionTime, // זמן סיום (יכול להיות null אם לא הוגדר נכון)
+                null // סטטוס המשימה - פתוחה
             );
         }));
 
         // Assign 5 calls that were closed after the maximum completion time
         assignments.AddRange(Enumerable.Range(0, 5).Select(_ =>
         {
-            Volunteer volunteer;
-            do
-            {
-                volunteer = volunteers.ElementAt(s_rand.Next(volunteers.Count()));
-            } while (assignments.Any(a => a.VolunteerId == volunteer.Id));
+            // רשימה זמנית של מתנדבים פנויים
+            var availableVolunteers = volunteers
+                .Where(v => !assignments.Any(a => a.VolunteerId == v.Id)) // סינון מתנדבים שכבר שובצו
+                .ToList();
 
-            var call = assignableCalls.ElementAt(s_rand.Next(assignableCalls.Count));
-            assignableCalls.Remove(call);
-            DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
-            DateTime? completionTime = call.MaxCompletionTime?.AddMinutes(s_rand.Next(1, 1000));
+            // בחירת מתנדב אקראי מרשימת המתנדבים 
+            var volunteer = volunteers.ElementAt(s_rand.Next(volunteers.Count()));
 
+            // בדיקה אם יש מספיק קריאות זמינות
+            if (assignableCalls.Count < 5)
+                throw new InvalidOperationException("Not enough assignable calls available.");
+
+            // בחירת קריאה אקראית
+            var call = assignableCalls[s_rand.Next(assignableCalls.Count)];
+            assignableCalls.Remove(call); // הסרה של הקריאה מהרשימה
+
+            // חישוב זמן התחלה
+            DateTime entryTime = call.OpenTime.AddMinutes(
+                s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0))
+            );
+
+            // בדיקה ויצירת completionTime עם ערך סביר
+            if (call.MaxCompletionTime == null)
+                throw new ArgumentException("MaxCompletionTime cannot be null for this operation.");
+
+            DateTime? completionTime = call.MaxCompletionTime.Value.AddMinutes(s_rand.Next(1, 120)); // עד שעתיים אחרי הזמן המקסימלי
+
+            // יצירת משימה חדשה
             return new Assignment(
-                0, // ID will be auto-generated
-                call.Id,
-                volunteer.Id,
-                entryTime,
-                completionTime,
-                CompletionType.Expired
+                0, // ID יוגדר אוטומטית
+                call.Id, // מזהה השיחה
+                volunteer.Id, // מזהה המתנדב
+                entryTime, // זמן התחלה
+                completionTime, // זמן סיום
+                CompletionType.Expired // סטטוס - פגת תוקף
             );
         }));
 

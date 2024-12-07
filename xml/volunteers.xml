@@ -1,3 +1,227 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ArrayOfVolunteer>
-</ArrayOfVolunteer>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Volunteers>
+  <Volunteer>
+    <Id>392718716</Id>
+    <FullName>Yossi Cohen</FullName>
+    <PhoneNumber>0501234567</PhoneNumber>
+    <Email>yossi.cohen@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>43.693545519140585</MaxDistance>
+    <VolunteerRole>Manager</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>221114475</Id>
+    <FullName>Rivka Levi</FullName>
+    <PhoneNumber>0501234568</PhoneNumber>
+    <Email>rivka.levi@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>62.56781394730994</MaxDistance>
+    <VolunteerRole>Volunteer</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>277484238</Id>
+    <FullName>Moshe Mizrahi</FullName>
+    <PhoneNumber>0501234569</PhoneNumber>
+    <Email>moshe.mizrahi@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>52.54358857893592</MaxDistance>
+    <VolunteerRole>Volunteer</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>376645344</Id>
+    <FullName>Yael Katz</FullName>
+    <PhoneNumber>0501234570</PhoneNumber>
+    <Email>yael.katz@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>66.01506442071712</MaxDistance>
+    <VolunteerRole>Volunteer</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>292426719</Id>
+    <FullName>David Peretz</FullName>
+    <PhoneNumber>0501234571</PhoneNumber>
+    <Email>david.peretz@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>48.73200542998878</MaxDistance>
+    <VolunteerRole>Volunteer</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>380175729</Id>
+    <FullName>Sara Ben-David</FullName>
+    <PhoneNumber>0501234572</PhoneNumber>
+    <Email>sara.ben-david@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>85.5000294035557</MaxDistance>
+    <VolunteerRole>Volunteer</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>300941296</Id>
+    <FullName>Avi Shalom</FullName>
+    <PhoneNumber>0501234573</PhoneNumber>
+    <Email>avi.shalom@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>45.47689221326896</MaxDistance>
+    <VolunteerRole>Volunteer</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>298291974</Id>
+    <FullName>Miriam Gold</FullName>
+    <PhoneNumber>0501234574</PhoneNumber>
+    <Email>miriam.gold@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>93.81095710798853</MaxDistance>
+    <VolunteerRole>Volunteer</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>215615795</Id>
+    <FullName>Daniel Azulay</FullName>
+    <PhoneNumber>0501234575</PhoneNumber>
+    <Email>daniel.azulay@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>22.22433921934953</MaxDistance>
+    <VolunteerRole>Volunteer</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>318688531</Id>
+    <FullName>Leah Bar</FullName>
+    <PhoneNumber>0501234576</PhoneNumber>
+    <Email>leah.bar@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>25.493967947174355</MaxDistance>
+    <VolunteerRole>Volunteer</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>360847043</Id>
+    <FullName>Yitzhak Shimon</FullName>
+    <PhoneNumber>0501234577</PhoneNumber>
+    <Email>yitzhak.shimon@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>90.83143145100091</MaxDistance>
+    <VolunteerRole>Volunteer</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>336885623</Id>
+    <FullName>Esther Malka</FullName>
+    <PhoneNumber>0501234578</PhoneNumber>
+    <Email>esther.malka@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>80.01162786192755</MaxDistance>
+    <VolunteerRole>Volunteer</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>237092453</Id>
+    <FullName>Ronen Alon</FullName>
+    <PhoneNumber>0501234579</PhoneNumber>
+    <Email>ronen.alon@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>41.929635894258375</MaxDistance>
+    <VolunteerRole>Volunteer</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>365829416</Id>
+    <FullName>Tamar Shani</FullName>
+    <PhoneNumber>0501234580</PhoneNumber>
+    <Email>tamar.shani@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>75.09771146768219</MaxDistance>
+    <VolunteerRole>Volunteer</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>222434760</Id>
+    <FullName>Elior Ben-Ami</FullName>
+    <PhoneNumber>0501234581</PhoneNumber>
+    <Email>elior.ben-ami@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>32.31280529608295</MaxDistance>
+    <VolunteerRole>Volunteer</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>360400424</Id>
+    <FullName>Shira Tal</FullName>
+    <PhoneNumber>0501234582</PhoneNumber>
+    <Email>shira.tal@gmail.com</Email>
+    <Password />
+    <CurrentAddress />
+    <Latitude />
+    <Longitude />
+    <MaxDistance>66.50558008151086</MaxDistance>
+    <VolunteerRole>Volunteer</VolunteerRole>
+    <IsActive>true</IsActive>
+    <DistanceType>AirDistance</DistanceType>
+  </Volunteer>
+</Volunteers>

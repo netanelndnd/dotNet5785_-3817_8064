@@ -47,7 +47,7 @@ static class XMLTools
     }
     #endregion
 
-    //האזור מכיל הגדרות של מתודות עזר לצורך גישה למשתנים בקובץ התצורה
+    //האזור מכיל הגדרות של מתודות עזר לצורך גישה למשתנים בקובץ התצורה על פי שיטה 2
     #region SaveLoadWithXElement
     public static void SaveListToXMLElement(XElement rootElem, string xmlFileName)
     {
