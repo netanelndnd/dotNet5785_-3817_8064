@@ -4,11 +4,20 @@ using DO;
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
-//שיטה 2
+/// <summary>
+/// Implementation of the IVolunteer interface for managing volunteers using XML storage.
+/// </summary>
 public class VolunteerImplementation : IVolunteer
 {
+    /// <summary>
+    /// Path to the XML file storing volunteer data.
+    /// </summary>
     private readonly string _filePath = Config.s_volunteers_xml;
 
+    /// <summary>
+    /// Creates a new volunteer and adds it to the XML file.
+    /// </summary>
+    /// <param name="item">The volunteer to create.</param>
     public void Create(Volunteer item)
     {
         XElement ArrayOfVolunteer = XMLTools.LoadListFromXMLElement(_filePath);
@@ -30,6 +39,10 @@ public class VolunteerImplementation : IVolunteer
         XMLTools.SaveListToXMLElement(ArrayOfVolunteer, _filePath);
     }
 
+    /// <summary>
+    /// Deletes a volunteer from the XML file by ID.
+    /// </summary>
+    /// <param name="id">The ID of the volunteer to delete.</param>
     public void Delete(int id)
     {
         XElement ArrayOfVolunteer = XMLTools.LoadListFromXMLElement(_filePath);
@@ -42,12 +55,20 @@ public class VolunteerImplementation : IVolunteer
         }
     }
 
+    /// <summary>
+    /// Deletes all volunteers from the XML file.
+    /// </summary>
     public void DeleteAll()
     {
         XElement ArrayOfVolunteer = new XElement("Volunteers");
         XMLTools.SaveListToXMLElement(ArrayOfVolunteer, _filePath);
     }
 
+    /// <summary>
+    /// Reads a volunteer from the XML file by ID.
+    /// </summary>
+    /// <param name="id">The ID of the volunteer to read.</param>
+    /// <returns>The volunteer with the specified ID, or null if not found.</returns>
     public Volunteer? Read(int id)
     {
         XElement ArrayOfVolunteer = XMLTools.LoadListFromXMLElement(_filePath);
@@ -56,6 +77,11 @@ public class VolunteerImplementation : IVolunteer
         return volunteer != null ? ParseVolunteer(volunteer) : null;
     }
 
+    /// <summary>
+    /// Reads a volunteer from the XML file that matches the specified filter.
+    /// </summary>
+    /// <param name="filter">The filter to apply.</param>
+    /// <returns>The first volunteer that matches the filter, or null if not found.</returns>
     public Volunteer? Read(Func<Volunteer, bool> filter)
     {
         XElement ArrayOfVolunteer = XMLTools.LoadListFromXMLElement(_filePath);
@@ -64,6 +90,11 @@ public class VolunteerImplementation : IVolunteer
             .FirstOrDefault(filter);
     }
 
+    /// <summary>
+    /// Reads all volunteers from the XML file that match the specified filter.
+    /// </summary>
+    /// <param name="filter">The filter to apply, or null to read all volunteers.</param>
+    /// <returns>An enumerable of volunteers that match the filter.</returns>
     public IEnumerable<Volunteer> ReadAll(Func<Volunteer, bool>? filter = null)
     {
         XElement ArrayOfVolunteer = XMLTools.LoadListFromXMLElement(_filePath);
@@ -72,6 +103,10 @@ public class VolunteerImplementation : IVolunteer
         return filter != null ? volunteerList.Where(filter) : volunteerList;
     }
 
+    /// <summary>
+    /// Updates an existing volunteer in the XML file.
+    /// </summary>
+    /// <param name="item">The volunteer to update.</param>
     public void Update(Volunteer item)
     {
         XElement ArrayOfVolunteer = XMLTools.LoadListFromXMLElement(_filePath);
@@ -94,7 +129,12 @@ public class VolunteerImplementation : IVolunteer
         }
     }
 
-    private Volunteer ParseVolunteer(XElement element)
+    /// <summary>
+    /// Parses an XElement into a Volunteer object.
+    /// </summary>
+    /// <param name="element">The XElement to parse.</param>
+    /// <returns>The parsed Volunteer object.</returns>
+    private static Volunteer ParseVolunteer(XElement element)
     {
         return new Volunteer(
             element.ToIntNullable("Id") ?? 0,

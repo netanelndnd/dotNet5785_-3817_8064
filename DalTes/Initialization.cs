@@ -307,5 +307,6 @@ public static class Initialization
         CreateCalls();//stage 1  
         Console.WriteLine("Creating assignments..."); //stage 1
         CreateAssignments();//stage 1  
+        Console.WriteLine("Initialization completed successfully.");
     }
 }
