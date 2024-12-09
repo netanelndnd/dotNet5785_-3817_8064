@@ -42,7 +42,7 @@
   </Call>
   <Call>
     <Id>1004</Id>
-    <CallType>FuelDelivery</CallType>
+    <CallType>FlatTire</CallType>
     <Address>בר אילן 42, בת ים</Address>
     <Latitude>32.01172928404402</Latitude>
     <Longitude>34.74362385383784</Longitude>
@@ -272,7 +272,7 @@
   </Call>
   <Call>
     <Id>1027</Id>
-    <CallType>FlatTire</CallType>
+    <CallType>FoodTransport</CallType>
     <Address>העצמאות 66, קרית אתא</Address>
     <Latitude>32.807085520556775</Latitude>
     <Longitude>35.10462231648692</Longitude>
@@ -452,7 +452,7 @@
   </Call>
   <Call>
     <Id>1045</Id>
-    <CallType>FoodTransport</CallType>
+    <CallType>MedicalEmergency</CallType>
     <Address>דרך יצחק רבין 19, בית שמש</Address>
     <Latitude>31.74555793800893</Latitude>
     <Longitude>34.99371105686167</Longitude>
@@ -482,7 +482,7 @@
   </Call>
   <Call>
     <Id>1048</Id>
-    <CallType>LostPerson</CallType>
+    <CallType>BatteryJumpStart</CallType>
     <Address>שפת אמת 25, בית שמש</Address>
     <Latitude>31.73938560185697</Latitude>
     <Longitude>34.99613311692805</Longitude>
