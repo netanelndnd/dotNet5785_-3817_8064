@@ -21,18 +21,9 @@ public static class Initialization
     /// </summary>
     private static void CreateVolunteers()
     {
-        string[] names = {
-            "Yossi Cohen", "Rivka Levi", "Moshe Mizrahi", "Yael Katz", "David Peretz", "Sara Ben-David", "Avi Shalom", "Miriam Gold", "Daniel Azulay", "Leah Bar",
-            "Yitzhak Shimon", "Esther Malka", "Ronen Alon", "Tamar Shani", "Elior Ben-Ami", "Shira Tal"
-        };
-        string[] emails = {
-            "yossi.cohen@gmail.com", "rivka.levi@gmail.com", "moshe.mizrahi@gmail.com", "yael.katz@gmail.com", "david.peretz@gmail.com", "sara.ben-david@gmail.com", "avi.shalom@gmail.com", "miriam.gold@gmail.com", "daniel.azulay@gmail.com", "leah.bar@gmail.com",
-            "yitzhak.shimon@gmail.com", "esther.malka@gmail.com", "ronen.alon@gmail.com", "tamar.shani@gmail.com", "elior.ben-ami@gmail.com", "shira.tal@gmail.com" };
-        string[] phoneNumbers = {
-            "0501234567", "0501234568", "0501234569", "0501234570", "0501234571", "0501234572", "0501234573", "0501234574", "0501234575", "0501234576",
-            "0501234577", "0501234578", "0501234579", "0501234580", "0501234581", "0501234582"
-           
-        };
+        string[] names = { "Yossi Cohen", "Rivka Levi", "Moshe Mizrahi", "Yael Katz", "David Peretz", "Sara Ben-David", "Avi Shalom", "Miriam Gold", "Daniel Azulay", "Leah Bar", "Yitzhak Shimon", "Esther Malka", "Ronen Alon", "Tamar Shani", "Elior Ben-Ami", "Shira Tal" };
+        string[] emails = { "yossi.cohen@gmail.com", "rivka.levi@gmail.com", "moshe.mizrahi@gmail.com", "yael.katz@gmail.com", "david.peretz@gmail.com", "sara.ben-david@gmail.com", "avi.shalom@gmail.com", "miriam.gold@gmail.com", "daniel.azulay@gmail.com", "leah.bar@gmail.com", "yitzhak.shimon@gmail.com", "esther.malka@gmail.com", "ronen.alon@gmail.com", "tamar.shani@gmail.com", "elior.ben-ami@gmail.com", "shira.tal@gmail.com" };
+        string[] phoneNumbers = { "0501234567", "0501234568", "0501234569", "0501234570", "0501234571", "0501234572", "0501234573", "0501234574", "0501234575", "0501234576", "0501234577", "0501234578", "0501234579", "0501234580", "0501234581", "0501234582" };
 
         for (int i = 0; i < names.Length; i++)
         {
@@ -125,9 +116,9 @@ public static class Initialization
             34.8618141278376, 35.19590856003538, 34.743271985523506, 34.752186728407715, 34.74362385383784, 34.747229546496264, 34.745333810322535, 34.748627700497515, 34.77308048033317, 34.784702171018964, 34.78533897059906, 34.77990632146705, 34.78262253224672, 34.80778224155118, 34.96942136688308, 34.98523717981069, 34.98876182539728, 34.99657405678095, 34.99240903307264, 35.01498376162042, 35.008282393139794, 35.12234042641816, 35.1139504148565, 35.11011456487845, 35.10917157396484, 35.10525108926754, 35.112780076486196, 35.10462231648692, 35.101859943618564, 35.10342631423813, 35.10634890958312, 35.204097845199364, 35.20240377805922, 35.20038113098719, 35.18947099850603, 35.1864233661719, 35.187628477045756, 35.19075423337481, 35.18204009422545, 35.18112523364712, 34.99378563017565, 34.99482705774016, 34.98983391964748, 34.982859631374865, 34.9808196442101, 34.99371105686167, 34.98401323833724, 34.991448806063076, 34.99613311692805, 34.998070548696916
         };
 
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < 70; i++) // Changed to 70 to create 20 more calls
         {
-            int addressIndex = i;
+            int addressIndex = i < 50 ? i : s_rand.Next(0, 50); // Use existing addresses randomly for the additional 20 calls
             DateTime openTime = s_dal?.Config.Clock.AddMinutes(-s_rand.Next(1, 10000)) ?? throw new InvalidOperationException("s_dalConfig is null");
             DateTime? maxCompletionTime = openTime + s_dal?.Config.RiskRange;
 
@@ -145,6 +136,10 @@ public static class Initialization
             s_dal?.Call.Create(call);
         }
     }
+
+
+
+
     /// <summary>
     /// Creates a list of assignments with random data and adds them to the DAL.
     /// </summary>
@@ -285,7 +280,7 @@ public static class Initialization
         }));
 
         // Add 20 more random assignments
-        assignments.AddRange(Enumerable.Range(0, 20).Select(_ =>
+        assignments.AddRange(Enumerable.Range(0, 25).Select(_ =>
         {
             var volunteer = volunteers.ElementAt(s_rand.Next(volunteers.Count()));
             var call = assignableCalls.ElementAt(s_rand.Next(assignableCalls.Count));
