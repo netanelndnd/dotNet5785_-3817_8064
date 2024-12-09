@@ -21,9 +21,27 @@ public static class Initialization
     /// </summary>
     private static void CreateVolunteers()
     {
-        string[] names = { "Yossi Cohen", "Rivka Levi", "Moshe Mizrahi", "Yael Katz", "David Peretz", "Sara Ben-David", "Avi Shalom", "Miriam Gold", "Daniel Azulay", "Leah Bar", "Yitzhak Shimon", "Esther Malka", "Ronen Alon", "Tamar Shani", "Elior Ben-Ami", "Shira Tal" };
-        string[] emails = { "yossi.cohen@gmail.com", "rivka.levi@gmail.com", "moshe.mizrahi@gmail.com", "yael.katz@gmail.com", "david.peretz@gmail.com", "sara.ben-david@gmail.com", "avi.shalom@gmail.com", "miriam.gold@gmail.com", "daniel.azulay@gmail.com", "leah.bar@gmail.com", "yitzhak.shimon@gmail.com", "esther.malka@gmail.com", "ronen.alon@gmail.com", "tamar.shani@gmail.com", "elior.ben-ami@gmail.com", "shira.tal@gmail.com" };
-        string[] phoneNumbers = { "0501234567", "0501234568", "0501234569", "0501234570", "0501234571", "0501234572", "0501234573", "0501234574", "0501234575", "0501234576", "0501234577", "0501234578", "0501234579", "0501234580", "0501234581", "0501234582" };
+        string[] names = {
+            "Yossi Cohen", "Rivka Levi", "Moshe Mizrahi", "Yael Katz", "David Peretz", "Sara Ben-David", "Avi Shalom", "Miriam Gold", "Daniel Azulay", "Leah Bar",
+            "Yitzhak Shimon", "Esther Malka", "Ronen Alon", "Tamar Shani", "Elior Ben-Ami", "Shira Tal", "Noa Levi", "Omer Cohen", "Lior Shalom", "Neta Bar",
+            "Gal Peretz", "Hila Mizrahi", "Rami Katz", "Dana Shani", "Eden Ben-David", "Itay Azulay", "Liat Gold", "Nir Shimon", "Talia Malka", "Yaron Alon",
+            "Maya Shalom", "Amit Cohen", "Or Levi", "Shay Katz", "Roni Peretz", "Tal Ben-David", "Eli Mizrahi", "Yaara Shani", "Dvir Azulay", "Lihi Gold",
+            "Nadav Shimon", "Shani Malka", "Roi Alon", "Adi Shalom", "Tomer Cohen", "Lior Levi", "Shira Katz", "Erez Peretz", "Noga Ben-David", "Yotam Mizrahi"
+        };
+        string[] emails = {
+            "yossi.cohen@gmail.com", "rivka.levi@gmail.com", "moshe.mizrahi@gmail.com", "yael.katz@gmail.com", "david.peretz@gmail.com", "sara.ben-david@gmail.com", "avi.shalom@gmail.com", "miriam.gold@gmail.com", "daniel.azulay@gmail.com", "leah.bar@gmail.com",
+            "yitzhak.shimon@gmail.com", "esther.malka@gmail.com", "ronen.alon@gmail.com", "tamar.shani@gmail.com", "elior.ben-ami@gmail.com", "shira.tal@gmail.com", "noa.levi@gmail.com", "omer.cohen@gmail.com", "lior.shalom@gmail.com", "neta.bar@gmail.com",
+            "gal.peretz@gmail.com", "hila.mizrahi@gmail.com", "rami.katz@gmail.com", "dana.shani@gmail.com", "eden.ben-david@gmail.com", "itay.azulay@gmail.com", "liat.gold@gmail.com", "nir.shimon@gmail.com", "talia.malka@gmail.com", "yaron.alon@gmail.com",
+            "maya.shalom@gmail.com", "amit.cohen@gmail.com", "or.levi@gmail.com", "shay.katz@gmail.com", "roni.peretz@gmail.com", "tal.ben-david@gmail.com", "eli.mizrahi@gmail.com", "yaara.shani@gmail.com", "dvir.azulay@gmail.com", "lihi.gold@gmail.com",
+            "nadav.shimon@gmail.com", "shani.malka@gmail.com", "roi.alon@gmail.com", "adi.shalom@gmail.com", "tomer.cohen@gmail.com", "lior.levi@gmail.com", "shira.katz@gmail.com", "erez.peretz@gmail.com", "noga.ben-david@gmail.com", "yotam.mizrahi@gmail.com"
+        };
+        string[] phoneNumbers = {
+            "0501234567", "0501234568", "0501234569", "0501234570", "0501234571", "0501234572", "0501234573", "0501234574", "0501234575", "0501234576",
+            "0501234577", "0501234578", "0501234579", "0501234580", "0501234581", "0501234582", "0501234583", "0501234584", "0501234585", "0501234586",
+            "0501234587", "0501234588", "0501234589", "0501234590", "0501234591", "0501234592", "0501234593", "0501234594", "0501234595", "0501234596",
+            "0501234597", "0501234598", "0501234599", "0501234600", "0501234601", "0501234602", "0501234603", "0501234604", "0501234605", "0501234606",
+            "0501234607", "0501234608", "0501234609", "0501234610", "0501234611", "0501234612", "0501234613", "0501234614", "0501234615", "0501234616"
+        };
 
         for (int i = 0; i < names.Length; i++)
         {
@@ -272,6 +290,26 @@ public static class Initialization
                 entryTime, // זמן התחלה
                 completionTime, // זמן סיום
                 CompletionType.Expired // סטטוס - פגת תוקף
+            );
+        }));
+
+        // Add 20 more random assignments
+        assignments.AddRange(Enumerable.Range(0, 20).Select(_ =>
+        {
+            var volunteer = volunteers.ElementAt(s_rand.Next(volunteers.Count()));
+            var call = assignableCalls.ElementAt(s_rand.Next(assignableCalls.Count));
+            assignableCalls.Remove(call);
+            DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
+            DateTime? completionTime = entryTime.AddMinutes(s_rand.Next(1, (int)((call.MaxCompletionTime - entryTime)?.TotalMinutes ?? 0)));
+            CompletionType? completionType = (CompletionType?)s_rand.Next(Enum.GetValues(typeof(CompletionType)).Length);
+
+            return new Assignment(
+                0, // ID will be auto-generated
+                call.Id,
+                volunteer.Id,
+                entryTime,
+                completionTime,
+                completionType
             );
         }));
 

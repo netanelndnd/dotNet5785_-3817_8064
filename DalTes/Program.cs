@@ -283,7 +283,7 @@ namespace DalTest
                 };
 
 
-        s_dal.Assignment.Create(newAssignment);
+                s_dal.Assignment.Create(newAssignment);
                 Console.WriteLine("Assignment created successfully.");
             }
             catch (Exception ex)
@@ -891,7 +891,7 @@ namespace DalTest
             s_dal.Call.DeleteAll();
             s_dal.Config.Reset();
         }
-        
+
     }
 }
 
