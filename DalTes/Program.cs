@@ -10,8 +10,10 @@ namespace DalTest
         //private static ICall? s_dal.Call = new CallImplementation();//stage 1
         //private static IConfig? s_dal.Config = new ConfigImplementation();//stage 1
 
-        //static readonly IDal s_dal = new Dal.DalList(); //stage 2
-        static readonly IDal s_dal = new Dal.DalXml(); //stage 3
+        //static readonly IDal s_dal = new DalList(); //stage 2
+        //static readonly IDal s_dal = new DalXml(); //stage 3
+        static readonly IDal s_dal = Factory.Get; //stage 4
+
         static void Main(string[] args)
         {
 
@@ -61,7 +63,8 @@ namespace DalTest
                         break;
                     case "6":
                         //Initialization.Do(s_dalAssignment, s_dal.Volunteer, s_dal.Call, s_dal.Config);// stage 1
-                        Initialization.Do(s_dal); //stage 2
+                        //Initialization.Do(s_dal); //stage 2
+                        Initialization.Do(); //stage 4
                         break;
                     case "7":
                         DisplayAllData();

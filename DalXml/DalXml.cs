@@ -3,8 +3,11 @@ using DalApi;
 
 
 
-sealed public class DalXml : IDal
+sealed internal class DalXml : IDal
 {
+    public static IDal Instance { get; } = new DalXml(); //stage 4
+    private DalXml() { } // constructor ,stage 4
+
     public IAssignment Assignment { get; } = new AssignmentImplementation();
 
     public ICall Call { get; } = new CallImplementation();

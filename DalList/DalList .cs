@@ -3,8 +3,11 @@ namespace Dal;
 using DalApi;
 
 
-sealed public class DalList : IDal
+sealed internal class DalList : IDal
 {
+    public static IDal Instance { get; } = new DalList();  //stage 4
+    private DalList() { } //constructor ,stage 4
+
     public IAssignment Assignment { get; } = new AssignmentImplementation();
 
     public ICall Call { get; } = new CallImplementation();
