@@ -1,6 +1,10 @@
 ﻿using Helpers;
 
 namespace BO;
+
+/// <summary>
+/// Entity for viewing only
+/// </summary>
 public class ClosedCallInList
 {
     public int Id { get; init; }
@@ -25,3 +29,5 @@ public class ClosedCallInList
     // The type of completion for the call (null if not applicable, retrieved from DO.Assignment)
     public override string ToString() => this.ToStringProperty();
 }
+
+

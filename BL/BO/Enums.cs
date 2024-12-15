@@ -6,13 +6,7 @@ public enum VolunteerRole
     Volunteer
 }
 
-// ENUM for distance type
-public enum DistanceType
-{
-    Aerial, // Aerial distance
-    Walking, // Walking distance
-    Driving // Driving distance
-}
+
 // ENUM for the type of the call
 public enum CallType
 {
@@ -29,11 +23,21 @@ public enum CallType
     None, // No call is currently in progress
 }
 
+// ENUM for distance type
+public enum DistanceType
+{
+    AirDistance,
+    WalkingDistance,
+    DrivingDistance
+}
+
 // ENUM for the status of the call
 public enum CallStatus
 {
+    Open, //Not currently assigned to any volunteer
     InProgress, // In progress
-    AtRisk // In progress at risk
+    OpenInRisk, //Open and approaching MaxCompletionTime
+    InProgressInRisk // In progress at risk
 }
 
 // ENUM for the completion status of the call
@@ -44,3 +48,67 @@ public enum CompletionType
     ManagerCancellation, // The manager canceled the assignment for the current volunteer before the maximum completion time
     Expired,             // The call was canceled because it was not treated and reached the maximum completion time
 }
+
+/// <summary>
+/// Enum representing the fields of a volunteer.
+/// </summary>
+public enum VolunteerFields
+{
+    Id,
+    FullName,
+    IsActive,
+    TotalCallsHandled,
+    TotalCallsCancelled,
+    TotalExpiredCalls,
+    CurrentCallId,
+    CurrentCallType
+}
+
+/// <summary>
+/// Enum representing the fields of a call in the list.
+/// </summary>
+public enum CallInListFields
+{
+    AssignmentId,
+    CallId,
+    CallType,
+    OpeningTime,
+    RemainingTime,
+    LastVolunteerName,
+    CompletionDuration,
+    Status,
+    TotalAssignments
+}
+
+public enum ClosedCallInListFields
+{
+    Id,
+    CallType,
+    FullAddress,
+    OpenedAt,
+    StartedAt,
+    CompletedAt,
+    CompletionStatus
+}
+
+public enum OpenCallInListFields
+{
+    Id,
+    CallType,
+    Description,
+    FullAddress,
+    OpenedAt,
+    MaxCompletionTime,
+    DistanceFromVolunteer
+}
+
+public enum TimeUnit
+{
+    Minute,
+    Hour,
+    Day,
+    Month,
+    Year
+}
+
+

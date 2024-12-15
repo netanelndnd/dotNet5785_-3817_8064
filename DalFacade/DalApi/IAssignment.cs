@@ -1,6 +1,6 @@
 ﻿namespace DalApi;
 using DO;
-public interface IAssignment : ICrud<Assignment> { }
+public interface IAssignment : ICrud<Assignment>{}
 //{
 //    void Create(Assignment item); //Creates new entity object in DAL
 //    Assignment? Read(int id); //Reads entity object by its ID 

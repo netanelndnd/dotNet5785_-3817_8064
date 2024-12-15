@@ -1,4 +1,4 @@
-﻿namespace BlTest
+﻿    namespace BlTest
 {
     internal class Program
     {

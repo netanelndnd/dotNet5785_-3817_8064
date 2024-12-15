@@ -3,6 +3,10 @@
 using Helpers;
 using System;
 
+/// <summary>
+/// Represents a call in the system with various details such as assignment, type, status, and timing information.
+/// Entity for viewing only
+/// </summary>
 public class CallInList
 {
     public int? AssignmentId { get; init; }
@@ -45,12 +49,12 @@ public class CallInList
     // - Maximum completion time in DO.Call.
     // - Current system time.
     // Possible statuses:
-    // - Open: No volunteer is currently handling the call.
-    // - InProgress: A volunteer is currently handling the call.
-    // - Closed: A volunteer has completed handling the call.
-    // - Expired: The call was not handled or not completed within the deadline.
-    // - OpenRisk: The call is open and approaching its deadline.
-    // - InProgressRisk: The call is being handled and approaching its deadline.
+    // Open - Not currently assigned to any volunteer
+    // InProgress - Currently being handled by a volunteer
+    // Treated - Completed by a volunteer
+    // Expired - Not handled or not completed in time
+    // OpenInRisk - Open and approaching MaxCompletionTime
+    // InProgressInRisk - InProgress and approaching MaxCompletionTime
 
     public int TotalAssignments { get; set; }
     // The total number of assignments associated with the current call.
@@ -58,3 +62,6 @@ public class CallInList
     // Represents how many times the call was taken, canceled, or handled up to its current status.
     public override string ToString() => this.ToStringProperty();
 }
+
+
+

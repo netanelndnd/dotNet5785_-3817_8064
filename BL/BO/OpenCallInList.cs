@@ -2,6 +2,9 @@
 
 namespace BO;
 
+/// <summary>
+/// Entity for viewing only
+/// </summary>
 public class OpenCallInList
 {
     public int Id { get; init; }
@@ -26,3 +29,4 @@ public class OpenCallInList
     // The distance from the volunteer to the call, calculated in the logical layer
     public override string ToString() => this.ToStringProperty();
 }
+

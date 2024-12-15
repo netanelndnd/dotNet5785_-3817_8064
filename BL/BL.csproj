@@ -19,8 +19,9 @@
     <ProjectReference Include="..\DalXml\DalXml.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="BlImplementation\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="BO\" />
+		<Folder Include="Helpers\" />
+	</ItemGroup>
 
 </Project>

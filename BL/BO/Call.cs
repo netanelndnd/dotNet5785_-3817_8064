@@ -42,7 +42,7 @@ public class Call
     // Status of the call. Computed based on the assignment's completion type, MaxCompletionTime, and the current system clock:
     // Open - Not currently assigned to any volunteer
     // InProgress - Currently being handled by a volunteer
-    // Closed - Completed by a volunteer
+    // Treated - Completed by a volunteer
     // Expired - Not handled or not completed in time
     // OpenInRisk - Open and approaching MaxCompletionTime
     // InProgressInRisk - InProgress and approaching MaxCompletionTime

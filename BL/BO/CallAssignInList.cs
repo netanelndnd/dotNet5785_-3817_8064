@@ -2,6 +2,9 @@
 
 namespace BO;
 
+/// <summary>
+/// Entity for viewing only
+/// </summary>
 public class CallAssignInList
 {
     public int? VolunteerId { get; set; }

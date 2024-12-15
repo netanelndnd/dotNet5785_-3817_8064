@@ -5,6 +5,12 @@ namespace Helpers;
 
 internal static class Tools
 {
+    /// <summary>
+    /// Converts the properties of an object to a string representation.
+    /// </summary>
+    /// <typeparam name="T">The type of the object.</typeparam>
+    /// <param name="t">The object instance.</param>
+    /// <returns>A string representation of the object's properties.</returns>
     public static string ToStringProperty<T>(this T t)
     {
         if (t == null)
