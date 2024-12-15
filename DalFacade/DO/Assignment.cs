@@ -9,6 +9,7 @@ using DalApi;
 /// <param name="EntryTime">Entry time - date and time when the volunteer started handling the call</param>
 /// <param name="CompletionTime">Actual completion time - date and time when the volunteer finished handling the call, can be null if not completed</param>
 /// <param name="CompletionStatus">Type of completion - ENUM, can be null if the call is still active</param>
+/// hiiiiiii
 public record Assignment(
     int Id,
     int CallId,
