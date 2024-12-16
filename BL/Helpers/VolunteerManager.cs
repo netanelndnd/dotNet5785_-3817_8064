@@ -211,6 +211,7 @@ internal static class VolunteerManager
             Latitude = volunteerB.Latitude,
             Longitude = volunteerB.Longitude,
             MaxDistance = volunteerB.MaxDistance,
+            DistanceType = (DO.DistanceType)volunteerB.DistanceType,
         };
         s_dal.Volunteer.Update(volunteerD);
     }
@@ -227,9 +228,9 @@ internal static class VolunteerManager
             Latitude = volunteerB.Latitude,
             Longitude = volunteerB.Longitude,
             MaxDistance = volunteerB.MaxDistance,
-
-            VolunteerRole = (DO.Role)volunteerB.Role
-            id = volunteerB.Id,
+            DistanceType = (DO.DistanceType)volunteerB.DistanceType,
+            VolunteerRole = (DO.Role)volunteerB.Role,
+            Id = volunteerB.Id,
         };
         s_dal.Volunteer.Update(volunteerD);
     }
