@@ -71,6 +71,10 @@ namespace BlImplementation
 
 
             });
+            if(!sortField.HasValue)
+            {
+                sortField = BO.VolunteerFields.Id;
+            }
             var sortedVolunteerList = VolunteerManager.SortVolunteers(volunteerList, sortField);
             return sortedVolunteerList;
         }
@@ -79,16 +83,42 @@ namespace BlImplementation
         public string Login(string username, string password)
         {
             var volunteer = _dal.Volunteer.Read(v => v.Email == username);//השם משתמש הוא האימייל של המתנדב
-            if (volunteer == null || volunteer.Password != password)
-            {
-                throw new InvalidOperationException("Invalid username or password.");
-            }
+            if (volunteer.Email != username)
+                throw new InvalidOperationException("Invalid username");
+
+            if(volunteer.Password != password)
+                throw new InvalidOperationException("Invalid password");
+
             return volunteer.VolunteerRole.ToString();
         }
 
         public void UpdateVolunteer(int id, BO.Volunteer volunteer)
         {
-            throw new NotImplementedException();
+            try
+            {
+                bool chekmanger = VolunteerManager.IsManager(id);
+                bool chekemail= VolunteerManager.IsValidEmail(volunteer.Email);
+                bool chekid = VolunteerManager.IsValidID(volunteer.Id);
+                bool chekphone = VolunteerManager.IsValidPhoneNumber(volunteer.PhoneNumber);
+                bool chekLatitudeandLongitude = VolunteerManager.IsLocationInIsrael(volunteer.Latitude, volunteer.Longitude);
+                if(chekemail == true && chekphone == true && chekLatitudeandLongitude == true && chekid == true)
+                {
+                    if (chekmanger == false)
+                    {
+                        Chengeforvolunteer(volunteer);
+                    }
+                    else
+                    {
+                        Chengeformanager(volunteer);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Can't Update because ", ex);
+            }
+
         }
 
     }

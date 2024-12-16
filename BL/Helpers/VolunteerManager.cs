@@ -1,5 +1,7 @@
 ﻿using DalApi;
 using BO;
+using System.Text.RegularExpressions;
+using BlImplementation;
 namespace Helpers;
 
 internal static class VolunteerManager
@@ -133,13 +135,109 @@ internal static class VolunteerManager
                           null
         };
     }
+    /// <summary>
+    /// Determines if a volunteer is a manager or a regular volunteer based on their ID.
+    /// </summary>
+    /// <param name="volunteerId">The ID of the volunteer.</param>
+    /// <returns>True if the volunteer is a manager, otherwise false.</returns>
+    public static bool IsManager(int volunteerId)
+    {
+        var volunteer = s_dal.Volunteer.Read(volunteerId);
+        return volunteer.VolunteerRole == 0;
+    }
+
+    public static bool IsValidEmail(string email)
+    {
+        // Validate email format
+        return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+    }
+    public static bool IsValidID(int id)
+    {
+        string idString = id.ToString();
+
+        // Check if there are exactly 9 digits
+        if (idString.Length != 9 || !int.TryParse(idString, out _))
+        {
+            return false;
+        }
+
+        // Calculate the check digit
+        int sum = 0;
+        for (int i = 0; i < 8; i++) // First eight digits
+        {
+            int digit = int.Parse(idString[i].ToString());
+            int multiplied = digit * (i % 2 == 0 ? 1 : 2); // Alternating multiplication by 1 and 2
+            sum += multiplied > 9 ? multiplied - 9 : multiplied; // If the result is above 9, subtract 9
+        }
+
+        int checkDigit = (10 - (sum % 10)) % 10;
+
+        // Compare to the check digit
+        return checkDigit == int.Parse(idString[8].ToString());
+    }
+    public static bool IsLocationInIsrael(double? latitude, double? longitude)
+    {
+        // Latitude and longitude range of Israel
+        const double minLatitude = 29.0;   // South - Eilat
+        const double maxLatitude = 33.3;   // North - Golan Heights
+        const double minLongitude = 34.3;  // West - Mediterranean Sea
+        const double maxLongitude = 35.9;  // East - Dead Sea and Jordan area
+
+        // Check if the coordinates are within the range
+        return latitude >= minLatitude && latitude <= maxLatitude &&
+               longitude >= minLongitude && longitude <= maxLongitude;
+    }
+
+    public static bool IsValidPhoneNumber(string phoneNumber)
+    {
+        // Remove spaces and special characters
+        phoneNumber = phoneNumber.Replace(" ", "").Replace("-", "");
+
+        // Pattern for Israeli phone number
+        string pattern = @"^(\+972|0)([23489]\d{1}|5[02489])\d{7}$";
+
+        // Validate with regex
+        return Regex.IsMatch(phoneNumber, pattern);
+    }
+    public static void Chengeforvolunteer(BO.Volunteer volunteerB)
+    {
+        DO.Volunteer volunteerD = new()
+        {
+            FullName = volunteerB.FullName,
+            PhoneNumber = volunteerB.PhoneNumber,
+            Email = volunteerB.Email,
+            Password = volunteerB.Password,
+            CurrentAddress = volunteerB.CurrentAddress,
+            Latitude = volunteerB.Latitude,
+            Longitude = volunteerB.Longitude,
+            MaxDistance = volunteerB.MaxDistance,
+        };
+        s_dal.Volunteer.Update(volunteerD);
+    }
+
+    public static void Chengeformaneger(BO.Volunteer volunteerB)
+    {
+        DO.Volunteer volunteerD = new()
+        {
+            FullName = volunteerB.FullName,
+            PhoneNumber = volunteerB.PhoneNumber,
+            Email = volunteerB.Email,
+            Password = volunteerB.Password,
+            CurrentAddress = volunteerB.CurrentAddress,
+            Latitude = volunteerB.Latitude,
+            Longitude = volunteerB.Longitude,
+            MaxDistance = volunteerB.MaxDistance,
+
+            VolunteerRole = (DO.Role)volunteerB.Role
+            id = volunteerB.Id,
+        };
+        s_dal.Volunteer.Update(volunteerD);
+    }
 }
 
 
 
 
-
-    
 
 
 
