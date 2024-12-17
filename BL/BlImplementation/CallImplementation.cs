@@ -44,7 +44,20 @@ namespace BlImplementation
 
         public int[] GetCallQuantitiesByStatus()
         {
-            throw new NotImplementedException();
+            var calls = _dal.Call.ReadAll();
+            var groupedCalls = calls.GroupBy(call => (int)call.CallType)
+                                    .Select(group => new { Status = group.Key, Count = group.Count() })
+                                    .ToList();
+
+            int maxStatus = Enum.GetValues(typeof(CallStatus)).Cast<int>().Max();
+            int[] quantities = new int[maxStatus + 1];
+
+            foreach (var group in groupedCalls)
+            {
+                quantities[group.Status] = group.Count;
+            }
+
+            return quantities;
         }
 
         public IEnumerable<ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, CallType? callType, ClosedCallInListFields? sortField)

@@ -57,6 +57,8 @@ internal static class CallManager
         };
     }
 
+    
+
 
 
 
@@ -85,4 +87,26 @@ internal static class CallManager
     {
         return degrees * (Math.PI / 180);
     }
+    /// <summary>
+    /// Retrieves all calls from the data layer as a list of CallInList.
+    /// </summary>
+    /// <returns>A list of CallInList objects containing details of all calls.</returns>
+    /// 
+    public static IEnumerable<BO.CallInList> GetAllCalls()
+    {
+        var callEntities = s_dal.Call.ReadAll();
+        return callEntities.Select(call => new BO.CallInList
+        {
+            AssignmentId = AssignmentManager.GetAssignmentIdByCallId(call.Id),
+            CallId = call.Id,
+            CallType = (BO.CallType)call.CallType,
+            OpeningTime = call.OpenTime,
+            RemainingTime = call.MaxCompletionTime.HasValue ? call.MaxCompletionTime.Value - ClockManager.Now : (TimeSpan?)null,
+            LastVolunteerName = AssignmentManager.GetVolunteerNameByCallId(call.Id),
+            CompletionDuration = AssignmentManager.GetTimeDifferenceForLastAssignment(call.Id),
+            Status = (BO.CallStatus)call.CallType,
+            TotalAssignments = AssignmentManager.CountAssignmentsByCallId(call.Id)
+        }).ToList();
+    }
+
 }

@@ -1,8 +1,6 @@
 ﻿
 using BlApi;
-using BO;
 using DalApi;
-using DO;
 using Helpers;
 //using BO;
 
@@ -14,26 +12,31 @@ namespace BlImplementation
 
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
+        /// <summary>
+        /// Adds a new volunteer to the system after validating the provided details.
+        /// </summary>
+        /// <param name="volunteerB">The volunteer object containing the details to be added.</param>
+        /// <exception cref="InvalidOperationException">Thrown when the volunteer cannot be added due to validation failure or other issues.</exception>
         public void AddVolunteer(BO.Volunteer volunteerB)
         {
             try
             {
-
                 // Validate the email format
-                bool chekemail = VolunteerManager.IsValidEmail(volunteerB.Email);
+                bool isEmailValid = VolunteerManager.IsValidEmail(volunteerB.Email);
 
                 // Validate the ID format
-                bool chekid = VolunteerManager.IsValidID(volunteerB.Id);
+                bool isIdValid = VolunteerManager.IsValidID(volunteerB.Id);
 
                 // Validate the phone number format
-                bool chekphone = VolunteerManager.IsValidPhoneNumber(volunteerB.PhoneNumber);
+                bool isPhoneNumberValid = VolunteerManager.IsValidPhoneNumber(volunteerB.PhoneNumber);
 
                 // Check if the location is within Israel
-                bool chekLatitudeandLongitude = VolunteerManager.IsLocationInIsrael(volunteerB.Latitude, volunteerB.Longitude);
+                bool isLocationValid = VolunteerManager.IsLocationInIsrael(volunteerB.Latitude, volunteerB.Longitude);
 
                 // If all validations pass
-                if (chekemail == true && chekphone == true && chekLatitudeandLongitude == true && chekid == true)
+                if (isEmailValid && isPhoneNumberValid && isLocationValid && isIdValid)
                 {
+                    // Create a new DO.Volunteer object with the validated details
                     DO.Volunteer volunteerD = new()
                     {
                         Id = volunteerB.Id,
@@ -46,42 +49,55 @@ namespace BlImplementation
                         Longitude = volunteerB.Longitude,
                         MaxDistance = volunteerB.MaxDistance,
                         IsActive = true,
-                        VolunteerRole = (Role)volunteerB.Role,
+                        VolunteerRole = (DO.Role)volunteerB.Role,
                         DistanceType = (DO.DistanceType)volunteerB.DistanceType,
                     };
+
+                    // Add the new volunteer to the database
                     _dal.Volunteer.Create(volunteerD);
+                }
+                else
+                {
+                    throw new InvalidOperationException("Validation failed for the volunteer details.");
                 }
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException("Can't add voluenteer because ", ex);
+                throw new InvalidOperationException("Can't add volunteer because of an error.", ex);
             }
-
         }
-            
 
+        /// <summary>
+        /// Deletes a volunteer from the system.
+        /// </summary>
+        /// <param name="id">The ID of the volunteer to delete.</param>
+        /// <exception cref="InvalidOperationException">Thrown when the volunteer cannot be deleted.</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when the volunteer does not exist.</exception>
         public void DeleteVolunteer(int id)
         {
-
             try
             {
                 var volunteer = _dal.Volunteer.Read(id);
-                if (volunteer.IsActive==false)
+                if (volunteer == null)
+                {
+                    throw new KeyNotFoundException($"Volunteer with ID {id} not found.");
+                }
+
+                if (volunteer.IsActive == false)
                 {
                     _dal.Volunteer.Delete(id);
                 }
                 else
                 {
-                    throw new InvalidOperationException("The volunterr is active");
+                    throw new InvalidOperationException("The volunteer is active");
                 }
             }
-            
             catch (Exception ex)
             {
                 throw new InvalidOperationException("Failed to delete volunteer.", ex);
             }
-          
         }
+
         /// <summary>
         /// Get the details of a volunteer
         /// </summary>
@@ -107,92 +123,117 @@ namespace BlImplementation
             }
         }
 
-
+        /// <summary>
+        /// Retrieves a list of volunteers based on their active status and sorts them by the specified field.
+        /// </summary>
+        /// <param name="isActive">Nullable boolean to filter active/inactive volunteers. If null, all volunteers are included.</param>
+        /// <param name="sortField">Nullable enum to sort the list by a specific field. If null, the list is sorted by ID.</param>
+        /// <returns>A sorted and filtered list of volunteers.</returns>
         public IEnumerable<BO.VolunteerInList> GetVolunteers(bool? isActive, BO.VolunteerFields? sortField)
         {
+            // Get all volunteers from the database
             var volunteers = _dal.Volunteer.ReadAll();
 
+            // If the active status is null, include all volunteers in the list
+            // If the active status is not null, filter the list of volunteers by the active status
             if (isActive.HasValue)
             {
                 volunteers = volunteers.Where(v => v.IsActive == isActive.Value);
             }
 
-            var volunteerList = volunteers.Select(v => new BO.VolunteerInList
-            {
-                Id = v.Id,
-                FullName = v.FullName,
-                IsActive = v.IsActive,
-                TotalCallsHandled = VolunteerManager.GetCompletedAssignmentsCount(v.Id),
-                TotalCallsCancelled = VolunteerManager.GetTotalCallsCancelled(v.Id),
-                TotalExpiredCalls = VolunteerManager.GetExpiredAssignmentsCount(v.Id),
-                CurrentCallId = VolunteerManager.GetPendingAssignmentCallId(v.Id),
-                CurrentCallType = VolunteerManager.GetPendingAssignmentCallType(v.Id) ?? BO.CallType.None,
-
-
-            });
+            // Convert the list of DO.Volunteer objects to a list of BO.VolunteerInList objects
+            var volunteerList = volunteers.Select(v => VolunteerManager.ConvertVolunteerIdToVolunteerInList(v.Id));
+            // If the sort field is not specified, sort by ID
             if (!sortField.HasValue)
             {
                 sortField = BO.VolunteerFields.Id;
             }
+            // Sort the list of volunteers by the specified field
             var sortedVolunteerList = VolunteerManager.SortVolunteers(volunteerList, sortField);
             return sortedVolunteerList;
         }
 
-
+        /// <summary>
+        /// Logs in a volunteer to the system - Email is the username.
+        /// </summary>
+        /// <param name="username">The username of the volunteer. Email is the username.</param>
+        /// <param name="password">The password of the volunteer.</param>
+        /// <returns>The role of the user.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the user does not exist or the password is incorrect.</exception>
         public string Login(string username, string password)
         {
-            var volunteer = _dal.Volunteer.Read(v => v.Email == username);//השם משתמש הוא האימייל של המתנדב
-            if (volunteer.Email != username)
-                throw new InvalidOperationException("Invalid username");
+            try
+            {
+                var volunteer = _dal.Volunteer.Read(v => v.Email == username);
+                if (volunteer == null)
+                {
+                    throw new InvalidOperationException("Invalid username");
+                }
 
-            if (volunteer.Password != password)
-                throw new InvalidOperationException("Invalid password");
+                if (volunteer.Password != password)
+                {
+                    throw new InvalidOperationException("Invalid password");
+                }
 
-            return volunteer.VolunteerRole.ToString();
+                return volunteer.VolunteerRole.ToString();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Failed to login.", ex);
+            }
         }
 
+        /// <summary>
+        /// Update the details of a volunteer
+        /// </summary>
+        /// <param name="id">The ID of the user executing the function.</param>
+        /// <param name="volunteer">The volunteer object with updated details.</param>
+        /// <exception cref="InvalidOperationException">Thrown when the volunteer cannot be updated due to validation failure or other issues.</exception>
         public void UpdateVolunteer(int id, BO.Volunteer volunteer)
         {
             try
             {
                 // Check if the user is a manager
-                bool chekmanger = VolunteerManager.IsManager(id);
+                bool isManager = VolunteerManager.IsManager(id);
 
                 // Validate the email format
-                bool chekemail = VolunteerManager.IsValidEmail(volunteer.Email);
+                bool isEmailValid = VolunteerManager.IsValidEmail(volunteer.Email);
 
                 // Validate the ID format
-                bool chekid = VolunteerManager.IsValidID(volunteer.Id);
+                bool isIdValid = VolunteerManager.IsValidID(volunteer.Id);
 
                 // Validate the phone number format
-                bool chekphone = VolunteerManager.IsValidPhoneNumber(volunteer.PhoneNumber);
+                bool isPhoneNumberValid = VolunteerManager.IsValidPhoneNumber(volunteer.PhoneNumber);
 
                 // Check if the location is within Israel
-                bool chekLatitudeandLongitude = VolunteerManager.IsLocationInIsrael(volunteer.Latitude, volunteer.Longitude);
+                bool isLocationValid = VolunteerManager.IsLocationInIsrael(volunteer.Latitude, volunteer.Longitude);
 
                 // If all validations pass
-                if (chekemail == true && chekphone == true && chekLatitudeandLongitude == true && chekid == true)
+                if (isEmailValid && isPhoneNumberValid && isLocationValid && isIdValid)
                 {
                     // If the user is not a manager, update as a volunteer
-                    if (chekmanger == false)
+                    if (!isManager)
                     {
-                        VolunteerManager.Chengeforvolunteer(volunteer);
+                        VolunteerManager.UpdateVolunteerDetails(volunteer);
                     }
                     // If the user is a manager, update as a manager
                     else
                     {
-                        VolunteerManager.Chengeformaneger(volunteer);
+                        VolunteerManager.UpdateManagerDetails(volunteer);
                     }
                 }
-
-
+                else
+                {
+                    throw new InvalidOperationException("Validation failed for the volunteer details.");
+                }
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException("Can't Update because ", ex);
+                throw new InvalidOperationException("Can't update volunteer details. because:", ex);
             }
-
         }
 
     }
 }
+
+

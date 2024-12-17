@@ -1,5 +1,4 @@
 ﻿using DalApi;
-using BO;
 using System.Text.RegularExpressions;
 using BlImplementation;
 namespace Helpers;
@@ -135,6 +134,7 @@ internal static class VolunteerManager
                           null
         };
     }
+
     /// <summary>
     /// Determines if a volunteer is a manager or a regular volunteer based on their ID.
     /// </summary>
@@ -146,13 +146,27 @@ internal static class VolunteerManager
         return volunteer.VolunteerRole == 0;
     }
 
+    /// <summary>
+    /// Validates if the given email address is in a proper format.
+    /// </summary>
+    /// <param name="email">The email address to validate.</param>
+    /// <returns>True if the email address is valid, otherwise false.</returns>
     public static bool IsValidEmail(string email)
     {
         // Validate email format
         return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
     }
+
+    /// <summary>
+    /// Validates if the given ID is a valid Israeli ID number.
+    /// </summary>
+    /// <param name="id">The ID number to validate.</param>
+    /// <returns>True if the ID is valid, otherwise false.</returns>
+    /// <exception cref="KeyNotFoundException">Thrown when the ID does not exist in the data layer.</exception>
     public static bool IsValidID(int id)
     {
+        //אנחנו לא בודקים האם קיים ת"ז בשכבת הנתונים, כי בעדכון אנחנו נבדוק זאת ותיזרק חריגה מתאימה
+
         string idString = id.ToString();
 
         // Check if there are exactly 9 digits
@@ -175,6 +189,13 @@ internal static class VolunteerManager
         // Compare to the check digit
         return checkDigit == int.Parse(idString[8].ToString());
     }
+
+    /// <summary>
+    /// Checks if the given latitude and longitude coordinates are within the geographical boundaries of Israel.
+    /// </summary>
+    /// <param name="latitude">The latitude coordinate to check.</param>
+    /// <param name="longitude">The longitude coordinate to check.</param>
+    /// <returns>True if the coordinates are within Israel, otherwise false.</returns>
     public static bool IsLocationInIsrael(double? latitude, double? longitude)
     {
         // Latitude and longitude range of Israel
@@ -188,21 +209,34 @@ internal static class VolunteerManager
                longitude >= minLongitude && longitude <= maxLongitude;
     }
 
+    /// <summary>
+    /// Validates if the given phone number is in a proper format.
+    /// </summary>
+    /// <param name="phoneNumber">The phone number to validate.</param>
+    /// <returns>True if the phone number is valid, otherwise false.</returns>
     public static bool IsValidPhoneNumber(string phoneNumber)
     {
-        // Remove spaces and special characters
+        // Remove spaces and special characters to validate the structure only
         phoneNumber = phoneNumber.Replace(" ", "").Replace("-", "");
 
-        // Pattern for Israeli phone number
-        string pattern = @"^(\+972|0)([23489]\d{1}|5[02489])\d{7}$";
+        // Pattern for numbers in the format 0501234567
+        // ^050 - the number must start with 050
+        // \d{7}$ - exactly 7 additional digits
+        string pattern = @"^050\d{7}$";
 
-        // Validate with regex
+        // Check if the number matches the pattern
         return Regex.IsMatch(phoneNumber, pattern);
     }
-    public static void Chengeforvolunteer(BO.Volunteer volunteerB)
+
+    /// <summary>
+    /// Updates the details by the volunteer.
+    /// </summary>
+    /// <param name="volunteerB">The volunteer object with updated details.</param>
+    public static void UpdateVolunteerDetails(BO.Volunteer volunteerB)
     {
         DO.Volunteer volunteerD = new()
         {
+            Id = volunteerB.Id,
             FullName = volunteerB.FullName,
             PhoneNumber = volunteerB.PhoneNumber,
             Email = volunteerB.Email,
@@ -213,13 +247,19 @@ internal static class VolunteerManager
             MaxDistance = volunteerB.MaxDistance,
             DistanceType = (DO.DistanceType)volunteerB.DistanceType,
         };
+        //תיזרק חריגה אם אין כזה ת"ז
         s_dal.Volunteer.Update(volunteerD);
     }
 
-    public static void Chengeformaneger(BO.Volunteer volunteerB)
+    /// <summary>
+    /// Updates the details by the manager.
+    /// </summary>
+    /// <param name="volunteerB"></param>
+    public static void UpdateManagerDetails(BO.Volunteer volunteerB)
     {
         DO.Volunteer volunteerD = new()
         {
+            Id = volunteerB.Id,
             FullName = volunteerB.FullName,
             PhoneNumber = volunteerB.PhoneNumber,
             Email = volunteerB.Email,
@@ -229,12 +269,56 @@ internal static class VolunteerManager
             Longitude = volunteerB.Longitude,
             MaxDistance = volunteerB.MaxDistance,
             DistanceType = (DO.DistanceType)volunteerB.DistanceType,
+            //פה רק מנהל יכול לשנות
             VolunteerRole = (DO.Role)volunteerB.Role,
-            Id = volunteerB.Id,
         };
+        //תיזרק חיריגה אם אין כזה ת"ז
         s_dal.Volunteer.Update(volunteerD);
     }
+
+    /// <summary>
+    /// Converts a volunteer ID to a BO.VolunteerInList object
+    /// </summary>
+    /// <param name="volunteerId">The ID of the volunteer</param>
+    /// <returns>A BO.VolunteerInList object</returns>
+    public static BO.VolunteerInList ConvertVolunteerIdToVolunteerInList(int volunteerId)
+    {
+        var volunteer = s_dal.Volunteer.Read(volunteerId);
+        return new BO.VolunteerInList
+        {
+            Id = volunteerId,
+            FullName = volunteer.FullName,
+            IsActive = volunteer.IsActive,
+            TotalCallsHandled = GetCompletedAssignmentsCount(volunteerId),
+            TotalCallsCancelled = GetTotalCallsCancelled(volunteerId),
+            TotalExpiredCalls = GetExpiredAssignmentsCount(volunteerId),
+            CurrentCallId = GetPendingAssignmentCallId(volunteerId),
+            CurrentCallType = GetPendingAssignmentCallType(volunteerId) ?? BO.CallType.None
+        };
+    }
+
+    /// <summary>
+    /// Get all volunteers as a list of VolunteerInList
+    /// </summary>
+    /// <returns>A list of VolunteerInList</returns>
+    public static IEnumerable<BO.VolunteerInList> GetAllVolunteers()
+    {
+        var volunteers = s_dal.Volunteer.ReadAll();
+        return volunteers.Select(v => new BO.VolunteerInList
+        {
+            Id = v.Id,
+            FullName = v.FullName,
+            IsActive = v.IsActive,
+            TotalCallsHandled = GetCompletedAssignmentsCount(v.Id),
+            TotalCallsCancelled = GetTotalCallsCancelled(v.Id),
+            TotalExpiredCalls = GetExpiredAssignmentsCount(v.Id),
+            CurrentCallId = GetPendingAssignmentCallId(v.Id),
+            CurrentCallType = GetPendingAssignmentCallType(v.Id) ?? BO.CallType.None
+        }).ToList();
+    }
 }
+
+
 
 
 
