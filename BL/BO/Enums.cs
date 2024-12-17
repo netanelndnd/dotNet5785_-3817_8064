@@ -56,12 +56,20 @@ public enum VolunteerFields
 {
     Id,
     FullName,
+    PhoneNumber,
+    Email,
+    Password,
+    CurrentAddress,
+    Latitude,
+    Longitude,
+    Role,
     IsActive,
+    MaxDistance,
+    DistanceType,
     TotalCallsHandled,
     TotalCallsCancelled,
     TotalExpiredCalls,
-    CurrentCallId,
-    CurrentCallType
+    CurrentCall
 }
 
 /// <summary>
