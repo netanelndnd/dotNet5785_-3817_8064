@@ -53,7 +53,7 @@ internal static class CallManager
             MaxCompletionTime = callDetails.MaxCompletionTime,
             StartedAt = (DateTime)assignment.EntryTime,
             DistanceFromVolunteer = CalculateDistance((double)volunteer.Latitude, (double)volunteer.Longitude, callDetails.Latitude, callDetails.Longitude),
-            Status = (BO.CallStatus)callDetails.CallType,
+            Status = (BO.CallStatus)callDetails.CallType,/////לתקןןןןן זה לא נכון
         };
     }
 
@@ -104,7 +104,7 @@ internal static class CallManager
             RemainingTime = call.MaxCompletionTime.HasValue ? call.MaxCompletionTime.Value - ClockManager.Now : (TimeSpan?)null,
             LastVolunteerName = AssignmentManager.GetVolunteerNameByCallId(call.Id),
             CompletionDuration = AssignmentManager.GetTimeDifferenceForLastAssignment(call.Id),
-            Status = (BO.CallStatus)call.CallType,
+            Status = (BO.CallStatus)call.CallType,///לתקןןןן
             TotalAssignments = AssignmentManager.CountAssignmentsByCallId(call.Id)
         }).ToList();
     }
