@@ -7,7 +7,9 @@ public enum VolunteerRole
 }
 
 
-// ENUM for the type of the call
+/// <summary>
+///ENUM for the type of the call
+/// </summary>
 public enum CallType
 {
     FoodPreparation = 0, // Preparation of food for those in need  
@@ -23,13 +25,16 @@ public enum CallType
     None, // No call is currently in progress
 }
 
-// ENUM for distance type
+/// <summary>
+/// ENUM for distance type
+/// </summary>
 public enum DistanceType
 {
     AirDistance,
     WalkingDistance,
     DrivingDistance
 }
+
 
 // ENUM for the status of the call
 public enum CallStatus

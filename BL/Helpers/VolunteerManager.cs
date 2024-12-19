@@ -193,24 +193,6 @@ internal static class VolunteerManager
         return checkDigit == int.Parse(idString[8].ToString());
     }
 
-    /// <summary>
-    /// Checks if the given latitude and longitude coordinates are within the geographical boundaries of Israel.
-    /// </summary>
-    /// <param name="latitude">The latitude coordinate to check.</param>
-    /// <param name="longitude">The longitude coordinate to check.</param>
-    /// <returns>True if the coordinates are within Israel, otherwise false.</returns>
-    public static bool IsLocationInIsrael(double? latitude, double? longitude)
-    {
-        // Latitude and longitude range of Israel
-        const double minLatitude = 29.0;   // South - Eilat
-        const double maxLatitude = 33.3;   // North - Golan Heights
-        const double minLongitude = 34.3;  // West - Mediterranean Sea
-        const double maxLongitude = 35.9;  // East - Dead Sea and Jordan area
-
-        // Check if the coordinates are within the range
-        return latitude >= minLatitude && latitude <= maxLatitude &&
-               longitude >= minLongitude && longitude <= maxLongitude;
-    }
 
     /// <summary>
     /// Validates if the given phone number is in a proper format.

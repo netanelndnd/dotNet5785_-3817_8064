@@ -1,5 +1,6 @@
 ﻿using DalApi;
 using System;
+using System.Data;
 
 namespace Helpers;
 
@@ -192,7 +193,7 @@ internal static class CallManager
     /// <param name="callId">The identifier of the call.</param>
     /// <returns>A Call object BO containing details of the call and its assignments.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the call with the specified ID is not found.</exception>
-    public static BO.Call ConvertCallIdToCall(int callId)
+    public static BO.Call ConvertDOCallToBOCall(int callId)
     {
         var callDetails = s_dal.Call.Read(a => a.Id == callId);
         if (callDetails == null)
@@ -216,6 +217,86 @@ internal static class CallManager
             Assignments = assignments.Any() ? assignments : null
         };
     }
+    /// <summary>
+    /// Converts a BO.Call object to a DO.Call object.
+    /// </summary>
+    /// <param name="boCall">The BO.Call object to convert.</param>
+    /// <returns>A DO.Call object containing the same details as the BO.Call object.</returns>
+    public static DO.Call ConvertBOCallToDOCall(BO.Call boCall)
+    {
+        if (boCall == null)
+        {
+            throw new ArgumentNullException(nameof(boCall), "The BO.Call object cannot be null.");
+        }
+
+        return new DO.Call
+        {
+            Id = boCall.Id,
+            CallType = (DO.CallType)boCall.CallType,
+            Address = boCall.FullAddress,
+            Latitude = boCall.Latitude,
+            Longitude = boCall.Longitude,
+            OpenTime = boCall.OpenedAt,
+            Description = boCall.Description,
+            MaxCompletionTime = boCall.MaxCompletionTime
+        };
+    }
+
+    /// <summary>
+    /// Retrieves a list of closed calls handled by a specific volunteer.
+    /// </summary>
+    /// <param name="volunteerId">The identifier of the volunteer.</param>
+    /// <returns>A list of ClosedCallInList objects containing details of closed calls handled by the volunteer.</returns>
+    public static IEnumerable<BO.ClosedCallInList>? GetClosedCallsByVolunteer(int volunteerId)
+    {
+        // Get all closed calls
+        var closedCalls = s_dal.Call.ReadAll().Where(c => c.MaxCompletionTime != null);
+        if (closedCalls == null || !closedCalls.Any())
+        {
+            return null;
+        }
+        // Return a list of closed calls handled by the volunteer
+        return closedCalls.Select(call => new BO.ClosedCallInList
+        {
+            Id = call.Id,
+            CallType = (BO.CallType)call.CallType,
+            FullAddress = call.Address,
+            OpenedAt = call.OpenTime,
+            StartedAt = s_dal.Assignment.Read(a => a.CallId == call.Id && a.VolunteerId == volunteerId)?.EntryTime ?? DateTime.MinValue,
+            CompletedAt = s_dal.Assignment.Read(a => a.CallId == call.Id && a.VolunteerId == volunteerId)?.CompletionTime,
+            CompletionStatus = (BO.CompletionType)s_dal.Assignment.Read(a => a.CallId == call.Id && a.VolunteerId == volunteerId)?.CompletionStatus
+        }).ToList();
+    }
+    /// <summary>
+    /// Retrieves a list of open calls available for a volunteer to choose from.
+    /// </summary>
+    /// <param name="volunteerId">The identifier of the volunteer.</param>
+    /// <returns>A list of OpenCallInList objects containing details of open calls available for the volunteer.</returns>
+    public static IEnumerable<BO.OpenCallInList>? GetOpenCallsForVolunteer(int volunteerId)
+    {
+        var openCalls = s_dal.Call.ReadAll().Where(c => c.MaxCompletionTime == null || c.MaxCompletionTime > ClockManager.Now);
+        if (openCalls == null || !openCalls.Any())
+        {
+            return null;
+        }
+
+
+
+        return openCalls.Select(call => new BO.OpenCallInList
+        {
+            Id = call.Id,
+            CallType = (BO.CallType)call.CallType,
+            FullAddress = call.Address,
+            OpenedAt = call.OpenTime,
+            DistanceFromVolunteer = CalculateDistance((double)s_dal.Volunteer.Read(volunteerId).Latitude
+            , (double)s_dal.Volunteer.Read(volunteerId).Longitude
+            , call.Latitude, call.Longitude),
+        }).ToList();
+    }
+
+
+    
+
 
 
 

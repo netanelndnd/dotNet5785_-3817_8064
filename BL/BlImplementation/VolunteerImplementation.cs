@@ -31,7 +31,7 @@ namespace BlImplementation
                 bool isPhoneNumberValid = VolunteerManager.IsValidPhoneNumber(volunteerB.PhoneNumber);
 
                 // Check if the location is within Israel
-                bool isLocationValid = VolunteerManager.IsLocationInIsrael(volunteerB.Latitude, volunteerB.Longitude);
+                bool isLocationValid = Tools.IsLocationInIsrael(volunteerB.Latitude, volunteerB.Longitude);
 
                 // If all validations pass
                 if (isEmailValid && isPhoneNumberValid && isLocationValid && isIdValid)
@@ -206,7 +206,7 @@ namespace BlImplementation
                 bool isPhoneNumberValid = VolunteerManager.IsValidPhoneNumber(volunteer.PhoneNumber);
 
                 // Check if the location is within Israel
-                bool isLocationValid = VolunteerManager.IsLocationInIsrael(volunteer.Latitude, volunteer.Longitude);
+                bool isLocationValid = Tools.IsLocationInIsrael(volunteer.Latitude, volunteer.Longitude);
 
                 // If all validations pass
                 if (isEmailValid && isPhoneNumberValid && isLocationValid && isIdValid)

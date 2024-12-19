@@ -15,17 +15,17 @@ public class Call
     public string? Description { get; set; }
     // Optional textual description, retrieved from DO.Call
 
-    public string? FullAddress { get; set; }
+    public string FullAddress { get; set; }
     // Full address of the call. During viewing, retrieved from DO.Call.
     // During creation or update, its validity must be checked in the logical layer.
     // If invalid, an exception should be thrown.
     // Latitude and Longitude are updated based on this address.
 
-    public double? Latitude { get; set; }
+    public double Latitude { get; set; }
     // Latitude of the call location. Updated whenever the address changes.
     // Calculated using geolocation functions. This value is used for distance calculations and not displayed.
 
-    public double? Longitude { get; set; }
+    public double Longitude { get; set; }
     // Longitude of the call location. Updated whenever the address changes.
     // Calculated using geolocation functions. This value is used for distance calculations and not displayed.
 

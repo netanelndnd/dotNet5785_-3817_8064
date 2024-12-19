@@ -22,6 +22,8 @@ internal static class AssignmentManager
         return assignment?.Id;
     }
 
+
+
     /// <summary>
     /// Get all assignments sorted by entry time
     /// </summary>
