@@ -129,7 +129,7 @@ namespace BlImplementation
         /// <param name="isActive">Nullable boolean to filter active/inactive volunteers. If null, all volunteers are included.</param>
         /// <param name="sortField">Nullable enum to sort the list by a specific field. If null, the list is sorted by ID.</param>
         /// <returns>A sorted and filtered list of volunteers.</returns>
-        public IEnumerable<BO.VolunteerInList> GetVolunteers(bool? isActive, BO.VolunteerFields? sortField)
+        public IEnumerable<BO.VolunteerInList> GetVolunteers(bool? isActive, BO.VolunteerInListFields? sortField)
         {
             // Get all volunteers from the database
             var volunteers = _dal.Volunteer.ReadAll();
@@ -146,7 +146,7 @@ namespace BlImplementation
             // If the sort field is not specified, sort by ID
             if (!sortField.HasValue)
             {
-                sortField = BO.VolunteerFields.Id;
+                sortField = BO.VolunteerInListFields.Id;
             }
             // Sort the list of volunteers by the specified field
             var sortedVolunteerList = VolunteerManager.SortVolunteers(volunteerList, sortField);

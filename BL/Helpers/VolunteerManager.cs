@@ -82,28 +82,31 @@ internal static class VolunteerManager
     /// <summary>
     /// Sort a list of volunteers by a specific field
     /// </summary>
-    /// <param name="volunteerList"></param>
-    /// <param name="sortField"></param>
-    /// <returns></returns>
-    public static IEnumerable<BO.VolunteerInList> SortVolunteers(IEnumerable<BO.VolunteerInList> volunteerList, BO.VolunteerFields? sortField)
+    /// <param name="volunteerList">The list of volunteers to sort.</param>
+    /// <param name="sortField">The field to sort by.</param>
+    /// <returns>A sorted list of volunteers.</returns>
+    public static IEnumerable<BO.VolunteerInList> SortVolunteers(IEnumerable<BO.VolunteerInList> volunteerList, BO.VolunteerInListFields? sortField)
     {
-        switch (sortField)
+        if (sortField.HasValue)
         {
-            case BO.VolunteerFields.FullName:
-                return volunteerList.OrderBy(v => v.FullName);
-            case BO.VolunteerFields.TotalCallsHandled:
-                return volunteerList.OrderBy(v => v.TotalCallsHandled);
-            case BO.VolunteerFields.TotalCallsCancelled:
-                return volunteerList.OrderBy(v => v.TotalCallsCancelled);
-            case BO.VolunteerFields.TotalExpiredCalls:
-                return volunteerList.OrderBy(v => v.TotalExpiredCalls);
-            case BO.VolunteerFields.CurrentCallId:
-                return volunteerList.OrderBy(v => v.CurrentCallId);
-            case BO.VolunteerFields.CurrentCallType:
-                return volunteerList.OrderBy(v => v.CurrentCallType);
-            default:
-                return volunteerList.OrderBy(v => v.Id);
+            // Get the property name from the field
+            var propertyName = sortField.Value.ToString();
+
+            // Get property information using Reflection
+            var property = typeof(BO.VolunteerInList).GetProperty(propertyName);
+
+            // Validate the field
+            if (property == null)
+            {
+                throw new ArgumentException($"The field '{propertyName}' does not exist in 'BO.VolunteerInList'.");
+            }
+
+            // Sort the list by the value of the property
+            return volunteerList.OrderBy(volunteer => property.GetValue(volunteer));
         }
+
+        // Default sorting by ID
+        return volunteerList.OrderBy(v => v.Id);
     }
 
     /// <summary>

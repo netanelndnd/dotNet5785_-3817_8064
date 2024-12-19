@@ -18,7 +18,7 @@ namespace BlApi
         /// <param name="isActive">Nullable boolean to filter active/inactive volunteers.</param>
         /// <param name="sortField">Nullable enum to sort the list by a specific field.</param>
         /// <returns>A sorted and filtered list of volunteers.</returns>
-        IEnumerable<BO.VolunteerInList> GetVolunteers(bool? isActive, BO.VolunteerFields? sortField);
+        IEnumerable<BO.VolunteerInList> GetVolunteers(bool? isActive, BO.VolunteerInListFields? sortField);
 
         /// <summary>
         /// Gets the details of a volunteer.

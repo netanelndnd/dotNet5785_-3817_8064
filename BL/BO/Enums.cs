@@ -10,7 +10,7 @@ public enum VolunteerRole
 // ENUM for the type of the call
 public enum CallType
 {
-    FoodPreparation, // Preparation of food for those in need  
+    FoodPreparation = 0, // Preparation of food for those in need  
     FoodTransport, // Transporting food to those in need  
     CarTrouble, // General car trouble assistance  
     FlatTire, // Assistance with a flat tire  
@@ -37,39 +37,33 @@ public enum CallStatus
     Open, //Not currently assigned to any volunteer
     InProgress, // In progress
     OpenInRisk, //Open and approaching MaxCompletionTime
-    InProgressInRisk // In progress at risk
+    InProgressInRisk, // In progress at risk
+    Treated,          // The call was treated on time, before the maximum completion time
+    Expired,             // The call was canceled because it was not treated and reached the maximum completion time
 }
 
-// ENUM for the completion status of the call
+// ENUM for the completion status of the assignment
 public enum CompletionType
 {
-    Treated,            // The call was treated on time, before the maximum completion time
-    SelfCancellation,   // The volunteer chose to cancel the treatment before the maximum completion time
-    ManagerCancellation, // The manager canceled the assignment for the current volunteer before the maximum completion time
-    Expired,             // The call was canceled because it was not treated and reached the maximum completion time
+    Treated = 0,            // The call was treated on time, before the maximum completion time
+    SelfCancellation = 1,   // The volunteer chose to cancel the treatment before the maximum completion time
+    ManagerCancellation = 2, // The manager canceled the assignment for the current volunteer before the maximum completion time
+    Expired = 3,             // The call was canceled because it was not treated and reached the maximum completion time
 }
 
 /// <summary>
 /// Enum representing the fields of a volunteer.
 /// </summary>
-public enum VolunteerFields
+public enum VolunteerInListFields
 {
     Id,
     FullName,
-    PhoneNumber,
-    Email,
-    Password,
-    CurrentAddress,
-    Latitude,
-    Longitude,
-    Role,
     IsActive,
-    MaxDistance,
-    DistanceType,
     TotalCallsHandled,
     TotalCallsCancelled,
     TotalExpiredCalls,
-    CurrentCall
+    CurrentCallId,
+    CurrentCallType
 }
 
 /// <summary>

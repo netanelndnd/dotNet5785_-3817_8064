@@ -92,6 +92,34 @@ internal static class AssignmentManager
         // Return the time difference between the completion time and entry time
         return call.OpenTime - assignment.CompletionTime;
     }
-    
 
+    /// <summary>
+    /// Get a list of call assignments for a given call id.
+    /// </summary>
+    /// <param name="callId">The identifier of the call.</param>
+    /// <returns>A list of call assignments or null if none found.</returns>
+    public static List<BO.CallAssignInList>? GetCallAssignmentsByCallId(int callId)
+    {
+        var assignments = s_dal.Assignment.ReadAll()
+            .Where(a => a.CallId == callId)
+            .ToList();
+
+        if (!assignments.Any())
+        {
+            return null;
+        }
+
+        var callAssignInList = assignments.Select(a => new BO.CallAssignInList
+        {
+            VolunteerId = a.VolunteerId,
+            VolunteerName = s_dal.Volunteer.Read(a.VolunteerId)?.FullName,
+            StartTime = a.EntryTime,
+            EndTime = a.CompletionTime,
+            CompletionType = (BO.CompletionType?)a.CompletionStatus
+        }).ToList();
+
+        return callAssignInList;
+    }
+    
+    
 }
