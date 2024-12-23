@@ -64,9 +64,7 @@ namespace BlImplementation
 
         public void CompleteCallHandling(int volunteerId, int assignmentId)
         {
-
-
-
+            
             throw new NotImplementedException();
         }
 
