@@ -1,6 +1,7 @@
 ﻿using BlApi;
 using BO;
 using Helpers;
+using System.Linq.Expressions;
 
 namespace BlImplementation
 {
@@ -54,18 +55,108 @@ namespace BlImplementation
 
         public void AssignCallToVolunteer(int volunteerId, int callId)
         {
-            throw new NotImplementedException();
+            var call = _dal.Call.Read(callId);
+            var callStatus = CallManager.GetCallStatus(callId);
+
+            if ((callStatus == CallStatus.Open || callStatus == CallStatus.OpenInRisk) && call.MaxCompletionTime < ClockManager.Now)
+            {
+                DO.Assignment newassignment = new DO.Assignment
+                {
+                    CallId = callId,
+                    VolunteerId = volunteerId,
+                    EntryTime = ClockManager.Now
+                };
+            }
+            else
+            {
+                throw new InvalidOperationException("Cannot assign the call to the volunteer. The call is not open or is expired.");
+            }
         }
 
         public void CancelCallHandling(int requesterId, int assignmentId)
         {
-            throw new NotImplementedException();
+            // Read the requester and assignment details from the data layer
+            var requester = _dal.Volunteer.Read(requesterId);
+            var assignment = _dal.Assignment.Read(assignmentId);
+
+            // Check if the CompletionStatus is open(null) or not
+            if (assignment.CompletionStatus == null)
+            {
+                // If the requester is the volunteer assigned to the call
+                if (requester.Id == assignment.VolunteerId)
+                {
+                    // Create a new assignment with self-cancellation status
+                    DO.Assignment newAssignment = new DO.Assignment
+                    {
+                        Id = assignment.Id,
+                        CallId = assignment.CallId,
+                        VolunteerId = assignment.VolunteerId,
+                        EntryTime = assignment.EntryTime,
+                        CompletionStatus = (DO.CompletionType)CompletionType.SelfCancellation,
+                        CompletionTime = ClockManager.Now
+                    };
+                    _dal.Assignment.Update(newAssignment);
+                }
+                // If the requester is a manager
+                else if (requester.VolunteerRole == DO.Role.Manager)
+                {
+                    // Create a new assignment with manager-cancellation status
+                    DO.Assignment newAssignment = new DO.Assignment
+                    {
+                        Id = assignment.Id,
+                        CallId = assignment.CallId,
+                        VolunteerId = assignment.VolunteerId,
+                        EntryTime = assignment.EntryTime,
+                        CompletionStatus = (DO.CompletionType)CompletionType.ManagerCancellation,
+                        CompletionTime = ClockManager.Now
+                    };
+                    _dal.Assignment.Update(newAssignment);
+                }
+            }
+            else
+            {
+                // Throw an exception if the requester does not have permission to cancel the call handling
+                throw new InvalidOperationException("Requester does not have permission to cancel this call handling.");
+            }
         }
 
         public void CompleteCallHandling(int volunteerId, int assignmentId)
         {
-            
-            throw new NotImplementedException();
+            try
+            {
+                // Read the requester and assignment details from the data layer
+                var volunteer = _dal.Volunteer.Read(volunteerId);
+                var assignment = _dal.Assignment.Read(assignmentId);
+                // Check if the CompletionStatus is open(null) or not
+                if (assignment.CompletionStatus == null)
+                {
+                    if (volunteerId == assignment.VolunteerId)
+                    {
+                        // Create a new assignment with self-cancellation status
+                        DO.Assignment newAssignment = new DO.Assignment
+                        {
+                            Id = assignment.Id,
+                            CallId = assignment.CallId,
+                            VolunteerId = assignment.VolunteerId,
+                            EntryTime = assignment.EntryTime,
+                            CompletionStatus = (DO.CompletionType)CompletionType.Treated,
+                            CompletionTime = ClockManager.Now
+                        };
+                        _dal.Assignment.Update(newAssignment);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Requester does not have permission to cancel this call handling.");
+                    }
+                }
+                else
+                    throw new InvalidOperationException("The assignment has already been handled.");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                // Rethrow the exception with a more appropriate message for the presentation layer
+                throw new KeyNotFoundException($"Assignment with ID {assignmentId} not found.", ex);
+            }
         }
 
 
