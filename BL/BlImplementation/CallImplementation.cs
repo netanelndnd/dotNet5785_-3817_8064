@@ -31,8 +31,14 @@ namespace BlImplementation
                 throw new ArgumentException("Address cannot be null or empty.");
             }
 
+            //get the coordinates of the address
+            var coordinates = Tools.GetCoordinates(call.FullAddress);
+
+            // Check if the location is within Israel
+            bool isLocationValid = coordinates.IsInIsrael;
+
             // Update latitude and longitude based on the address
-            if (!Tools.IsLocationInIsrael(call.Latitude, call.Longitude))
+            if (!isLocationValid)
             {
                 throw new ArgumentException("Invalid address. Address is outside of Israel or does not exist.");
             }
@@ -52,15 +58,21 @@ namespace BlImplementation
             }
         }
 
-
+        /// <summary>
+        /// Assigns a call to a volunteer for handling.
+        /// </summary>
+        /// <param name="volunteerId">The identifier of the volunteer.</param>
+        /// <param name="callId">The identifier of the call.</param>
+        /// <exception cref="InvalidOperationException">Thrown when the call cannot be assigned due to invalid status or expiration.</exception>
         public void AssignCallToVolunteer(int volunteerId, int callId)
         {
             var call = _dal.Call.Read(callId);
             var callStatus = CallManager.GetCallStatus(callId);
 
+            // Check if the call is open or open in risk and the maximum completion time has not passed
             if ((callStatus == CallStatus.Open || callStatus == CallStatus.OpenInRisk) && call.MaxCompletionTime < ClockManager.Now)
             {
-                DO.Assignment newassignment = new DO.Assignment
+                DO.Assignment newAssignment = new DO.Assignment
                 {
                     CallId = callId,
                     VolunteerId = volunteerId,
@@ -73,6 +85,12 @@ namespace BlImplementation
             }
         }
 
+        /// <summary>
+        /// Cancels the handling of a call by the volunteer or a manager.
+        /// </summary>
+        /// <param name="requesterId">The identifier of the requester (volunteer or manager).</param>
+        /// <param name="assignmentId">The identifier of the assignment to be canceled.</param>
+        /// <exception cref="InvalidOperationException">Thrown when the requester does not have permission to cancel the call handling or the assignment has already been completed.</exception>
         public void CancelCallHandling(int requesterId, int assignmentId)
         {
             // Read the requester and assignment details from the data layer
@@ -120,6 +138,13 @@ namespace BlImplementation
             }
         }
 
+        /// <summary>
+        /// Completes the handling of a call by a volunteer.
+        /// </summary>
+        /// <param name="volunteerId">The identifier of the volunteer completing the call.</param>
+        /// <param name="assignmentId">The identifier of the assignment related to the call.</param>
+        /// <exception cref="InvalidOperationException">Thrown when the call handling cannot be completed due to invalid status or permissions.</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when the assignment or volunteer is not found.</exception>
         public void CompleteCallHandling(int volunteerId, int assignmentId)
         {
             try
@@ -130,6 +155,7 @@ namespace BlImplementation
                 // Check if the CompletionStatus is open(null) or not
                 if (assignment.CompletionStatus == null)
                 {
+                    // If the requester is the volunteer assigned to the call
                     if (volunteerId == assignment.VolunteerId)
                     {
                         // Create a new assignment with self-cancellation status
@@ -158,8 +184,6 @@ namespace BlImplementation
                 throw new KeyNotFoundException($"Assignment with ID {assignmentId} not found.", ex);
             }
         }
-
-
 
         /// <summary>
         /// Deletes a call by its identifier.
@@ -393,10 +417,12 @@ namespace BlImplementation
                 throw new ArgumentException("Address cannot be null or empty.");
             }
 
-            //צריך לדואג פה לפוקציה אשר מייבאת את הקורדינטות על פי הכתובת שמתקבלת
-            0000000
+            var coordinates = Tools.GetCoordinates(call.FullAddress);
 
-            if (Tools.IsLocationInIsrael(call.Latitude, call.Longitude))
+            // Check if the location is within Israel
+            bool isLocationValid = coordinates.IsInIsrael;
+
+            if (!isLocationValid)
             {
                 throw new ArgumentException("Invalid address. Unable to retrieve coordinates or address is outside of Israel or does not exist.");
             }

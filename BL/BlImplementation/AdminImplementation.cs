@@ -65,13 +65,12 @@ namespace BlImplementation
         }
 
         /// <summary>
-        /// Resets the database to its initial state.
+        ///resets the database to its initial state.
         /// מאפס את מסד הנתונים למצבו ההתחלתי.
         /// </summary>
-
         public void ResetDatabase()
         {
-            // Reset configuration data to initial values
+            // Reset the configuration to its initial state and update the clock to the current time (now)
             _dal.Config.Reset();
             ClockManager.UpdateClock(ClockManager.Now);
 
@@ -88,10 +87,11 @@ namespace BlImplementation
         public void InitializeDatabase()
         {
             // Reset the database to its initial state
+            ResetDatabase();
+
+            // Initialize the database with initial data
             DalTest.Initialization.Do();
             ClockManager.UpdateClock(ClockManager.Now);
-
-          
         }
     }
 }

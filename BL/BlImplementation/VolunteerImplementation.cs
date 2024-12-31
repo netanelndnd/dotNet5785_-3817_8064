@@ -30,8 +30,10 @@ namespace BlImplementation
                 // Validate the phone number format
                 bool isPhoneNumberValid = VolunteerManager.IsValidPhoneNumber(volunteerB.PhoneNumber);
 
+                var coordinates = Tools.GetCoordinates(volunteerB.CurrentAddress);
+
                 // Check if the location is within Israel
-                bool isLocationValid = Tools.IsLocationInIsrael(volunteerB.Latitude, volunteerB.Longitude);
+                bool isLocationValid = coordinates.IsInIsrael;
 
                 // If all validations pass
                 if (isEmailValid && isPhoneNumberValid && isLocationValid && isIdValid)
@@ -45,8 +47,8 @@ namespace BlImplementation
                         PhoneNumber = volunteerB.PhoneNumber,
                         CurrentAddress = volunteerB.CurrentAddress,
                         FullName = volunteerB.FullName,
-                        Latitude = volunteerB.Latitude,
-                        Longitude = volunteerB.Longitude,
+                        Latitude = coordinates.Latitude,
+                        Longitude = coordinates.Longitude,
                         MaxDistance = volunteerB.MaxDistance,
                         IsActive = true,
                         VolunteerRole = (DO.Role)volunteerB.Role,
@@ -205,21 +207,40 @@ namespace BlImplementation
                 // Validate the phone number format
                 bool isPhoneNumberValid = VolunteerManager.IsValidPhoneNumber(volunteer.PhoneNumber);
 
+                var coordinates = Tools.GetCoordinates(volunteer.CurrentAddress);
+
                 // Check if the location is within Israel
-                bool isLocationValid = Tools.IsLocationInIsrael(volunteer.Latitude, volunteer.Longitude);
+                bool isLocationValid = coordinates.IsInIsrael;
 
                 // If all validations pass
                 if (isEmailValid && isPhoneNumberValid && isLocationValid && isIdValid)
                 {
+                    // Create a new BO.Volunteer object with the validated details
+                    BO.Volunteer volunteerB = new()
+                    {
+                        Id = volunteer.Id,
+                        Email = volunteer.Email,
+                        Password = volunteer.Password,
+                        PhoneNumber = volunteer.PhoneNumber,
+                        CurrentAddress = volunteer.CurrentAddress,
+                        FullName = volunteer.FullName,
+                        Latitude = coordinates.Latitude,
+                        Longitude = coordinates.Longitude,
+                        MaxDistance = volunteer.MaxDistance,
+                        IsActive = true,
+                        Role = (BO.VolunteerRole)volunteer.Role,
+                        DistanceType = (BO.DistanceType)volunteer.DistanceType,
+                    };
+
                     // If the user is not a manager, update as a volunteer
                     if (!isManager)
                     {
-                        VolunteerManager.UpdateVolunteerDetails(volunteer);
+                        VolunteerManager.UpdateVolunteerDetails(volunteerB);
                     }
                     // If the user is a manager, update as a manager
                     else
                     {
-                        VolunteerManager.UpdateManagerDetails(volunteer);
+                        VolunteerManager.UpdateManagerDetails(volunteerB);
                     }
                 }
                 else

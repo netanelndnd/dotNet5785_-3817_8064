@@ -1,5 +1,9 @@
 ﻿using System.Reflection;
 using System.Text;
+using System.IO;
+using System.Net;
+using System.Text.Json; // שימוש ב-System.Text.Json
+
 
 namespace Helpers;
 
@@ -60,18 +64,98 @@ internal static class Tools
     /// <param name="latitude">The latitude coordinate to check.</param>
     /// <param name="longitude">The longitude coordinate to check.</param>
     /// <returns>True if the coordinates are within Israel, otherwise false.</returns>
-    public static bool IsLocationInIsrael(double? latitude, double? longitude)
-    {
-        // Latitude and longitude range of Israel
-        const double minLatitude = 29.0;   // South - Eilat
-        const double maxLatitude = 33.3;   // North - Golan Heights
-        const double minLongitude = 34.3;  // West - Mediterranean Sea
-        const double maxLongitude = 35.9;  // East - Dead Sea and Jordan area
+    //public static bool IsLocationInIsrael(double? latitude, double? longitude)
+    //{
+    //    // Latitude and longitude range of Israel
+    //    const double minLatitude = 29.0;   // South - Eilat
+    //    const double maxLatitude = 33.3;   // North - Golan Heights
+    //    const double minLongitude = 34.3;  // West - Mediterranean Sea
+    //    const double maxLongitude = 35.9;  // East - Dead Sea and Jordan area
 
-        // Check if the coordinates are within the range
-        return latitude >= minLatitude && latitude <= maxLatitude &&
-               longitude >= minLongitude && longitude <= maxLongitude;
+    //    // Check if the coordinates are within the range
+    //    return latitude >= minLatitude && latitude <= maxLatitude &&
+    //           longitude >= minLongitude && longitude <= maxLongitude;
+    //}
+
+
+
+    public static (double Latitude, double Longitude, bool IsInIsrael) GetCoordinates(string address)
+    {
+        string apiKey = "AIzaSyBnuV561P8tA08Y7DQDH0GAu5AhQ86m5xs";
+
+        if (string.IsNullOrWhiteSpace(address))
+        {
+            throw new ArgumentException("הכתובת אינה תקינה או ריקה.");
+        }
+
+        string encodedAddress = Uri.EscapeDataString(address);
+        string url = $"https://maps.googleapis.com/maps/api/geocode/json?address={encodedAddress}&key={apiKey}";
+
+        try
+        {
+            var request = WebRequest.Create(url);
+            request.Method = "GET";
+            request.Timeout = 10000;
+
+            using (var response = request.GetResponse())
+            using (var stream = response.GetResponseStream())
+            using (var reader = new StreamReader(stream))
+            {
+                string jsonResponse = reader.ReadToEnd();
+                JsonDocument jsonDocument = JsonDocument.Parse(jsonResponse);
+
+                var status = jsonDocument.RootElement.GetProperty("status").GetString();
+                if (status != "OK")
+                {
+                    throw new Exception($"שגיאה בבקשת Geocoding: {status}");
+                }
+
+                var location = jsonDocument.RootElement
+                    .GetProperty("results")[0]
+                    .GetProperty("geometry")
+                    .GetProperty("location");
+
+                double latitude = location.GetProperty("lat").GetDouble();
+                double longitude = location.GetProperty("lng").GetDouble();
+
+                // בדיקת אם המיקום נמצא בישראל על פי התשובה מגוגל
+                bool isInIsrael = IsLocationInIsrael(jsonDocument);
+
+                return (latitude, longitude, isInIsrael);
+            }
+        }
+        catch (WebException ex)
+        {
+            throw new Exception("שגיאה בבקשת הרשת: " + ex.Message, ex);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("שגיאה בעת עיבוד הכתובת: " + ex.Message, ex);
+        }
+    }
+
+    // פונקציה שבודקת אם המיקום בישראל על פי תשובת גוגל
+    public static bool IsLocationInIsrael(JsonDocument jsonDocument)
+    {
+        // חיפוש אם יש רכיב "ישראל" ב-address_components
+        foreach (var result in jsonDocument.RootElement.GetProperty("results").EnumerateArray())
+        {
+            var addressComponents = result.GetProperty("address_components");
+
+            foreach (var component in addressComponents.EnumerateArray())
+            {
+                // אם חלק מהכתובת הוא מדינה, נבדוק אם היא ישראל
+                if (component.GetProperty("types").EnumerateArray().Any(type => type.GetString() == "country"))
+                {
+                    string country = component.GetProperty("long_name").GetString();
+                    if (country == "ישראל")
+                    {
+                        return true; // אם נמצאה ישראל
+                    }
+                }
+            }
+        }
+
+        return false; // לא נמצאה ישראל
     }
 }
-    
-

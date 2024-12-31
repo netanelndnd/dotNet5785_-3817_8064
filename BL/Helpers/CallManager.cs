@@ -114,9 +114,10 @@ internal static class CallManager
 
 
     /// <summary>
-    /// Updates the status of a call based on its current state and assignment details.
+    /// Retrieves the status of a specific call, optionally filtered by volunteer ID.
     /// </summary>
     /// <param name="callId">The identifier of the call.</param>
+    /// <param name="volunteerId">The identifier of the volunteer (optional).</param>
     /// <returns>The updated status of the call.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the call with the specified ID is not found.</exception>
     public static BO.CallStatus GetCallStatus(int callId, int? volunteerId = null)
@@ -229,13 +230,17 @@ internal static class CallManager
             throw new ArgumentNullException(nameof(boCall), "The BO.Call object cannot be null.");
         }
 
+        // Get the coordinates of the address
+        var coordinates = Tools.GetCoordinates(boCall.FullAddress);
+
+
         return new DO.Call
         {
             Id = boCall.Id,
             CallType = (DO.CallType)boCall.CallType,
             Address = boCall.FullAddress,
-            Latitude = boCall.Latitude,
-            Longitude = boCall.Longitude,
+            Latitude = coordinates.Latitude,
+            Longitude = coordinates.Longitude,
             OpenTime = boCall.OpenedAt,
             Description = boCall.Description,
             MaxCompletionTime = boCall.MaxCompletionTime
