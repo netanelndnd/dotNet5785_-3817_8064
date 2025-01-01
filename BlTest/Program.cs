@@ -1,4 +1,6 @@
-﻿    namespace BlTest
+﻿using DO;
+
+namespace BlTest
 {
     internal class Program
     {
@@ -115,28 +117,93 @@
                     switch (volunteerOption)
                     {
                         case 1:
-                            // Add Volunteer
-                            // Collect data and call s_bl.Volunteer.AddVolunteer
+                            Console.Write("Enter volunteer Full name: ");
+                            string name = Console.ReadLine();
+                            Console.Write("Enter volunteer Id: ");
+                            int id = int.Parse(Console.ReadLine());
+                            Console.Write("Enter volunteer email: ");
+                            string email = Console.ReadLine();
+                            Console.Write("Enter volunteer Phone Number: ");
+                            string phonenumber = Console.ReadLine();
+                            Console.Write("Enter volunteer Password: ");
+                            string password = Console.ReadLine();
+                            Console.Write("Enter volunteer Current Address: ");
+                            string currentaddress = Console.ReadLine();
+                            Console.Write("Enter volunteer role (Volunteer/Manager): ");
+                            string roleInput = Console.ReadLine();
+                            BO.VolunteerRole roleinput = (BO.VolunteerRole)Enum.Parse(typeof(BO.VolunteerRole), roleInput, true);
+                            BO.Volunteer newVolunteer = new BO.Volunteer
+                            {
+                                FullName = name,
+                                Id = id,
+                                Email = email,
+                                PhoneNumber = phonenumber,
+                                Password = password,
+                                CurrentAddress = currentaddress,
+                                Latitude = null,
+                                Longitude = null,
+                                IsActive = true,
+                                MaxDistance = null,
+                                Role = roleinput,
+                                DistanceType = BO.DistanceType.AirDistance
+                            };
+
+                            s_bl.Volunteer.AddVolunteer(newVolunteer);
+                            Console.WriteLine("Volunteer added successfully.");
                             break;
                         case 2:
-                            // Delete Volunteer
-                            // Collect data and call s_bl.Volunteer.DeleteVolunteer
+                            Console.Write("Enter volunteer ID to delete: ");
+                            int deleteId = int.Parse(Console.ReadLine());
+                            s_bl.Volunteer.DeleteVolunteer(deleteId);
+                            Console.WriteLine("Volunteer deleted successfully.");
                             break;
                         case 3:
-                            // Get Volunteer Details
-                            // Collect data and call s_bl.Volunteer.GetVolunteerDetails
+                            Console.Write("Enter volunteer ID to get details: ");
+                            int detailsId = int.Parse(Console.ReadLine());
+                            var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(detailsId);
+                            Console.WriteLine($"Name: {volunteerDetails.FullName}, Phone Number: {volunteerDetails.PhoneNumber} , Email: {volunteerDetails.Email}");
                             break;
                         case 4:
-                            // Get Volunteers
-                            // Collect data and call s_bl.Volunteer.GetVolunteers
+                            var volunteers = s_bl.Volunteer.GetVolunteers(null, null);
+                            foreach (var volunteer in volunteers)
+                            {
+                                Console.WriteLine(volunteer);
+                            }
                             break;
                         case 5:
-                            // Login
-                            // Collect data and call s_bl.Volunteer.Login
+                            Console.Write("Enter username: ");
+                            string username = Console.ReadLine();
+                            Console.Write("Enter password: ");
+                            string Password = Console.ReadLine();
+                            var role = s_bl.Volunteer.Login(username, Password);
+                            Console.WriteLine($"Logged in as {role}");
                             break;
                         case 6:
-                            // Update Volunteer
-                            // Collect data and call s_bl.Volunteer.UpdateVolunteer
+                            Console.Write("Enter volunteer ID to update: ");
+                            int updateId = int.Parse(Console.ReadLine());
+                            Console.Write("Enter new volunteer name: ");
+                            string newName = Console.ReadLine();
+                            Console.Write("Enter new volunteer Phone Number: ");
+                            string newPhonenumber = (Console.ReadLine());
+                            Console.Write("Enter new volunteer email: ");
+                            string newEmail = Console.ReadLine();
+                            Console.Write("Enter new volunteer Current Address: ");
+                            string newCurrentaddress = Console.ReadLine();
+                            BO.Volunteer updatedVolunteer = new BO.Volunteer
+                            {
+                                FullName = newName,
+                                Email = newEmail,
+                                PhoneNumber = newPhonenumber,
+                                CurrentAddress = newCurrentaddress,
+                                Latitude = null,
+                                Longitude = null,
+                                Role = BO.VolunteerRole.Volunteer,
+                                IsActive = true,
+                                MaxDistance = null,
+                                DistanceType = BO.DistanceType.AirDistance,
+                            };
+                            s_bl.Volunteer.UpdateVolunteer(updateId, updatedVolunteer);
+                            Console.WriteLine("Volunteer updated successfully.");
                             break;
                         case 0:
                             return;

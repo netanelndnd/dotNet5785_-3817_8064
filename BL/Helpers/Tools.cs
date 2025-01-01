@@ -126,11 +126,11 @@ internal static class Tools
         }
         catch (WebException ex)
         {
-            throw new Exception("שגיאה בבקשת הרשת: " + ex.Message, ex);
+            throw new Exception("Error in network request: " + ex.Message, ex);
         }
         catch (Exception ex)
         {
-            throw new Exception("שגיאה בעת עיבוד הכתובת: " + ex.Message, ex);
+            throw new Exception("Error processing address: " + ex.Message, ex);
         }
     }
 
