@@ -8,13 +8,13 @@ using System.Security.Cryptography.X509Certificates;
 internal class VolunteerImplementation : IVolunteer
 {
     /// <summary>
-    /// Create new Volunteer
+    /// Creates a new Volunteer
     /// </summary>
-    /// <param name="item"></param>
-    /// <exception cref="Exception"></exception>
+    /// <param name="item">The Volunteer object to create</param>
+    /// <exception cref="DalAlreadyExistsException">Thrown when a volunteer with the same ID already exists</exception>
     public void Create(Volunteer item)
     {
-        //for entities with normal id (not auto id)
+        // For entities with normal id (not auto id)
         if (Read(item.Id) is not null)
             throw new DalAlreadyExistsException($"Volunteer with ID={item.Id} already exists");
         DataSource.Volunteers.Append(item);
@@ -24,12 +24,12 @@ internal class VolunteerImplementation : IVolunteer
     /// Deletes a volunteer by their ID
     /// </summary>
     /// <param name="id">The ID of the volunteer to delete</param>
-    /// <exception cref="Exception">Thrown when the volunteer with the specified ID does not exist</exception>
+    /// <exception cref="DalDeletionImpossible">Thrown when the volunteer with the specified ID does not exist</exception>
     public void Delete(int id)
     {
         var volunteer = Read(id);
         if (volunteer is null)
-            throw new DalDoesNotExistException($"Volunteer with ID={id} does not exist");
+            throw new DalDeletionImpossible($"Volunteer with ID={id} does not exist");
         else
             DataSource.Volunteers.Remove(volunteer);
     }
@@ -56,17 +56,22 @@ internal class VolunteerImplementation : IVolunteer
         }
         return null;
     }
+
     /// <summary>
-    /// Read an Volunteer based on a filter condition
+    /// Reads a volunteer based on a filter condition
     /// </summary>
+    /// <param name="filter">The filter condition to apply</param>
+    /// <returns>The volunteer that matches the filter condition, or null if not found</returns>
     public Volunteer? Read(Func<Volunteer, bool> filter)
     {
         return DataSource.Volunteers.FirstOrDefault(filter);
     }
+
     /// <summary>
     /// Reads all volunteers
     /// </summary>
-    /// <returns>A list of all volunteers</returns>
+    /// <param name="filter">Optional filter condition to apply</param>
+    /// <returns>A list of all volunteers, optionally filtered</returns>
     public IEnumerable<Volunteer> ReadAll(Func<Volunteer, bool>? filter = null)
     {
         return filter != null
@@ -78,6 +83,7 @@ internal class VolunteerImplementation : IVolunteer
     /// Updates an existing Volunteer
     /// </summary>
     /// <param name="item">The updated Volunteer object</param>
+    /// <exception cref="DalDoesNotExistException">Thrown when the volunteer with the specified ID does not exist</exception>
     public void Update(Volunteer item)
     {
         var existingVolunteer = Read(item.Id);

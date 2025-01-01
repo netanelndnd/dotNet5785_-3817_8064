@@ -21,6 +21,12 @@ public class VolunteerImplementation : IVolunteer
     public void Create(Volunteer item)
     {
         XElement ArrayOfVolunteer = XMLTools.LoadListFromXMLElement(_filePath);
+        XElement? existingVolunteer = ArrayOfVolunteer.Elements("Volunteer")
+            .FirstOrDefault(v => (int?)v.Element("Id") == item.Id);
+        if (existingVolunteer != null)
+        {
+            throw new DO.DalAlreadyExistsException($"Volunteer with ID {item.Id} already exists.");
+        }
         XElement newVolunteer = new XElement("Volunteer",
             new XElement("Id", item.Id),
             new XElement("FullName", item.FullName),
@@ -48,11 +54,12 @@ public class VolunteerImplementation : IVolunteer
         XElement ArrayOfVolunteer = XMLTools.LoadListFromXMLElement(_filePath);
         XElement? volunteer = ArrayOfVolunteer.Elements("Volunteer")
             .FirstOrDefault(v => (int?)v.Element("Id") == id);
-        if (volunteer != null)
+        if (volunteer == null)
         {
-            volunteer.Remove();
-            XMLTools.SaveListToXMLElement(ArrayOfVolunteer, _filePath);
+            throw new DO.DalDeletionImpossible($"Volunteer with ID {id} does not exist.");
         }
+        volunteer.Remove();
+        XMLTools.SaveListToXMLElement(ArrayOfVolunteer, _filePath);
     }
 
     /// <summary>
@@ -112,21 +119,22 @@ public class VolunteerImplementation : IVolunteer
         XElement ArrayOfVolunteer = XMLTools.LoadListFromXMLElement(_filePath);
         XElement? volunteer = ArrayOfVolunteer.Elements("Volunteer")
             .FirstOrDefault(v => (int?)v.Element("Id") == item.Id);
-        if (volunteer != null)
+        if (volunteer == null)
         {
-            volunteer.SetElementValue("FullName", item.FullName);
-            volunteer.SetElementValue("PhoneNumber", item.PhoneNumber);
-            volunteer.SetElementValue("Email", item.Email);
-            volunteer.SetElementValue("Password", item.Password);
-            volunteer.SetElementValue("CurrentAddress", item.CurrentAddress);
-            volunteer.SetElementValue("Latitude", item.Latitude);
-            volunteer.SetElementValue("Longitude", item.Longitude);
-            volunteer.SetElementValue("MaxDistance", item.MaxDistance);
-            volunteer.SetElementValue("VolunteerRole", item.VolunteerRole);
-            volunteer.SetElementValue("IsActive", item.IsActive);
-            volunteer.SetElementValue("DistanceType", item.DistanceType);
-            XMLTools.SaveListToXMLElement(ArrayOfVolunteer, _filePath);
+            throw new DO.DalDoesNotExistException($"Volunteer with ID {item.Id} does not exist.");
         }
+        volunteer.SetElementValue("FullName", item.FullName);
+        volunteer.SetElementValue("PhoneNumber", item.PhoneNumber);
+        volunteer.SetElementValue("Email", item.Email);
+        volunteer.SetElementValue("Password", item.Password);
+        volunteer.SetElementValue("CurrentAddress", item.CurrentAddress);
+        volunteer.SetElementValue("Latitude", item.Latitude);
+        volunteer.SetElementValue("Longitude", item.Longitude);
+        volunteer.SetElementValue("MaxDistance", item.MaxDistance);
+        volunteer.SetElementValue("VolunteerRole", item.VolunteerRole);
+        volunteer.SetElementValue("IsActive", item.IsActive);
+        volunteer.SetElementValue("DistanceType", item.DistanceType);
+        XMLTools.SaveListToXMLElement(ArrayOfVolunteer, _filePath);
     }
 
     /// <summary>

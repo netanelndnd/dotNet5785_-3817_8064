@@ -16,6 +16,8 @@ public class CallImplementation : ICall
     public void Create(Call item)
     {
         List<Call> Calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
+        if (Calls.Any(it => it.Id == item.Id))
+            throw new DalAlreadyExistsException($"Call with ID={item.Id} already exists");
         item = item with { Id = Config.NextCallId };
         Calls.Add(item);
         XMLTools.SaveListToXMLSerializer(Calls, Config.s_calls_xml);
@@ -25,12 +27,12 @@ public class CallImplementation : ICall
     /// Deletes a call record by its ID.
     /// </summary>
     /// <param name="id">The ID of the call record to delete.</param>
-    /// <exception cref="DalDoesNotExistException">Thrown when the call record with the specified ID does not exist.</exception>
+    /// <exception cref="DalDeletionImpossible">Thrown when the call record with the specified ID does not exist.</exception>
     public void Delete(int id)
     {
         List<Call> Calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
         if (Calls.RemoveAll(it => it.Id == id) == 0)
-            throw new DalDoesNotExistException($"Call with ID={id} does not exist");
+            throw new DalDeletionImpossible($"Call with ID={id} does not exist");
         XMLTools.SaveListToXMLSerializer(Calls, Config.s_calls_xml);
     }
 

@@ -10,8 +10,8 @@ internal static class VolunteerManager
     /// <summary>
     /// Get the number of calls that a volunteer has handled
     /// </summary>
-    /// <param name="volunteerId"></param>
-    /// <returns></returns
+    /// <param name="volunteerId">The ID of the volunteer</param>
+    /// <returns>The number of completed assignments</returns>
     public static int GetCompletedAssignmentsCount(int volunteerId)
     {
         var assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId);
@@ -21,8 +21,8 @@ internal static class VolunteerManager
     /// <summary>
     /// Get the number of calls that a volunteer has canceled
     /// </summary>
-    /// <param name="volunteerId"></param>
-    /// <returns></returns>
+    /// <param name="volunteerId">The ID of the volunteer</param>
+    /// <returns>The number of canceled calls</returns>
     public static int GetTotalCallsCancelled(int volunteerId)
     {
         var assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId);
@@ -32,8 +32,8 @@ internal static class VolunteerManager
     /// <summary>
     /// Get the number of assignments that have expired for a volunteer
     /// </summary>
-    /// <param name="volunteerId"></param>
-    /// <returns></returns>
+    /// <param name="volunteerId">The ID of the volunteer</param>
+    /// <returns>The number of expired assignments</returns>
     public static int GetExpiredAssignmentsCount(int volunteerId)
     {
         var assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId);
@@ -41,11 +41,10 @@ internal static class VolunteerManager
     }
 
     /// <summary>
-    /// <summary>
     /// Check if there is an assignment for the volunteer that has not been completed yet and return the assignmentID
     /// </summary>
-    /// <param name="volunteerId"></param>
-    /// <returns></returns>
+    /// <param name="volunteerId">The ID of the volunteer</param>
+    /// <returns>The ID of the pending assignment, or null if none exists</returns>
     public static int? GetPendingAssignmentId(int volunteerId)
     {
         var assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.VolunteerId == volunteerId && a.CompletionTime == null);
@@ -55,8 +54,8 @@ internal static class VolunteerManager
     /// <summary>
     /// Get the call ID of the pending assignment for a volunteer
     /// </summary>
-    /// <param name="volunteerId"></param>
-    /// <returns></returns>
+    /// <param name="volunteerId">The ID of the volunteer</param>
+    /// <returns>The call ID of the pending assignment, or null if none exists</returns>
     public static int? GetPendingAssignmentCallId(int volunteerId)
     {
         var assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.VolunteerId == volunteerId && a.CompletionTime == null);
@@ -66,8 +65,8 @@ internal static class VolunteerManager
     /// <summary>
     /// Get the call type of the pending assignment for a volunteer
     /// </summary>
-    /// <param name="volunteerId"></param>
-    /// <returns></returns>
+    /// <param name="volunteerId">The ID of the volunteer</param>
+    /// <returns>The call type of the pending assignment, or BO.CallType.None if none exists</returns>
     public static BO.CallType? GetPendingAssignmentCallType(int volunteerId)
     {
         int? callId = GetPendingAssignmentCallId(volunteerId);
@@ -82,9 +81,9 @@ internal static class VolunteerManager
     /// <summary>
     /// Sort a list of volunteers by a specific field
     /// </summary>
-    /// <param name="volunteerList">The list of volunteers to sort.</param>
-    /// <param name="sortField">The field to sort by.</param>
-    /// <returns>A sorted list of volunteers.</returns>
+    /// <param name="volunteerList">The list of volunteers to sort</param>
+    /// <param name="sortField">The field to sort by</param>
+    /// <returns>A sorted list of volunteers</returns>
     public static IEnumerable<BO.VolunteerInList> SortVolunteers(IEnumerable<BO.VolunteerInList> volunteerList, BO.VolunteerInListFields? sortField)
     {
         if (sortField.HasValue)
@@ -139,10 +138,10 @@ internal static class VolunteerManager
     }
 
     /// <summary>
-    /// Determines if a volunteer is a manager or a regular volunteer based on their ID.
+    /// Determines if a volunteer is a manager or a regular volunteer based on their ID
     /// </summary>
-    /// <param name="volunteerId">The ID of the volunteer.</param>
-    /// <returns>True if the volunteer is a manager, otherwise false.</returns>
+    /// <param name="volunteerId">The ID of the volunteer</param>
+    /// <returns>True if the volunteer is a manager, otherwise false</returns>
     public static bool IsManager(int volunteerId)
     {
         var volunteer = s_dal.Volunteer.Read(volunteerId);
@@ -150,10 +149,10 @@ internal static class VolunteerManager
     }
 
     /// <summary>
-    /// Validates if the given email address is in a proper format.
+    /// Validates if the given email address is in a proper format
     /// </summary>
-    /// <param name="email">The email address to validate.</param>
-    /// <returns>True if the email address is valid, otherwise false.</returns>
+    /// <param name="email">The email address to validate</param>
+    /// <returns>True if the email address is valid, otherwise false</returns>
     public static bool IsValidEmail(string email)
     {
         // Validate email format
@@ -161,11 +160,11 @@ internal static class VolunteerManager
     }
 
     /// <summary>
-    /// Validates if the given ID is a valid Israeli ID number.
+    /// Validates if the given ID is a valid Israeli ID number
     /// </summary>
-    /// <param name="id">The ID number to validate.</param>
-    /// <returns>True if the ID is valid, otherwise false.</returns>
-    /// <exception cref="KeyNotFoundException">Thrown when the ID does not exist in the data layer.</exception>
+    /// <param name="id">The ID number to validate</param>
+    /// <returns>True if the ID is valid, otherwise false</returns>
+    /// <exception cref="KeyNotFoundException">Thrown when the ID does not exist in the data layer</exception>
     public static bool IsValidID(int id)
     {
         //אנחנו לא בודקים האם קיים ת"ז בשכבת הנתונים, כי בעדכון אנחנו נבדוק זאת ותיזרק חריגה מתאימה
@@ -193,12 +192,11 @@ internal static class VolunteerManager
         return checkDigit == int.Parse(idString[8].ToString());
     }
 
-
     /// <summary>
-    /// Validates if the given phone number is in a proper format.
+    /// Validates if the given phone number is in a proper format
     /// </summary>
-    /// <param name="phoneNumber">The phone number to validate.</param>
-    /// <returns>True if the phone number is valid, otherwise false.</returns>
+    /// <param name="phoneNumber">The phone number to validate</param>
+    /// <returns>True if the phone number is valid, otherwise false</returns>
     public static bool IsValidPhoneNumber(string phoneNumber)
     {
         // Remove spaces and special characters to validate the structure only
@@ -214,9 +212,9 @@ internal static class VolunteerManager
     }
 
     /// <summary>
-    /// Updates the details by the volunteer.
+    /// Updates the details by the volunteer
     /// </summary>
-    /// <param name="volunteerB">The volunteer object with updated details.</param>
+    /// <param name="volunteerB">The volunteer object with updated details</param>
     public static void UpdateVolunteerDetails(BO.Volunteer volunteerB)
     {
         DO.Volunteer volunteerD = new()
@@ -237,9 +235,9 @@ internal static class VolunteerManager
     }
 
     /// <summary>
-    /// Updates the details by the manager.
+    /// Updates the details by the manager
     /// </summary>
-    /// <param name="volunteerB"></param>
+    /// <param name="volunteerB">The volunteer object with updated details</param>
     public static void UpdateManagerDetails(BO.Volunteer volunteerB)
     {
         DO.Volunteer volunteerD = new()

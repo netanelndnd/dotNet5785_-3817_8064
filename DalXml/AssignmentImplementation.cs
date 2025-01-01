@@ -4,7 +4,6 @@ using DO;
 using System;
 using System.Collections.Generic;
 
-//שיטה 1
 /// <summary>
 /// Implementation of the IAssignment interface for managing assignments using XML storage.
 /// </summary>
@@ -17,6 +16,8 @@ public class AssignmentImplementation : IAssignment
     public void Create(Assignment item)
     {
         List<Assignment> Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
+        if (Assignments.Any(a => a.Id == item.Id))
+            throw new DalAlreadyExistsException($"Assignment with ID={item.Id} already exists");
         item = item with { Id = Config.NextAssignmentId };
         Assignments.Add(item);
         XMLTools.SaveListToXMLSerializer(Assignments, Config.s_assignments_xml);
@@ -26,12 +27,12 @@ public class AssignmentImplementation : IAssignment
     /// Deletes an assignment by its ID.
     /// </summary>
     /// <param name="id">The ID of the assignment to delete.</param>
-    /// <exception cref="DalDoesNotExistException">Thrown when the assignment with the specified ID does not exist.</exception>
+    /// <exception cref="DalDeletionImpossible">Thrown when the assignment with the specified ID does not exist.</exception>
     public void Delete(int id)
     {
         List<Assignment> Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
         if (Assignments.RemoveAll(it => it.Id == id) == 0)
-            throw new DalDoesNotExistException($"Assignment with ID={id} does not exist");
+            throw new DalDeletionImpossible($"Assignment with ID={id} does not exist");
         XMLTools.SaveListToXMLSerializer(Assignments, Config.s_assignments_xml);
     }
 

@@ -9,29 +9,28 @@ namespace BlImplementation
     {
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
-
-
         /// <summary>
         /// Adds a new call to the system.
         /// </summary>
         /// <param name="call">The call object to add.</param>
-        /// <exception cref="ArgumentException">Thrown when the call has invalid data.</exception>
-        /// <exception cref="InvalidOperationException">Thrown when the call cannot be added due to an internal error.</exception>
+        /// <exception cref="BlInvalidDateOrderException">Thrown when the maximum completion time is less than or equal to the opening time.</exception>
+        /// <exception cref="BlInvalidAddressException">Thrown when the address is null, empty, or invalid.</exception>
+        /// <exception cref="BlOperationException">Thrown when the call cannot be added due to an internal error.</exception>
         public void AddCall(Call call)
         {
             // Validate the maximum completion time is greater than the opening time
             if (call.MaxCompletionTime.HasValue && call.MaxCompletionTime <= call.OpenedAt)
             {
-                throw new ArgumentException("Maximum completion time must be greater than the opening time.");
+                throw new BlInvalidDateOrderException("Maximum completion time must be greater than the opening time.");
             }
 
             // Validate the address and update latitude and longitude
             if (string.IsNullOrWhiteSpace(call.FullAddress))
             {
-                throw new ArgumentException("Address cannot be null or empty.");
+                throw new BlInvalidAddressException("Address cannot be null or empty.");
             }
 
-            //get the coordinates of the address
+            // Get the coordinates of the address
             var coordinates = Tools.GetCoordinates(call.FullAddress);
 
             // Check if the location is within Israel
@@ -40,7 +39,7 @@ namespace BlImplementation
             // Update latitude and longitude based on the address
             if (!isLocationValid)
             {
-                throw new ArgumentException("Invalid address. Address is outside of Israel or does not exist.");
+                throw new BlInvalidAddressException("Invalid address. Address is outside of Israel or does not exist.");
             }
 
             // Convert BO.Call to DO.Call
@@ -54,7 +53,7 @@ namespace BlImplementation
             catch (Exception ex)
             {
                 // Handle any exceptions that may occur during the creation process
-                throw new InvalidOperationException("Failed to add the call.", ex);
+                throw new BlOperationException("Failed to add the call.", ex);
             }
         }
 
@@ -63,7 +62,7 @@ namespace BlImplementation
         /// </summary>
         /// <param name="volunteerId">The identifier of the volunteer.</param>
         /// <param name="callId">The identifier of the call.</param>
-        /// <exception cref="InvalidOperationException">Thrown when the call cannot be assigned due to invalid status or expiration.</exception>
+        /// <exception cref="BlOperationException">Thrown when the call cannot be assigned due to invalid status or expiration.</exception>
         public void AssignCallToVolunteer(int volunteerId, int callId)
         {
             var call = _dal.Call.Read(callId);
@@ -81,7 +80,7 @@ namespace BlImplementation
             }
             else
             {
-                throw new InvalidOperationException("Cannot assign the call to the volunteer. The call is not open or is expired.");
+                throw new BlOperationException("Cannot assign the call to the volunteer. The call is not open or is expired.");
             }
         }
 
@@ -90,7 +89,7 @@ namespace BlImplementation
         /// </summary>
         /// <param name="requesterId">The identifier of the requester (volunteer or manager).</param>
         /// <param name="assignmentId">The identifier of the assignment to be canceled.</param>
-        /// <exception cref="InvalidOperationException">Thrown when the requester does not have permission to cancel the call handling or the assignment has already been completed.</exception>
+        /// <exception cref="BlUnauthorizedAccessException">Thrown when the requester does not have permission to cancel the call handling or the assignment has already been completed.</exception>
         public void CancelCallHandling(int requesterId, int assignmentId)
         {
             // Read the requester and assignment details from the data layer
@@ -134,7 +133,7 @@ namespace BlImplementation
             else
             {
                 // Throw an exception if the requester does not have permission to cancel the call handling
-                throw new InvalidOperationException("Requester does not have permission to cancel this call handling.");
+                throw new BlUnauthorizedAccessException("Requester does not have permission to cancel this call handling.");
             }
         }
 
@@ -143,8 +142,8 @@ namespace BlImplementation
         /// </summary>
         /// <param name="volunteerId">The identifier of the volunteer completing the call.</param>
         /// <param name="assignmentId">The identifier of the assignment related to the call.</param>
-        /// <exception cref="InvalidOperationException">Thrown when the call handling cannot be completed due to invalid status or permissions.</exception>
-        /// <exception cref="KeyNotFoundException">Thrown when the assignment or volunteer is not found.</exception>
+        /// <exception cref="BlUnauthorizedAccessException">Thrown when the call handling cannot be completed due to invalid status or permissions.</exception>
+        /// <exception cref="BlDoesNotExistException">Thrown when the assignment or volunteer is not found.</exception>
         public void CompleteCallHandling(int volunteerId, int assignmentId)
         {
             try
@@ -172,16 +171,18 @@ namespace BlImplementation
                     }
                     else
                     {
-                        throw new InvalidOperationException("Requester does not have permission to cancel this call handling.");
+                        throw new BlUnauthorizedAccessException("Requester does not have permission to cancel this call handling.");
                     }
                 }
                 else
-                    throw new InvalidOperationException("The assignment has already been handled.");
+                {
+                    throw new BlUnauthorizedAccessException("The assignment has already been handled.");
+                }
             }
-            catch (KeyNotFoundException ex)
+            catch (Exception ex)
             {
                 // Rethrow the exception with a more appropriate message for the presentation layer
-                throw new KeyNotFoundException($"Assignment with ID {assignmentId} not found.", ex);
+                throw new BlDoesNotExistException($"Assignment with ID {assignmentId} not found.", ex);
             }
         }
 
@@ -189,22 +190,21 @@ namespace BlImplementation
         /// Deletes a call by its identifier.
         /// </summary>
         /// <param name="id">The identifier of the call to delete.</param>
-        /// <exception cref="KeyNotFoundException">Thrown when the call with the specified ID is not found.</exception>
-        /// <exception cref="InvalidOperationException">Thrown when the call cannot be deleted because
-        /// it is not open or has been assigned.</exception>
+        /// <exception cref="BlDoesNotExistException">Thrown when the call with the specified ID is not found.</exception>
+        /// <exception cref="BlOperationException">Thrown when the call cannot be deleted because it is not open or has been assigned.</exception>
         public void DeleteCall(int id)
         {
             // Retrieve the call details from the data layer
             var callEntity = _dal.Call.Read(id);
             if (callEntity == null)
             {
-                throw new KeyNotFoundException($"Call with ID {id} not found.");
+                throw new BlDoesNotExistException($"Call with ID {id} not found.");
             }
 
             // Check if the call is in an open status and has never been assigned
             if (CallManager.GetCallStatus(id) != CallStatus.Open || AssignmentManager.GetAssignmentIdByCallId(id) != null)
             {
-                throw new InvalidOperationException("Cannot delete the call. Only open calls that have never been assigned can be deleted.");
+                throw new BlDeletionImpossible("Cannot delete the call. Only open calls that have never been assigned can be deleted.");
             }
 
             try
@@ -212,10 +212,10 @@ namespace BlImplementation
                 // Attempt to delete the call in the data layer
                 _dal.Call.Delete(id);
             }
-            catch (KeyNotFoundException ex)
+            catch (Exception ex)
             {
                 // Rethrow the exception with a more appropriate message for the presentation layer
-                throw new KeyNotFoundException($"Call with ID {id} not found.", ex);
+                throw new BlDoesNotExistException($"Call with ID {id} not found.", ex);
             }
         }
 
@@ -224,7 +224,7 @@ namespace BlImplementation
         /// </summary>
         /// <param name="id">The identifier of the call.</param>
         /// <returns>The details of the call.</returns>
-        /// <exception cref="KeyNotFoundException">Thrown when the call does not exist.</exception>
+        /// <exception cref="BlDoesNotExistException">Thrown when the call does not exist.</exception>
         public Call GetCallDetails(int id)
         {
             try
@@ -233,7 +233,7 @@ namespace BlImplementation
                 var callEntity = _dal.Call.Read(id);
                 if (callEntity == null)
                 {
-                    throw new KeyNotFoundException($"Call with ID {id} not found.");
+                    throw new BlDoesNotExistException($"Call with ID {id} not found.");
                 }
 
                 // Create the BO.Call object
@@ -241,10 +241,10 @@ namespace BlImplementation
 
                 return call;
             }
-            catch (KeyNotFoundException ex)
+            catch (Exception ex)
             {
                 // Rethrow the exception with a more appropriate message for the presentation layer
-                throw new KeyNotFoundException($"Call with ID {id} not found.", ex);
+                throw new BlDoesNotExistException($"Call with ID {id} not found.", ex);
             }
         }
 
@@ -401,20 +401,21 @@ namespace BlImplementation
         /// Updates the details of a call.
         /// </summary>
         /// <param name="call"></param>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="KeyNotFoundException"></exception>
+        /// <exception cref="BlInvalidDateOrderException"></exception>
+        /// <exception cref="BlInvalidAddressException"></exception>
+        /// <exception cref="BlDoesNotExistException"></exception>
         public void UpdateCall(Call call)
         {
             // Validate the maximum completion time is greater than the opening time
             if (call.MaxCompletionTime.HasValue && call.MaxCompletionTime <= call.OpenedAt)
             {
-                throw new ArgumentException("Maximum completion time must be greater than the opening time.");
+                throw new BlInvalidDateOrderException("Maximum completion time must be greater than the opening time.");
             }
 
             // Validate the address and update latitude and longitude
             if (string.IsNullOrWhiteSpace(call.FullAddress))
             {
-                throw new ArgumentException("Address cannot be null or empty.");
+                throw new BlInvalidAddressException("Address cannot be null or empty.");
             }
 
             var coordinates = Tools.GetCoordinates(call.FullAddress);
@@ -424,7 +425,7 @@ namespace BlImplementation
 
             if (!isLocationValid)
             {
-                throw new ArgumentException("Invalid address. Unable to retrieve coordinates or address is outside of Israel or does not exist.");
+                throw new BlInvalidAddressException("Invalid address. Unable to retrieve coordinates or address is outside of Israel or does not exist.");
             }
 
             // Convert BO.Call to DO.Call
@@ -434,10 +435,10 @@ namespace BlImplementation
                 // Attempt to update the call in the data layer
                 _dal.Call.Update(doCall);
             }
-            catch (KeyNotFoundException ex)
+            catch (DO.DalDoesNotExistException ex)
             {
                 // Rethrow the exception with a more appropriate message for the presentation layer
-                throw new KeyNotFoundException($"Call with ID {call.Id} not found.", ex);
+                throw new BlDoesNotExistException($"Call with ID {call.Id} not found.", ex);
             }
         }
     }
