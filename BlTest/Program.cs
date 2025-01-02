@@ -101,13 +101,13 @@ internal class Program
         while (true)
         {
             Console.WriteLine("Volunteer Menu:");
-            Console.WriteLine("1. Add Volunteer");
-            Console.WriteLine("2. Delete Volunteer");
-            Console.WriteLine("3. Get Volunteer Details");
-            Console.WriteLine("4. Get Volunteers");
-            Console.WriteLine("5. Login");
-            Console.WriteLine("6. Update Volunteer");
-            Console.WriteLine("0. Back to Main Menu");
+            Console.WriteLine("1. Add Volunteer - Add a new volunteer to the system");
+            Console.WriteLine("2. Delete Volunteer - Remove an existing volunteer from the system");
+            Console.WriteLine("3. Get Volunteer Details - View details of a specific volunteer");
+            Console.WriteLine("4. Get Volunteers - List all volunteers with optional filters and sorting");
+            Console.WriteLine("5. Login - Volunteer login to the system");
+            Console.WriteLine("6. Update Volunteer - Update details of an existing volunteer");
+            Console.WriteLine("0. Back to Main Menu - Return to the main menu");
             Console.Write("Select an option: ");
             if (!int.TryParse(Console.ReadLine(), out int volunteerOption) || volunteerOption < 0 || volunteerOption > 6)
             {
