@@ -202,10 +202,10 @@ internal static class VolunteerManager
         // Remove spaces and special characters to validate the structure only
         phoneNumber = phoneNumber.Replace(" ", "").Replace("-", "");
 
-        // Pattern for numbers in the format 0501234567
-        // ^050 - the number must start with 050
+        // Pattern for numbers in the format 0501234567, 0521234567, 0541234567, 0551234567, 0571234567, 0581234567
+        // ^05[024578] - the number must start with 050, 052, 054, 055, 057, or 058
         // \d{7}$ - exactly 7 additional digits
-        string pattern = @"^050\d{7}$";
+        string pattern = @"^05[024578]\d{7}$";
 
         // Check if the number matches the pattern
         return Regex.IsMatch(phoneNumber, pattern);

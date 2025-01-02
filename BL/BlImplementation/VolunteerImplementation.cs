@@ -10,10 +10,16 @@ namespace BlImplementation
     {
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
+
         /// <summary>
         /// Adds a new volunteer to the system after validating the provided details.
         /// </summary>
         /// <param name="volunteerB">The volunteer object containing the details to be added.</param>
+        /// <exception cref="BO.BlValidationException">
+        /// Thrown when validation of the volunteer details fails. The exception message includes a list of invalid details: Email, ID, Phone Number, Location.
+        /// </exception>
+        /// <exception cref="BO.BlAlreadyExistsException">Thrown when a volunteer with the same ID already exists.</exception>
+        /// <exception cref="BO.BlSystemException">Thrown when an unexpected error occurs while adding the volunteer.</exception>
         public void AddVolunteer(BO.Volunteer volunteerB)
         {
             try
@@ -31,6 +37,13 @@ namespace BlImplementation
 
                 // Check if the location is within Israel
                 bool isLocationValid = coordinates.IsInIsrael;
+
+                // Collect invalid details
+                List<string> invalidDetails = new();
+                if (!isEmailValid) invalidDetails.Add("Email");
+                if (!isIdValid) invalidDetails.Add("ID");
+                if (!isPhoneNumberValid) invalidDetails.Add("Phone Number");
+                if (!isLocationValid) invalidDetails.Add("Location");
 
                 // If all validations pass
                 if (isEmailValid && isPhoneNumberValid && isLocationValid && isIdValid)
@@ -55,7 +68,7 @@ namespace BlImplementation
                 }
                 else
                 {
-                    throw new BO.BlValidationException("Validation failed for the volunteer details.");
+                    throw new BO.BlValidationException($"Validation failed for the following details: {string.Join(", ", invalidDetails)}");
                 }
             }
             catch (DO.DalAlreadyExistsException ex)
@@ -187,6 +200,13 @@ namespace BlImplementation
 
                 bool isLocationValid = coordinates.IsInIsrael;
 
+                // Collect invalid details
+                List<string> invalidDetails = new();
+                if (!isEmailValid) invalidDetails.Add("Email");
+                if (!isIdValid) invalidDetails.Add("ID");
+                if (!isPhoneNumberValid) invalidDetails.Add("Phone Number");
+                if (!isLocationValid) invalidDetails.Add("Location");
+
                 if (isEmailValid && isPhoneNumberValid && isLocationValid && isIdValid)
                 {
                     BO.Volunteer volunteerB = new()
@@ -216,7 +236,7 @@ namespace BlImplementation
                 }
                 else
                 {
-                    throw new BO.BlValidationException("Validation failed for the volunteer details.");
+                    throw new BO.BlValidationException($"Validation failed for the following details: {string.Join(", ", invalidDetails)}");
                 }
             }
             catch (Exception ex)

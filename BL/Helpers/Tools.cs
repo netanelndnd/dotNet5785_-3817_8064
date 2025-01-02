@@ -7,7 +7,7 @@ using System.Text.Json; // שימוש ב-System.Text.Json
 
 namespace Helpers;
 
-internal static class Tools
+public static class Tools
 {
     /// <summary>
     /// Converts the properties of an object to a string representation.
@@ -126,11 +126,11 @@ internal static class Tools
         }
         catch (WebException ex)
         {
-            throw new Exception("שגיאה בבקשת הרשת: " + ex.Message, ex);
+            throw new Exception("Error in network request: " + ex.Message, ex);
         }
         catch (Exception ex)
         {
-            throw new Exception("שגיאה בעת עיבוד הכתובת: " + ex.Message, ex);
+            throw new Exception("Error processing address: " + ex.Message, ex);
         }
     }
 
@@ -148,7 +148,7 @@ internal static class Tools
                 if (component.GetProperty("types").EnumerateArray().Any(type => type.GetString() == "country"))
                 {
                     string country = component.GetProperty("long_name").GetString();
-                    if (country == "ישראל")
+                    if (country == "Israel")
                     {
                         return true; // אם נמצאה ישראל
                     }
