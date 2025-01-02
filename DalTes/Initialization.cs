@@ -138,7 +138,7 @@ public static class Initialization
         for (int i = 0; i < 65; i++) // Changed to 70 to create 20 more calls
         {
             int addressIndex = i < 50 ? i : s_rand.Next(0, 50); // Use existing addresses randomly for the additional 20 calls
-            DateTime openTime = s_dal?.Config.Clock ?? throw new InvalidOperationException("s_dalConfig is null");
+            DateTime openTime = s_dal?.Config.Clock.AddMinutes(s_rand.Next(0, 1001)) ?? throw new InvalidOperationException("s_dalConfig is null");
             DateTime? maxCompletionTime = openTime + s_dal?.Config.RiskRange;
 
             Call call = new Call(

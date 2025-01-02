@@ -148,13 +148,31 @@ internal class Program
                         Console.WriteLine($"Distance Type: {volunteerDetails.DistanceType}");
                         Console.WriteLine($"Password: {volunteerDetails.Password ?? "N/A"}");
                         Console.WriteLine($"Address: {volunteerDetails.CurrentAddress ?? "N/A"}");
-                        Console.WriteLine($"Distance: {volunteerDetails.MaxDistance?.ToString() ?? "N/A"}");
                         Console.WriteLine($"Latitude: {volunteerDetails.Latitude?.ToString() ?? "N/A"}");
                         Console.WriteLine($"Longitude: {volunteerDetails.Longitude?.ToString() ?? "N/A"}");
                         Console.WriteLine($"Is the volunteer Active? {(volunteerDetails.IsActive ? "Yes" : "No")}");
+                        Console.WriteLine($"Max Distance: {volunteerDetails.MaxDistance?.ToString() ?? "N/A"}");
                         Console.WriteLine($"Sum of Cared Calls: {volunteerDetails.TotalCallsHandled}");
                         Console.WriteLine($"Sum of Cancelled Calls: {volunteerDetails.TotalCallsCancelled}");
                         Console.WriteLine($"Sum of Expired Calls: {volunteerDetails.TotalExpiredCalls}");
+
+                        if (volunteerDetails.CurrentCall != null)
+                        {
+                            Console.WriteLine("Current Call in Progress:");
+                            Console.WriteLine($"  Call ID: {volunteerDetails.CurrentCall.CallId}");
+                            Console.WriteLine($"  Call Type: {volunteerDetails.CurrentCall.CallType}");
+                            Console.WriteLine($"  Description: {volunteerDetails.CurrentCall.Description ?? "N/A"}");
+                            Console.WriteLine($"  Address: {volunteerDetails.CurrentCall.FullAddress}");
+                            Console.WriteLine($"  Opened At: {volunteerDetails.CurrentCall.OpenedAt}");
+                            Console.WriteLine($"  Max Completion Time: {volunteerDetails.CurrentCall.MaxCompletionTime?.ToString() ?? "N/A"}");
+                            Console.WriteLine($"  Started At: {volunteerDetails.CurrentCall.StartedAt}");
+                            Console.WriteLine($"  Distance From Volunteer: {volunteerDetails.CurrentCall.DistanceFromVolunteer}");
+                            Console.WriteLine($"  Status: {volunteerDetails.CurrentCall.Status}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("No current call in progress.");
+                        }
                         break;
                     case 4:
                         Console.Write("Enter 1 to filter active volunteers, 2 for inactive, or 0 for all: ");
