@@ -15,7 +15,7 @@ namespace BlImplementation
         /// </summary>
         public DateTime GetSystemClock()
         {
-            return DateTime.Now;
+            return ClockManager.Now;
         }
 
         /// <summary>

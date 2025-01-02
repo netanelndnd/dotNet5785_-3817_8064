@@ -7,7 +7,7 @@ using System.Text.Json; // שימוש ב-System.Text.Json
 
 namespace Helpers;
 
-internal static class Tools
+public static class Tools
 {
     /// <summary>
     /// Converts the properties of an object to a string representation.

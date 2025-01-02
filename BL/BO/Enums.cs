@@ -2,8 +2,8 @@
 // ENUM for volunteer role
 public enum VolunteerRole
 {
-    Manager,
-    Volunteer
+    Manager = 0,
+    Volunteer = 1
 }
 
 
