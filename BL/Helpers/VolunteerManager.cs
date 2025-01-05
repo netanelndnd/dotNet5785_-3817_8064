@@ -3,10 +3,11 @@ using System.Text.RegularExpressions;
 using BlImplementation;
 namespace Helpers;
 
-internal static class VolunteerManager
+internal static class VolunteerManager  
 {
     private static IDal s_dal = Factory.Get; //stage 4
 
+    internal static ObserverManager Observers = new(); //stage 5
     /// <summary>
     /// Get the number of calls that a volunteer has handled
     /// </summary>
@@ -234,6 +235,8 @@ internal static class VolunteerManager
         };
         //תיזרק חריגה אם אין כזה ת"ז
         s_dal.Volunteer.Update(volunteerD);
+        Observers.NotifyListUpdated();
+        Observers.NotifyItemUpdated(volunteerD.Id);
     }
 
     /// <summary>
@@ -259,6 +262,8 @@ internal static class VolunteerManager
         };
         //תיזרק חיריגה אם אין כזה ת"ז
         s_dal.Volunteer.Update(volunteerD);
+        Observers.NotifyListUpdated();
+        Observers.NotifyItemUpdated(volunteerD.Id);
     }
 
     /// <summary>

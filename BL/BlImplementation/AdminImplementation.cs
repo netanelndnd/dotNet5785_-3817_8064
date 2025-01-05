@@ -15,7 +15,7 @@ namespace BlImplementation
         /// </summary>
         public DateTime GetSystemClock()
         {
-            return ClockManager.Now;
+            return AdminManager.Now;
         }
 
         /// <summary>
@@ -26,23 +26,23 @@ namespace BlImplementation
         {
             if(timeUnit == TimeUnit.Minute)
             {
-                ClockManager.UpdateClock(ClockManager.Now.AddMinutes(1));
+                AdminManager.UpdateClock(AdminManager.Now.AddMinutes(1));
             }
             else if (timeUnit == TimeUnit.Hour)
             {
-                ClockManager.UpdateClock(ClockManager.Now.AddHours(1));
+                AdminManager.UpdateClock(AdminManager.Now.AddHours(1));
             }
             else if (timeUnit == TimeUnit.Day)
             {
-                ClockManager.UpdateClock(ClockManager.Now.AddDays(1));
+                AdminManager.UpdateClock(AdminManager.Now.AddDays(1));
             }
             else if (timeUnit == TimeUnit.Month)
             {
-                ClockManager.UpdateClock(ClockManager.Now.AddMonths(1));
+                AdminManager.UpdateClock(AdminManager.Now.AddMonths(1));
             }
             else if (timeUnit == TimeUnit.Year)
             {
-                ClockManager.UpdateClock(ClockManager.Now.AddYears(1));
+                AdminManager.UpdateClock(AdminManager.Now.AddYears(1));
             }
         }
 
@@ -52,7 +52,7 @@ namespace BlImplementation
         /// </summary>
         public TimeSpan GetRiskTimeSpan()
         {
-            return _dal.Config.RiskRange;
+            return AdminManager.RiskRange;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace BlImplementation
         /// </summary>
         public void SetRiskTimeSpan(TimeSpan riskTimeSpan)
         {
-            _dal.Config.RiskRange = riskTimeSpan;
+            AdminManager.RiskRange = riskTimeSpan;
         }
 
         /// <summary>
@@ -71,9 +71,9 @@ namespace BlImplementation
         public void ResetDatabase()
         {
             // Reset the configuration to its initial state and update the clock to the current time (now)
-            _dal.Config.Reset();
-            ClockManager.UpdateClock(ClockManager.Now);
-
+            AdminManager.Reset();
+            AdminManager.UpdateClock(AdminManager.Now);
+            AdminManager.RiskRange = TimeSpan.FromHours(2);
             // Clear data for all entities
             _dal.Assignment.DeleteAll();
             _dal.Call.DeleteAll();
@@ -88,10 +88,36 @@ namespace BlImplementation
         {
             // Reset the database to its initial state
             ResetDatabase();
-
+            AdminManager.Reset();
             // Initialize the database with initial data
             DalTest.Initialization.Do();
-            ClockManager.UpdateClock(ClockManager.Now);
+            AdminManager.UpdateClock(AdminManager.Now);
+            AdminManager.RiskRange = TimeSpan.FromHours(2);
         }
+        /// <summary>
+        /// Adds an observer for clock updates.
+        /// </summary>
+        /// <param name="clockObserver">The observer to add.</param>
+        public void AddClockObserver(Action clockObserver) =>
+           AdminManager.ClockUpdatedObservers += clockObserver;
+        /// <summary>
+        /// Removes an observer for clock updates.
+        /// </summary>
+        /// <param name="clockObserver">The observer to remove.</param>
+        public void RemoveClockObserver(Action clockObserver) =>
+           AdminManager.ClockUpdatedObservers -= clockObserver;
+        /// <summary>
+        /// Adds an observer for configuration updates.
+        /// </summary>
+        /// <param name="configObserver">The observer to add.</param>
+        public void AddConfigObserver(Action configObserver) =>
+           AdminManager.ConfigUpdatedObservers += configObserver;
+        /// <summary>
+        /// Removes an observer for configuration updates.
+        /// </summary>
+        /// <param name="configObserver">The observer to remove.</param>
+        public void RemoveConfigObserver(Action configObserver) =>
+           AdminManager.ConfigUpdatedObservers -= configObserver;
+
     }
 }

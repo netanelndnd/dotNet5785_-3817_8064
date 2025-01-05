@@ -10,6 +10,14 @@ namespace BlImplementation
     {
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
+        public void AddObserver(Action listObserver) =>
+          VolunteerManager.Observers.AddListObserver(listObserver); //stage 5
+        public void AddObserver(int id, Action observer) =>
+          VolunteerManager.Observers.AddObserver(id, observer); //stage 5
+        public void RemoveObserver(Action listObserver) =>
+          VolunteerManager.Observers.RemoveListObserver(listObserver); //stage 5
+        public void RemoveObserver(int id, Action observer) =>
+          VolunteerManager.Observers.RemoveObserver(id, observer); //stage 5
 
         /// <summary>
         /// Adds a new volunteer to the system after validating the provided details.
@@ -65,6 +73,7 @@ namespace BlImplementation
                     };
 
                     _dal.Volunteer.Create(volunteerD);
+                    VolunteerManager.Observers.NotifyListUpdated();
                 }
                 else
                 {
@@ -95,6 +104,7 @@ namespace BlImplementation
                 if (volunteer.IsActive == false)
                 {
                     _dal.Volunteer.Delete(id);
+                    VolunteerManager.Observers.NotifyListUpdated();
                 }
                 else
                 {
@@ -228,10 +238,14 @@ namespace BlImplementation
                     if (!isManager)
                     {
                         VolunteerManager.UpdateVolunteerDetails(volunteerB);
+                        VolunteerManager.Observers.NotifyItemUpdated(volunteerB.Id);
+                        VolunteerManager.Observers.NotifyListUpdated();
                     }
                     else
                     {
                         VolunteerManager.UpdateManagerDetails(volunteerB);
+                        VolunteerManager.Observers.NotifyItemUpdated(volunteerB.Id);
+                        VolunteerManager.Observers.NotifyListUpdated();
                     }
                 }
                 else

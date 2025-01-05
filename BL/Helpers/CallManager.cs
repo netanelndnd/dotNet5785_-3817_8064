@@ -1,14 +1,15 @@
-﻿using DalApi;
+﻿using BlApi;
+using DalApi;
 using System;
 using System.Data;
 
 namespace Helpers;
 
-internal static class CallManager
+internal static class CallManager 
 {
     private static IDal s_dal = Factory.Get; //stage 4
 
-
+    internal static ObserverManager Observers = new(); //stage 5
     public static int GetCallTypeById(int callId)
     {
         var callDetails = s_dal.Call.Read(a => a.Id == callId);
@@ -104,7 +105,7 @@ internal static class CallManager
             CallId = call.Id,
             CallType = (BO.CallType)call.CallType,
             OpeningTime = call.OpenTime,
-            RemainingTime = call.MaxCompletionTime.HasValue ? call.MaxCompletionTime.Value - ClockManager.Now : (TimeSpan?)null,
+            RemainingTime = call.MaxCompletionTime.HasValue ? call.MaxCompletionTime.Value - AdminManager.Now : (TimeSpan?)null,
             LastVolunteerName = AssignmentManager.GetVolunteerNameByCallId(call.Id),
             CompletionDuration = AssignmentManager.GetTimeDifferenceForLastAssignment(call.Id),
             Status = GetCallStatus(call.Id),
@@ -131,7 +132,7 @@ internal static class CallManager
         }
         // Get the assignment details
         var assignment = s_dal.Assignment.Read(a => a.CallId == callId && a.CompletionTime == null);
-        var now = ClockManager.Now;
+        var now = AdminManager.Now;
         var riskRange = s_dal.Config.RiskRange;
 
         if (volunteerId.HasValue)
@@ -279,7 +280,7 @@ internal static class CallManager
     /// <returns>A list of OpenCallInList objects containing details of open calls available for the volunteer.</returns>
     public static IEnumerable<BO.OpenCallInList>? GetOpenCallsForVolunteer(int volunteerId)
     {
-        var openCalls = s_dal.Call.ReadAll().Where(c => c.MaxCompletionTime == null || c.MaxCompletionTime > ClockManager.Now);
+        var openCalls = s_dal.Call.ReadAll().Where(c => c.MaxCompletionTime == null || c.MaxCompletionTime > AdminManager.Now);
         if (openCalls == null || !openCalls.Any())
         {
             return null;

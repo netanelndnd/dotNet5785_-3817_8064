@@ -39,5 +39,11 @@ namespace BlApi
         /// Initializes the database with initial data.
         /// </summary>
         void InitializeDatabase();
+
+        void AddConfigObserver(Action configObserver);
+        void RemoveConfigObserver(Action configObserver);
+        void AddClockObserver(Action clockObserver);
+        void RemoveClockObserver(Action clockObserver);
+
     }
 }

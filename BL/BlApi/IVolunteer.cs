@@ -1,8 +1,9 @@
 ﻿
 namespace BlApi
 {
-    public interface IVolunteer
+    public interface IVolunteer : IObservable //stage 5
     {
+
         /// <summary>
         /// Logs in a volunteer to the system.
         /// </summary>

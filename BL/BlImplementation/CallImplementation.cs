@@ -9,6 +9,17 @@ namespace BlImplementation
     {
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
+        public void AddObserver(Action listObserver) =>
+          CallManager.Observers.AddListObserver(listObserver); //stage 5
+        public void AddObserver(int id, Action observer) =>
+          CallManager.Observers.AddObserver(id, observer); //stage 5
+        public void RemoveObserver(Action listObserver) =>
+          CallManager.Observers.RemoveListObserver(listObserver); //stage 5
+        public void RemoveObserver(int id, Action observer) =>
+          CallManager.Observers.RemoveObserver(id, observer); //stage 5
+
+
+
         /// <summary>
         /// Adds a new call to the system.
         /// </summary>
@@ -49,6 +60,7 @@ namespace BlImplementation
             {
                 // Attempt to add the call in the data layer
                 _dal.Call.Create(doCall);
+                CallManager.Observers.NotifyListUpdated();
             }
             catch (Exception ex)
             {
@@ -69,13 +81,13 @@ namespace BlImplementation
             var callStatus = CallManager.GetCallStatus(callId);
 
             // Check if the call is open or open in risk and the maximum completion time has not passed
-            if ((callStatus == CallStatus.Open || callStatus == CallStatus.OpenInRisk) && call.MaxCompletionTime < ClockManager.Now)
+            if ((callStatus == CallStatus.Open || callStatus == CallStatus.OpenInRisk) && call.MaxCompletionTime < AdminManager.Now)
             {
                 DO.Assignment newAssignment = new DO.Assignment
                 {
                     CallId = callId,
                     VolunteerId = volunteerId,
-                    EntryTime = ClockManager.Now
+                    EntryTime = AdminManager.Now
                 };
             }
             else
@@ -110,7 +122,7 @@ namespace BlImplementation
                         VolunteerId = assignment.VolunteerId,
                         EntryTime = assignment.EntryTime,
                         CompletionStatus = (DO.CompletionType)CompletionType.SelfCancellation,
-                        CompletionTime = ClockManager.Now
+                        CompletionTime = AdminManager.Now
                     };
                     _dal.Assignment.Update(newAssignment);
                 }
@@ -125,9 +137,11 @@ namespace BlImplementation
                         VolunteerId = assignment.VolunteerId,
                         EntryTime = assignment.EntryTime,
                         CompletionStatus = (DO.CompletionType)CompletionType.ManagerCancellation,
-                        CompletionTime = ClockManager.Now
+                        CompletionTime = AdminManager.Now
                     };
                     _dal.Assignment.Update(newAssignment);
+                    CallManager.Observers.NotifyItemUpdated(newAssignment.Id);
+                    CallManager.Observers.NotifyListUpdated();
                 }
             }
             else
@@ -165,9 +179,11 @@ namespace BlImplementation
                             VolunteerId = assignment.VolunteerId,
                             EntryTime = assignment.EntryTime,
                             CompletionStatus = (DO.CompletionType)CompletionType.Treated,
-                            CompletionTime = ClockManager.Now
+                            CompletionTime = AdminManager.Now
                         };
                         _dal.Assignment.Update(newAssignment);
+                        CallManager.Observers.NotifyItemUpdated(newAssignment.Id);
+                        CallManager.Observers.NotifyListUpdated();
                     }
                     else
                     {
@@ -211,6 +227,7 @@ namespace BlImplementation
             {
                 // Attempt to delete the call in the data layer
                 _dal.Call.Delete(id);
+                CallManager.Observers.NotifyListUpdated();
             }
             catch (Exception ex)
             {
@@ -434,6 +451,8 @@ namespace BlImplementation
             {
                 // Attempt to update the call in the data layer
                 _dal.Call.Update(doCall);
+                CallManager.Observers.NotifyItemUpdated(doCall.Id);
+                CallManager.Observers.NotifyListUpdated();
             }
             catch (DO.DalDoesNotExistException ex)
             {
