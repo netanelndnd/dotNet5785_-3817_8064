@@ -19,6 +19,10 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            <Label Content="Label" HorizontalAlignment="Left" Grid.Column="0" Margin="119,10,0,0" VerticalAlignment="Top"/>
+            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" />
         </Grid>
+        <ListView />
+        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100"/>
     </Grid>
 </Window>
