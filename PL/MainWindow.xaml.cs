@@ -36,20 +36,8 @@ namespace PL
 
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
-        // Method called when the window is loaded
-        public void Loaded_Screen()
-        {
-            CurrentTime = s_bl.Admin.GetSystemClock();
-            TimeRisk = s_bl.Admin.GetRiskTimeSpan();
-            s_bl.Admin.AddClockObserver(clockObserver);
-            s_bl.Admin.AddConfigObserver(configObserver);
-        }
-        public void Closed_Screen()
-        {
-            s_bl.Admin.RemoveClockObserver(clockObserver);
-            s_bl.Admin.RemoveConfigObserver(configObserver);
-        }
-
+       
+       
 
         // Dependency property for the current time
         public DateTime CurrentTime
@@ -135,6 +123,22 @@ namespace PL
                 case MessageBoxResult.No:
                     break;
             }
+        }
+        // Method called when the window is loaded
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            CurrentTime = s_bl.Admin.GetSystemClock();
+            TimeRisk = s_bl.Admin.GetRiskTimeSpan();
+            s_bl.Admin.AddClockObserver(clockObserver);
+            s_bl.Admin.AddConfigObserver(configObserver);
+        }
+
+        // Method called when the window is closed
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            s_bl.Admin.RemoveClockObserver(clockObserver);
+            s_bl.Admin.RemoveConfigObserver(configObserver);
         }
     }
 }

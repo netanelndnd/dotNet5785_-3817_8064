@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
-        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" Loaded="Window_Loaded" Closed="Window_Closed">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="218*"/>
@@ -14,7 +14,7 @@
             <ColumnDefinition Width="513*"/>
         </Grid.ColumnDefinitions>
         <!--clock system-->
-        <Label Content ="{Binding CurrentTime}" Margin="34,5,360,0" VerticalAlignment="Top" RenderTransformOrigin="15.22,0.444" Height="45" Grid.Column="2"/>
+        <Label Content ="{Binding CurrentTime}" Margin="10,0,384,0" VerticalAlignment="Top" RenderTransformOrigin="15.22,0.444" Height="45" Grid.Column="2"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="75,50,0,0" Grid.ColumnSpan="3">
             <Button Content="Add One Minute" Click="btnAddOneMinute_Click" Width="120" Height="30" Margin="5"/>
             <Button Content="Add One Hour" Click="btnAddOneHour_Click" Width="120" Height="30" Margin="5"/>
