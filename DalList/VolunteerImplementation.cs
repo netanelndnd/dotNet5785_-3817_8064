@@ -31,7 +31,7 @@ internal class VolunteerImplementation : IVolunteer
         if (volunteer is null)
             throw new DalDeletionImpossible($"Volunteer with ID={id} does not exist");
         else
-            DataSource.Volunteers.Remove(volunteer);
+            DataSource.Volunteers.Select(v=> v.Id != volunteer.Id);
     }
 
     /// <summary>
@@ -39,7 +39,7 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     public void DeleteAll()
     {
-        DataSource.Volunteers.Clear();
+        DataSource.Volunteers.DefaultIfEmpty();
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ internal class VolunteerImplementation : IVolunteer
         if (existingVolunteer is null)
             throw new DalDoesNotExistException($"Volunteer with ID={item.Id} does not exist");
 
-        DataSource.Volunteers.Remove(existingVolunteer);
-        DataSource.Volunteers.Append(item);
+        Delete(existingVolunteer.Id);
+        Create(item);
     }
 }

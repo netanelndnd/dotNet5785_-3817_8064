@@ -1,29 +1,65 @@
-﻿<Window x:Class="PL.Volunteer.VolunteerInList"
+﻿<Window x:Class="PL.Volunteer.VolunteerInListWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
-        Title="VolunteerInList" Height="640" Width="800"
+        Title="VolunteerInListWindow" Height="640" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
     <!--External Grid-->
     <Grid>
+        <!-- Define the row structure of the main grid -->
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="500*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        
         <!--Internal, Upper Grid-->
         <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto">
+            <!-- Define the column structure of the internal grid -->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            
+            <!-- Label in the first column of the internal grid -->
             <Label Content="Label" HorizontalAlignment="Left" Grid.Column="0" Margin="119,10,0,0" VerticalAlignment="Top"/>
-            <ComboBox ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}" SelectedValue="{Binding Path=callType, Mode=TwoWay}" SelectionChanged="CallTyps_CB" Margin="302,0,10,7" Grid.Column="1" RenderTransformOrigin="-0.797,-4.404" />
+            
+            <!-- ComboBox in the second column of the internal grid -->
+            <ComboBox ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}" 
+                      SelectedValue="{Binding Path=callType, Mode=TwoWay}" 
+                      SelectionChanged="CallTyps_CB" 
+                      Margin="302,0,10,7" 
+                      Grid.Column="1" 
+                      RenderTransformOrigin="-0.797,-4.404" />
         </Grid>
-        <ListView Margin="5" Grid.Row="1" ItemsSource="{Binding Path=VolunteerList}"/>
+        
+        <!-- ListView to display the list of volunteers -->
+        <ListView Margin="5" Grid.Row="1" ItemsSource="{Binding Path=VolunteerList}">
+            <ListView.View>
+                <GridView>
+                    <!-- Define columns for the GridView inside the ListView -->
+                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="Auto"/>
+                    <GridViewColumn Header="Full Name" DisplayMemberBinding="{Binding FullName}" Width="Auto"/>
+                    <GridViewColumn Header="Is Active" Width="Auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <!-- CheckBox to display the IsActive property -->
+                                <CheckBox IsEnabled="False" IsChecked="{Binding Path=IsActive}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Total Calls Handled" DisplayMemberBinding="{Binding TotalCallsHandled}" Width="Auto"/>
+                    <GridViewColumn Header="Total Calls Cancelled" DisplayMemberBinding="{Binding TotalCallsCancelled}" Width="Auto"/>
+                    <GridViewColumn Header="Total Expired Calls" DisplayMemberBinding="{Binding TotalExpiredCalls}" Width="Auto"/>
+                    <GridViewColumn Header="Current Call Type" DisplayMemberBinding="{Binding CurrentCallType}" Width="Auto"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        
+        <!-- Button at the bottom of the main grid -->
         <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100"/>
     </Grid>
 </Window>

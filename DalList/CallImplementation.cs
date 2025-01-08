@@ -36,7 +36,7 @@ internal class CallImplementation : ICall
         if (call is null)
             throw new DalDeletionImpossible($"Call with ID={id} does not exist");
         else
-            DataSource.Calls.Remove(call);
+            DataSource.Calls.Select(v=> v.Id!=call.Id);
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ internal class CallImplementation : ICall
     /// </summary>
     public void DeleteAll()
     {
-        DataSource.Calls.Clear();
+        DataSource.Calls.DefaultIfEmpty();
     }
 
     /// <summary>
@@ -91,8 +91,8 @@ internal class CallImplementation : ICall
         {
             throw new DalDoesNotExistException($"Call with ID={item.Id} does not exist");
         }
-        DataSource.Calls.Remove(existingCall);
-        DataSource.Calls.Append(item);
+        Delete(existingCall.Id);
+        Create(item);
     }
 }
 

@@ -35,7 +35,7 @@ internal class AssignmentImplementation : IAssignment
         if (assignment is null)
             throw new DalDeletionImpossible($"Assignment with ID={id} does not exist");
         else
-            DataSource.Assignments.Remove(assignment);
+            DataSource.Assignments.Select(v=>v.Id != assignment.Id);
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ internal class AssignmentImplementation : IAssignment
     /// </summary>
     public void DeleteAll()
     {
-        DataSource.Assignments.Clear();
+        DataSource.Assignments.DefaultIfEmpty();
     }
 
     /// <summary>
@@ -88,8 +88,8 @@ internal class AssignmentImplementation : IAssignment
         var existingAssignment = Read(item.Id);
         if (existingAssignment is null)
             throw new DalDoesNotExistException($"Assignment with ID={item.Id} does not exist");
-        DataSource.Assignments.Remove(existingAssignment);
-        DataSource.Assignments.Add(item);
+        Delete(existingAssignment.Id);
+        Create(item);
     }
 }
 
