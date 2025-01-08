@@ -22,10 +22,6 @@ namespace PL
             InitializeComponent();
         }
 
-
-        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-
-
         // Observer method to update the current time
         private void clockObserver()
         {
