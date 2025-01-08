@@ -9,6 +9,8 @@ namespace BlImplementation
     {
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
+        #region Stage 5
+
         public void AddObserver(Action listObserver) =>
           CallManager.Observers.AddListObserver(listObserver); //stage 5
         public void AddObserver(int id, Action observer) =>
@@ -18,6 +20,7 @@ namespace BlImplementation
         public void RemoveObserver(int id, Action observer) =>
           CallManager.Observers.RemoveObserver(id, observer); //stage 5
 
+        #endregion Stage 5
 
 
         /// <summary>
@@ -125,6 +128,8 @@ namespace BlImplementation
                         CompletionTime = AdminManager.Now
                     };
                     _dal.Assignment.Update(newAssignment);
+                    CallManager.Observers.NotifyItemUpdated(newAssignment.Id);
+                    CallManager.Observers.NotifyListUpdated();
                 }
                 // If the requester is a manager
                 else if (requester.VolunteerRole == DO.Role.Manager)

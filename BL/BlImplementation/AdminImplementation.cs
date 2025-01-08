@@ -73,7 +73,7 @@ namespace BlImplementation
             // Reset the configuration to its initial state and update the clock to the current time (now)
             AdminManager.Reset();
             AdminManager.UpdateClock(AdminManager.Now);
-            AdminManager.RiskRange = TimeSpan.FromHours(2);
+            AdminManager.RiskRange = AdminManager.RiskRange;
             // Clear data for all entities
             _dal.Assignment.DeleteAll();
             _dal.Call.DeleteAll();
@@ -92,32 +92,40 @@ namespace BlImplementation
             // Initialize the database with initial data
             DalTest.Initialization.Do();
             AdminManager.UpdateClock(AdminManager.Now);
-            AdminManager.RiskRange = TimeSpan.FromHours(2);
+            AdminManager.RiskRange = AdminManager.RiskRange;
         }
+
+        #region Stage 5
+
         /// <summary>
         /// Adds an observer for clock updates.
         /// </summary>
         /// <param name="clockObserver">The observer to add.</param>
         public void AddClockObserver(Action clockObserver) =>
            AdminManager.ClockUpdatedObservers += clockObserver;
+
         /// <summary>
         /// Removes an observer for clock updates.
         /// </summary>
         /// <param name="clockObserver">The observer to remove.</param>
         public void RemoveClockObserver(Action clockObserver) =>
            AdminManager.ClockUpdatedObservers -= clockObserver;
+
         /// <summary>
         /// Adds an observer for configuration updates.
         /// </summary>
         /// <param name="configObserver">The observer to add.</param>
         public void AddConfigObserver(Action configObserver) =>
            AdminManager.ConfigUpdatedObservers += configObserver;
+
         /// <summary>
         /// Removes an observer for configuration updates.
         /// </summary>
         /// <param name="configObserver">The observer to remove.</param>
         public void RemoveConfigObserver(Action configObserver) =>
            AdminManager.ConfigUpdatedObservers -= configObserver;
+
+        #endregion Stage 5
 
     }
 }

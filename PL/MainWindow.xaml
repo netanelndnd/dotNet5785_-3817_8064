@@ -9,12 +9,13 @@
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="287*"/>
+            <ColumnDefinition Width="218*"/>
+            <ColumnDefinition Width="69*"/>
             <ColumnDefinition Width="513*"/>
         </Grid.ColumnDefinitions>
         <!--clock system-->
-        <Label Content ="{Binding CurrentTime}" Margin="34,5,360,0" VerticalAlignment="Top" RenderTransformOrigin="15.22,0.444" Height="45" Grid.Column="1"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="75,50,0,0" Grid.ColumnSpan="2">
+        <Label Content ="{Binding CurrentTime}" Margin="34,5,360,0" VerticalAlignment="Top" RenderTransformOrigin="15.22,0.444" Height="45" Grid.Column="2"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="75,50,0,0" Grid.ColumnSpan="3">
             <Button Content="Add One Minute" Click="btnAddOneMinute_Click" Width="120" Height="30" Margin="5"/>
             <Button Content="Add One Hour" Click="btnAddOneHour_Click" Width="120" Height="30" Margin="5"/>
             <Button Content="Add One Day" Click="btnAddOneDay_Click" Width="120" Height="30" Margin="5"/>
@@ -22,7 +23,7 @@
             <Button Content="Add One Year" Click="btnAddOneYear_Click" Width="120" Height="30" Margin="5"/>
         </StackPanel>
         <!--Time span configuration-->
-        <TextBox HorizontalAlignment="Left" Margin="190,170,0,0" TextWrapping="Wrap" Text="{Binding TimeRisk}" VerticalAlignment="Top" Width="127" Height="24" Grid.ColumnSpan="2"/>
+        <TextBox HorizontalAlignment="Left" Margin="190,170,0,0" TextWrapping="Wrap" Text="{Binding TimeRisk}" VerticalAlignment="Top" Width="127" Height="24" Grid.ColumnSpan="3"/>
         <!--Time span configuration update button-->
         <Button Content="Update time risk" Click="btnUpdateTimeSpan_Click" HorizontalAlignment="Left" Margin="75,170,0,0" VerticalAlignment="Top"/>
         <!--List view button-->

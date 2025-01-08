@@ -8,6 +8,7 @@ internal static class CallManager
     private static IDal s_dal = Factory.Get; //stage 4
 
     internal static ObserverManager Observers = new(); //stage 5
+
     public static int GetCallTypeById(int callId)
     {
         var callDetails = s_dal.Call.Read(a => a.Id == callId);
@@ -58,14 +59,6 @@ internal static class CallManager
         };
     }
 
-
-    
-
-
-
-
-
-
     // פונקציה לחישוב המרחק בין שתי נקודות על פי קו רוחב וקו אורך
     public static double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
     {
@@ -89,6 +82,7 @@ internal static class CallManager
     {
         return degrees * (Math.PI / 180);
     }
+
     /// <summary>
     /// Retrieves all calls from the data layer as a list of CallInList.
     /// </summary>
@@ -110,7 +104,6 @@ internal static class CallManager
             TotalAssignments = AssignmentManager.CountAssignmentsByCallId(call.Id)
         }).ToList();
     }
-
 
     /// <summary>
     /// Retrieves the status of a specific call, optionally filtered by volunteer ID.
@@ -186,7 +179,6 @@ internal static class CallManager
         }
     }
 
-
     /// <summary>
     /// Retrieves the details of a call and its assignments.
     /// </summary>
@@ -217,6 +209,7 @@ internal static class CallManager
             Assignments = assignments.Any() ? assignments : null
         };
     }
+
     /// <summary>
     /// Converts a BO.Call object to a DO.Call object.
     /// </summary>
@@ -271,6 +264,7 @@ internal static class CallManager
             CompletionStatus = (BO.CompletionType)s_dal.Assignment.Read(a => a.CallId == call.Id && a.VolunteerId == volunteerId)?.CompletionStatus
         }).ToList();
     }
+
     /// <summary>
     /// Retrieves a list of open calls available for a volunteer to choose from.
     /// </summary>
