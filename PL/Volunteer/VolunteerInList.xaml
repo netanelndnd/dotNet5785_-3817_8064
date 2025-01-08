@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
-        Title="VolunteerInList" Height="640" Width="800">
+        Title="VolunteerInList" Height="640" Width="800"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
     <!--External Grid-->
     <Grid>
         <Grid.RowDefinitions>
@@ -20,9 +21,9 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Label Content="Label" HorizontalAlignment="Left" Grid.Column="0" Margin="119,10,0,0" VerticalAlignment="Top"/>
-            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" />
+            <ComboBox ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}" SelectedValue="{Binding Path=callType, Mode=TwoWay}" SelectionChanged="CallTyps_CB" Margin="302,0,10,7" Grid.Column="1" RenderTransformOrigin="-0.797,-4.404" />
         </Grid>
-        <ListView />
+        <ListView Margin="5" Grid.Row="1" ItemsSource="{Binding Path=VolunteerList}"/>
         <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100"/>
     </Grid>
 </Window>
