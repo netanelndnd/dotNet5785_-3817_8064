@@ -5,48 +5,55 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
-        Title="VolunteerInListWindow" Height="640" Width="800"
+        Title="Volunteer List" Height="640" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
-    <!--External Grid-->
-    <Grid>
-        <!-- Define the row structure of the main grid -->
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#2E8B57"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#2E8B57"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="200"/>
+        </Style>
+    </Window.Resources>
+    <Grid Background="#F0F0F0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="40*"/>
-            <RowDefinition Height="500*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
-        <!--Internal, Upper Grid-->
-        <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto">
-            <!-- Define the column structure of the internal grid -->
+        <!-- Header Section -->
+        <Grid Grid.Row="0" Background="#2E8B57" Margin="10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            
-            <!-- Label in the first column of the internal grid -->
-            <Label Content="Label" HorizontalAlignment="Left" Grid.Column="0" Margin="119,10,0,0" VerticalAlignment="Top"/>
-            
-            <!-- ComboBox in the second column of the internal grid -->
+            <Label Content="Filter by Call Type:" Foreground="White" VerticalAlignment="Center" Grid.Column="0" Margin="5"/>
             <ComboBox ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}" 
                       SelectedValue="{Binding Path=callType, Mode=TwoWay}" 
                       SelectionChanged="CallTyps_CB" 
-                      Margin="302,0,10,7" 
-                      Grid.Column="1" 
-                      RenderTransformOrigin="-0.797,-4.404" />
+                      VerticalAlignment="Center" Grid.Column="1" Margin="5"/>
         </Grid>
         
-        <!-- ListView to display the list of volunteers -->
-        <ListView Margin="5" Grid.Row="1" ItemsSource="{Binding Path=VolunteerList}">
+        <!-- ListView Section -->
+        <ListView Margin="10" Grid.Row="1" ItemsSource="{Binding Path=VolunteerList}" SelectedItem="{Binding SelectedVolunteer}" MouseDoubleClick="lsvVolunteersList_MouseDoubleClick" Background="White" BorderBrush="#2E8B57" BorderThickness="1">
             <ListView.View>
                 <GridView>
-                    <!-- Define columns for the GridView inside the ListView -->
                     <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="Auto"/>
                     <GridViewColumn Header="Full Name" DisplayMemberBinding="{Binding FullName}" Width="Auto"/>
                     <GridViewColumn Header="Is Active" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <!-- CheckBox to display the IsActive property -->
                                 <CheckBox IsEnabled="False" IsChecked="{Binding Path=IsActive}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -59,7 +66,9 @@
             </ListView.View>
         </ListView>
         
-        <!-- Button at the bottom of the main grid -->
-        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100"/>
+        <!-- Footer Section -->
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Add Volunteer" Click="btnAdd_Click"/>
+        </StackPanel>
     </Grid>
 </Window>

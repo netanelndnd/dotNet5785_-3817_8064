@@ -25,7 +25,6 @@ namespace PL.Volunteer
             InitializeComponent();
         }
 
-
         // Property to store and retrieve the list of volunteers.
         // This property uses a DependencyProperty to enable data binding in WPF.
         public IEnumerable<BO.VolunteerInList> VolunteerList
@@ -42,9 +41,11 @@ namespace PL.Volunteer
         public static readonly DependencyProperty VolunteerListProperty =
             DependencyProperty.Register("VolunteerList", typeof(IEnumerable<BO.VolunteerInList>), typeof(VolunteerInListWindow), new PropertyMetadata(null));
 
-
         // Property to store the type of call. It is initialized to 'None' by default.
         public BO.CallType callType { get; set; } = BO.CallType.None;
+
+        // Property to store the selected volunteer in the list.
+        public BO.VolunteerInList? SelectedVolunteer { get; set; }
 
         // Method to handle the selection of a call type in the ComboBox.
         // This method is triggered when the selection in the ComboBox changes.
@@ -53,11 +54,16 @@ namespace PL.Volunteer
             // Update the VolunteerList based on the selected call type.
             // If the call type is 'None', retrieve all volunteers.
             // Otherwise, filter the volunteers by the selected call type.
-            VolunteerList = (callType == BO.CallType.None) ?
-                s_bl?.Volunteer.GetVolunteers(null, null, null)! :
-                s_bl?.Volunteer.GetVolunteers(null, null, callType)!;
-        }
 
+           //
+           לתיקון!
+
+                // Update the VolunteerList based on the selected call type.
+
+            VolunteerList = (callType == BO.CallType.None) ?
+                s_bl?.Volunteer.GetVolunteers(null, null)! :
+                s_bl?.Volunteer.GetVolunteers(null, null callType)!;
+        }
 
         // Method to query the list of volunteers based on the current call type.
         // If the call type is 'None', it retrieves all volunteers.
@@ -80,6 +86,17 @@ namespace PL.Volunteer
         private void Window_Closed(object sender, EventArgs e)
             => s_bl.Volunteer.RemoveObserver(volunteerListObserver);
 
+        // Event handler for double-clicking on a volunteer in the list.
+        private void lsvVolunteersList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (SelectedVolunteer != null)
+                new WindowVolunteer(SelectedVolunteer.Id).Show();
+        }
 
+        // Event handler for clicking the Add button.
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            new WindowVolunteer().Show();
+        }
     }
 }

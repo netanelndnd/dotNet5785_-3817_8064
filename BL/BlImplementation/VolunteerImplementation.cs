@@ -141,14 +141,14 @@ namespace BlImplementation
                 throw new BO.BlSystemException("An error occurred while retrieving volunteer details.", ex);
             }
         }
-       
+
         /// <summary>
         /// Retrieves a list of volunteers filtered and sorted based on the provided criteria.
         /// </summary>
         /// <param name="isActive">Nullable boolean to filter active/inactive volunteers. Null for all.</param>
         /// <param name="sortField">Nullable field to sort the list. Null for default sorting by ID.</param>
         /// <returns>A sorted and filtered list of volunteers.</returns>
-        public IEnumerable<BO.VolunteerInList> GetVolunteers(bool? isActive, BO.VolunteerInListFields? sortField,BO.CallType? callType)
+        public IEnumerable<BO.VolunteerInList> GetVolunteers(bool? isActive, BO.VolunteerInListFields? sortField)
         {
             try
             {
@@ -161,12 +161,8 @@ namespace BlImplementation
 
                 var volunteerList = volunteers.Select(v => VolunteerManager.ConvertVolunteerIdToVolunteerInList(v.Id));
                 sortField ??= BO.VolunteerInListFields.Id;
-                volunteerList= VolunteerManager.SortVolunteers(volunteerList, sortField);
-                if (callType.HasValue)
-                {
-                    return volunteerList.Where(volunteerList => volunteerList.CurrentCallType == callType);
-                }
-                return volunteerList;
+
+                return VolunteerManager.SortVolunteers(volunteerList, sortField);
             }
             catch (Exception ex)
             {
@@ -268,7 +264,7 @@ namespace BlImplementation
             }
         }
     }
-}   
+}
 
 
 
