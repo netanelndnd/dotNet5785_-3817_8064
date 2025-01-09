@@ -169,7 +169,23 @@ namespace BlImplementation
                 throw new BO.BlSystemException("An error occurred while retrieving the list of volunteers.", ex);
             }
         }
-
+        public IEnumerable<BO.VolunteerInList> GetCallTypsOfVolunteers(BO.CallType? callType)
+        {
+            try
+            {
+                var volunteers = GetVolunteers(null,null);
+                if (callType != BO.CallType.None)
+                {
+                    volunteers = volunteers.Where(v => v.CurrentCallType == callType);
+                    return volunteers;
+                }
+                return volunteers;
+            }
+            catch (Exception ex)
+            {
+                throw new BO.BlSystemException("An error occurred while retrieving the list of volunteers.", ex);
+            }
+        }
         /// <summary>
         /// Logs in a volunteer to the system.
         /// </summary>

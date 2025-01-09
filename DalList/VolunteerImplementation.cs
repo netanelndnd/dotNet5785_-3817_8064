@@ -39,7 +39,8 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     public void DeleteAll()
     {
-        DataSource.Volunteers.DefaultIfEmpty();
+        if (DataSource.Volunteers != null)
+            DataSource.Volunteers.DefaultIfEmpty();
     }
 
     /// <summary>
@@ -49,10 +50,13 @@ internal class VolunteerImplementation : IVolunteer
     /// <returns>The volunteer with the specified ID, or null if not found</returns>
     public Volunteer? Read(int id)
     {
-        foreach (var item in DataSource.Volunteers)
+        if (DataSource.Volunteers != null)
         {
-            if (item.Id == id)
-                return item;
+            foreach (var item in DataSource.Volunteers)
+            {
+                if (item.Id == id)
+                    return item;
+            }
         }
         return null;
     }

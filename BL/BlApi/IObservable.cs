@@ -1,4 +1,6 @@
-﻿namespace BlApi;
+﻿using BO;
+
+namespace BlApi;
 
 /// <summary>
 /// This interface provides actions to register (add) and unregister (remove) observers
@@ -17,6 +19,8 @@ public interface IObservable //stage 5
     /// <param name="id">the identifier of the entity instance to be observed</param>
     /// <param name="observer">the observer method to be registered</param>
     void AddObserver(int id, Action observer);
+
+    
     /// <summary>
     /// Unregister observer for changes in a list of entities
     /// </summary>

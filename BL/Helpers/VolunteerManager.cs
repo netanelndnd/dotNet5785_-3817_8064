@@ -60,7 +60,7 @@ internal static class VolunteerManager
     /// <returns>The call ID of the pending assignment, or null if none exists</returns>
     public static int? GetPendingAssignmentCallId(int volunteerId)
     {
-        var assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.VolunteerId == volunteerId && a.CompletionTime == null);
+        var assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.VolunteerId == volunteerId && a.CompletionTime != null);
         return assignment != null ? assignment.CallId : (int?)null;
     }
 

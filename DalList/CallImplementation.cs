@@ -44,7 +44,8 @@ internal class CallImplementation : ICall
     /// </summary>
     public void DeleteAll()
     {
-        DataSource.Calls.DefaultIfEmpty();
+        if(DataSource.Calls!=null)
+           DataSource.Calls.DefaultIfEmpty();
     }
 
     /// <summary>

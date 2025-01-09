@@ -1,9 +1,13 @@
 ﻿
+using BO;
+
 namespace BlApi
 {
     public interface IVolunteer : IObservable //stage 5
     {
+        IEnumerable<VolunteerInList> GetCallTypsOfVolunteers(CallType? callType);
 
+        IEnumerable<VolunteerInList> GetVolunteers(bool? isActive, VolunteerInListFields? sortField);
         /// <summary>
         /// Logs in a volunteer to the system.
         /// </summary>
@@ -12,14 +16,6 @@ namespace BlApi
         /// <returns>The role of the user.</returns>
         /// <exception cref="InvalidOperationException">Thrown when the user does not exist or the password is incorrect.</exception>
         string Login(string username, string password);
-
-        /// <summary>
-        /// Gets a list of volunteers.
-        /// </summary>
-        /// <param name="isActive">Nullable boolean to filter active/inactive volunteers.</param>
-        /// <param name="sortField">Nullable enum to sort the list by a specific field.</param>
-        /// <returns>A sorted and filtered list of volunteers.</returns>
-        IEnumerable<BO.VolunteerInList> GetVolunteers(bool? isActive, BO.VolunteerInListFields? sortField);
 
         /// <summary>
         /// Gets the details of a volunteer.

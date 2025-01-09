@@ -43,7 +43,8 @@ internal class AssignmentImplementation : IAssignment
     /// </summary>
     public void DeleteAll()
     {
-        DataSource.Assignments.DefaultIfEmpty();
+        if (DataSource.Assignments!=null)
+           DataSource.Assignments.DefaultIfEmpty();
     }
 
     /// <summary>

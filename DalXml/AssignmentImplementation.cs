@@ -15,8 +15,8 @@ public class AssignmentImplementation : IAssignment
     /// <param name="item">The assignment to create.</param>
     public void Create(Assignment item)
     {
-        List<Assignment> Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
-        if (Assignments.Any(a => a.Id == item.Id))
+        var Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
+        if (Assignments.Any(it => it.Id == item.Id))
             throw new DalAlreadyExistsException($"Assignment with ID={item.Id} already exists");
         item = item with { Id = Config.NextAssignmentId };
         Assignments.Add(item);
@@ -30,7 +30,7 @@ public class AssignmentImplementation : IAssignment
     /// <exception cref="DalDeletionImpossible">Thrown when the assignment with the specified ID does not exist.</exception>
     public void Delete(int id)
     {
-        List<Assignment> Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
+        var Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
         if (Assignments.RemoveAll(it => it.Id == id) == 0)
             throw new DalDeletionImpossible($"Assignment with ID={id} does not exist");
         XMLTools.SaveListToXMLSerializer(Assignments, Config.s_assignments_xml);
@@ -51,7 +51,7 @@ public class AssignmentImplementation : IAssignment
     /// <returns>The assignment with the specified ID, or null if not found.</returns>
     public Assignment? Read(int id)
     {
-        List<Assignment> Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
+        var Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
         return Assignments.FirstOrDefault(it => it.Id == id);
     }
 
@@ -62,7 +62,7 @@ public class AssignmentImplementation : IAssignment
     /// <returns>The first assignment that matches the filter, or null if not found.</returns>
     public Assignment? Read(Func<Assignment, bool> filter)
     {
-        List<Assignment> Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
+        var Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
         return Assignments.FirstOrDefault(filter);
     }
 
@@ -73,7 +73,7 @@ public class AssignmentImplementation : IAssignment
     /// <returns>An enumerable of assignments that match the filter.</returns>
     public IEnumerable<Assignment> ReadAll(Func<Assignment, bool>? filter = null)
     {
-        List<Assignment> Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
+        var Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
         return filter == null ? Assignments : Assignments.Where(filter);
     }
 
@@ -84,7 +84,7 @@ public class AssignmentImplementation : IAssignment
     /// <exception cref="DalDoesNotExistException">Thrown when the assignment with the specified ID does not exist.</exception>
     public void Update(Assignment item)
     {
-        List<Assignment> Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
+        var Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
         if (Assignments.RemoveAll(it => it.Id == item.Id) == 0)
             throw new DalDoesNotExistException($"Assignment with ID={item.Id} does not exist");
         Assignments.Add(item);
