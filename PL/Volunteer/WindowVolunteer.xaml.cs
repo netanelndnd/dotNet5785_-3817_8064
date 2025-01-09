@@ -19,9 +19,27 @@ namespace PL.Volunteer
     /// </summary>
     public partial class WindowVolunteer : Window
     {
-        public WindowVolunteer()
+        public WindowVolunteer(int id = 0)
         {
             InitializeComponent();
+
+            // Assign the CurrentVolunteer property based on the id parameter
+            CurrentVolunteer = (id != 0) ? s_bl.Volunteer.GetVolunteerDetails(id) : new BO.Volunteer();
         }
+
+        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+
+        // CLR wrapper for the Dependency Property
+        public BO.Volunteer? CurrentVolunteer
+        {
+            get { return (BO.Volunteer?)GetValue(CurrentVolunteerProperty); }
+            set { SetValue(CurrentVolunteerProperty, value); }
+        }
+
+        // Define the Dependency Property
+        public static readonly DependencyProperty CurrentVolunteerProperty =
+            DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(WindowVolunteer), new PropertyMetadata(null));
+
+
     }
 }
