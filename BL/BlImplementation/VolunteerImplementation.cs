@@ -159,7 +159,7 @@ namespace BlImplementation
                     volunteers = volunteers.Where(v => v.IsActive == isActive.Value);
                 }
 
-                var volunteerList = volunteers.Select(v => VolunteerManager.ConvertVolunteerIdToVolunteerInList(v.Id));
+                IEnumerable<BO.VolunteerInList> volunteerList = volunteers.Select(v => VolunteerManager.ConvertVolunteerIdToVolunteerInList(v.Id));
                 sortField ??= BO.VolunteerInListFields.Id;
 
                 return VolunteerManager.SortVolunteers(volunteerList, sortField);
@@ -173,13 +173,15 @@ namespace BlImplementation
         {
             try
             {
-                var volunteers = GetVolunteers(null,null);
-                if (callType != BO.CallType.None)
+                var volunteers = GetVolunteers(null, null);
+                if (callType == null || callType == BO.CallType.None)
                 {
-                    volunteers = volunteers.Where(v => v.CurrentCallType == callType);
                     return volunteers;
                 }
-                return volunteers;
+                else
+                {
+                    return volunteers.Where(v => v.CurrentCallType == callType);
+                }
             }
             catch (Exception ex)
             {

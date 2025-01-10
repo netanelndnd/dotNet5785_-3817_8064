@@ -57,7 +57,7 @@ namespace PL.Volunteer
                 // Update the VolunteerList based on the selected call type.
 
             VolunteerList = (callType == BO.CallType.None) ?
-                s_bl?.Volunteer.GetCallTypsOfVolunteers(callType)! :
+                s_bl?.Volunteer.GetCallTypsOfVolunteers(BO.CallType.None)! :
                 s_bl?.Volunteer.GetCallTypsOfVolunteers(callType)!;
         }
 
@@ -66,7 +66,7 @@ namespace PL.Volunteer
         // Otherwise, it filters the volunteers by the selected call type.
         private void queryVolunteerList()
             => VolunteerList = (callType == BO.CallType.None) ?
-               s_bl?.Volunteer.GetCallTypsOfVolunteers(callType)! : s_bl?.Volunteer.GetCallTypsOfVolunteers(callType)!;
+               s_bl?.Volunteer.GetCallTypsOfVolunteers(BO.CallType.None)! : s_bl?.Volunteer.GetCallTypsOfVolunteers(callType)!;
 
         // Observer method to update the volunteer list when changes occur.
         private void volunteerListObserver()

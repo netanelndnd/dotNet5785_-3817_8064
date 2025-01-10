@@ -1,225 +1,225 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Volunteers>
   <Volunteer>
-    <Id>375901896</Id>
+    <Id>369657153</Id>
     <FullName>Yossi Cohen</FullName>
     <PhoneNumber>0501234567</PhoneNumber>
     <Email>yossi.cohen@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>13.191592399706986</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>6.168348925355982</MaxDistance>
     <VolunteerRole>Manager</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>217357867</Id>
+    <Id>364046656</Id>
     <FullName>Rivka Levi</FullName>
     <PhoneNumber>0501234568</PhoneNumber>
     <Email>rivka.levi@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>24.444330358200062</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>66.2799204921504</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>299042390</Id>
+    <Id>369669234</Id>
     <FullName>Moshe Mizrahi</FullName>
     <PhoneNumber>0501234569</PhoneNumber>
     <Email>moshe.mizrahi@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>86.10492116213172</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>65.79201926384829</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>399351144</Id>
+    <Id>227198643</Id>
     <FullName>Yael Katz</FullName>
     <PhoneNumber>0501234570</PhoneNumber>
     <Email>yael.katz@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>88.80514546430702</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>28.46293887660987</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>331684528</Id>
+    <Id>280963828</Id>
     <FullName>David Peretz</FullName>
     <PhoneNumber>0501234571</PhoneNumber>
     <Email>david.peretz@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>0.3364781977925335</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>82.5266731847758</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>240094968</Id>
+    <Id>382994056</Id>
     <FullName>Sara Ben-David</FullName>
     <PhoneNumber>0501234572</PhoneNumber>
     <Email>sara.ben-david@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>78.75827228368665</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>49.001628143288386</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>321471623</Id>
+    <Id>240706163</Id>
     <FullName>Avi Shalom</FullName>
     <PhoneNumber>0501234573</PhoneNumber>
     <Email>avi.shalom@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>6.801901184586523</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>87.20810708016514</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>287779572</Id>
+    <Id>213406579</Id>
     <FullName>Miriam Gold</FullName>
     <PhoneNumber>0501234574</PhoneNumber>
     <Email>miriam.gold@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>83.29505058292094</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>73.4006310217006</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>288437343</Id>
+    <Id>384064275</Id>
     <FullName>Daniel Azulay</FullName>
     <PhoneNumber>0501234575</PhoneNumber>
     <Email>daniel.azulay@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>46.31571484464192</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>28.28373086875482</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>297522518</Id>
+    <Id>268763915</Id>
     <FullName>Leah Bar</FullName>
     <PhoneNumber>0501234576</PhoneNumber>
     <Email>leah.bar@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>12.650583108244739</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>27.795990641044853</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>363233283</Id>
+    <Id>272292014</Id>
     <FullName>Yitzhak Shimon</FullName>
     <PhoneNumber>0501234577</PhoneNumber>
     <Email>yitzhak.shimon@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>98.14632827400838</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>69.6008455005809</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>345951243</Id>
+    <Id>245732315</Id>
     <FullName>Esther Malka</FullName>
     <PhoneNumber>0501234578</PhoneNumber>
     <Email>esther.malka@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>62.938366914634614</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>15.22776745237474</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>379118772</Id>
+    <Id>205856535</Id>
     <FullName>Ronen Alon</FullName>
     <PhoneNumber>0501234579</PhoneNumber>
     <Email>ronen.alon@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>64.71742118987068</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>15.956584725154233</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>271285160</Id>
+    <Id>355058859</Id>
     <FullName>Tamar Shani</FullName>
     <PhoneNumber>0501234580</PhoneNumber>
     <Email>tamar.shani@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>40.528126176904934</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>49.382460409625416</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>292243607</Id>
+    <Id>247018503</Id>
     <FullName>Elior Ben-Ami</FullName>
     <PhoneNumber>0501234581</PhoneNumber>
     <Email>elior.ben-ami@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>55.15037092503094</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>62.34381775777011</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>229120984</Id>
+    <Id>394995873</Id>
     <FullName>Shira Tal</FullName>
     <PhoneNumber>0501234582</PhoneNumber>
     <Email>shira.tal@gmail.com</Email>
-    <Password />
-    <CurrentAddress />
-    <Latitude />
-    <Longitude />
-    <MaxDistance>48.95993405757412</MaxDistance>
+    <Password></Password>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>97.93619000600509</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>

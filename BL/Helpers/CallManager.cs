@@ -33,7 +33,7 @@ internal static class CallManager
             throw new InvalidOperationException($"Call with ID {callId} not found.");
         }
 
-        var assignment = s_dal.Assignment.Read(a => a.VolunteerId == volunteerId && a.CompletionTime == null && a.CallId == callId);
+        var assignment = s_dal.Assignment.Read(a => a.VolunteerId == volunteerId && a.CompletionStatus == null && a.CallId == callId);
         if (assignment == null)
         {
             throw new InvalidOperationException($"Assignment for volunteer ID {volunteerId} and call ID {callId} not found.");
@@ -45,23 +45,29 @@ internal static class CallManager
             throw new InvalidOperationException($"Volunteer with ID {volunteerId} not found.");
         }
 
-        return new BO.CallInProgress
+
+        var callInProgress = new BO.CallInProgress
         {
             Id = callDetails.Id,
             CallType = (BO.CallType)callDetails.CallType,
             Description = callDetails.Description,
             FullAddress = callDetails.Address,
             OpenedAt = callDetails.OpenTime,
+            StartedAt = assignment.EntryTime,
             MaxCompletionTime = callDetails.MaxCompletionTime,
-            StartedAt = (DateTime)assignment.EntryTime,
-            DistanceFromVolunteer = CalculateDistance((double)volunteer.Latitude, (double)volunteer.Longitude, callDetails.Latitude, callDetails.Longitude),
+            DistanceFromVolunteer = CalculateDistance(volunteer.Latitude ?? throw new InvalidOperationException("Volunteer latitude is null."),
+                                                  volunteer.Longitude ?? throw new InvalidOperationException("Volunteer longitude is null."),
+                                                  callDetails.Latitude, callDetails.Longitude),
             Status = GetCallStatus(callId)
         };
+
+        return callInProgress;
     }
 
     // פונקציה לחישוב המרחק בין שתי נקודות על פי קו רוחב וקו אורך
     public static double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
     {
+
         // קבועים עבור חישוב המרחק
         double R = 6371; // רדיוס כדור הארץ בקילומטרים
         double dLat = DegreesToRadians(lat2 - lat1); // שינוי בקו הרוחב

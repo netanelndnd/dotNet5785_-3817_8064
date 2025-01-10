@@ -29,10 +29,17 @@ namespace PL.Volunteer
             CurrentVolunteer = (id != 0) ? s_bl.Volunteer.GetVolunteerDetails(id) : new BO.Volunteer();
             ButtonText = (id != 0) ? "Update" : "Add";
 
+            // Debugging: Check if the email is set correctly
+            if (CurrentVolunteer != null)
+            {
+                Console.WriteLine($"Email: {CurrentVolunteer.Email}");
+            }
+
             // Register event handlers for loading and closing the window
-            //this.Loaded += Window_Loaded;
-            //this.Closed += Window_Closed;
+            this.Loaded += Window_Loaded;
+            this.Closed += Window_Closed;
         }
+       
 
         // CLR wrapper for the Dependency Property
         public BO.Volunteer? CurrentVolunteer
@@ -63,9 +70,17 @@ namespace PL.Volunteer
                 }
                 this.Close();
             }
+            catch (BO.BlDoesNotExistException ex)
+            {
+                MessageBox.Show("Volunteer not found: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (BO.BlOperationException ex)
+            {
+                MessageBox.Show("Operation failed: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("An unexpected error occurred: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

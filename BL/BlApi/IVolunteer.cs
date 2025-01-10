@@ -8,6 +8,7 @@ namespace BlApi
         IEnumerable<VolunteerInList> GetCallTypsOfVolunteers(CallType? callType);
 
         IEnumerable<VolunteerInList> GetVolunteers(bool? isActive, VolunteerInListFields? sortField);
+
         /// <summary>
         /// Logs in a volunteer to the system.
         /// </summary>

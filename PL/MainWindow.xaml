@@ -6,31 +6,70 @@
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
-        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" Loaded="Window_Loaded" Closed="Window_Closed">
-    <Grid>
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+        WindowStartupLocation="CenterScreen"
+        Background="#F0F0F0"
+        Loaded="Window_Loaded" Closed="Window_Closed">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#2E8B57"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="BorderBrush" Value="#2E8B57"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="218*"/>
-            <ColumnDefinition Width="69*"/>
-            <ColumnDefinition Width="513*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <!--clock system-->
-        <Label Content ="{Binding CurrentTime}" Margin="10,0,384,0" VerticalAlignment="Top" RenderTransformOrigin="15.22,0.444" Height="45" Grid.Column="2"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="75,50,0,0" Grid.ColumnSpan="3">
-            <Button Content="Add One Minute" Click="btnAddOneMinute_Click" Width="120" Height="30" Margin="5"/>
-            <Button Content="Add One Hour" Click="btnAddOneHour_Click" Width="120" Height="30" Margin="5"/>
-            <Button Content="Add One Day" Click="btnAddOneDay_Click" Width="120" Height="30" Margin="5"/>
-            <Button Content="Add One Month" Click="btnAddOneMonth_Click" Width="120" Height="30" Margin="5"/>
-            <Button Content="Add One Year" Click="btnAddOneYear_Click" Width="120" Height="30" Margin="5"/>
+
+        <!-- Clock System -->
+        <Label Content="{Binding CurrentTime}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,10,0" Height="45"/>
+
+        <!-- Time Manipulation Buttons -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,60,0,0" Grid.Row="1">
+            <Button Content="Add One Minute" Click="btnAddOneMinute_Click" Width="120" Height="30"/>
+            <Button Content="Add One Hour" Click="btnAddOneHour_Click" Width="120" Height="30"/>
+            <Button Content="Add One Day" Click="btnAddOneDay_Click" Width="120" Height="30"/>
+            <Button Content="Add One Month" Click="btnAddOneMonth_Click" Width="120" Height="30"/>
+            <Button Content="Add One Year" Click="btnAddOneYear_Click" Width="120" Height="30"/>
         </StackPanel>
-        <!--Time span configuration-->
-        <TextBox HorizontalAlignment="Left" Margin="190,170,0,0" TextWrapping="Wrap" Text="{Binding TimeRisk}" VerticalAlignment="Top" Width="127" Height="24" Grid.ColumnSpan="3"/>
-        <!--Time span configuration update button-->
-        <Button Content="Update time risk" Click="btnUpdateTimeSpan_Click" HorizontalAlignment="Left" Margin="75,170,0,0" VerticalAlignment="Top"/>
-        <!--List view button-->
-        <Button Content="List Volunteers" Click="btnListVolunteers_Click" HorizontalAlignment="Left" Margin="75,245,0,0" VerticalAlignment="Top"/>
-        <!--Initialize button-->
-        <Button Content="Initialize all the system"  Click="btnInitialize_Click" HorizontalAlignment="Left" Margin="75,285,0,0" VerticalAlignment="Top"/>
-        <!--ResetDB button-->
-        <Button Content="Reset all the system"  Click="btnReset_Click" HorizontalAlignment="Left" Margin="75,323,0,0" VerticalAlignment="Top"/>
+
+        <!-- Time Span Configuration -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,120,0,0" Grid.Row="2">
+            <Label Content="Time Risk:" VerticalAlignment="Center" Width="100"/>
+            <TextBox Text="{Binding TimeRisk}" VerticalAlignment="Center"/>
+            <Button Content="Update Time Risk" Click="btnUpdateTimeSpan_Click" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Action Buttons -->
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,180,0,0" Grid.Row="2">
+            <Button Content="List Volunteers" Click="btnListVolunteers_Click" Width="200"/>
+            <Button Content="Initialize All the System" Click="btnInitialize_Click" Width="200"/>
+            <Button Content="Reset All the System" Click="btnReset_Click" Width="200"/>
+        </StackPanel>
     </Grid>
 </Window>
