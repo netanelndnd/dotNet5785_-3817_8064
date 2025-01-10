@@ -54,8 +54,6 @@ namespace PL.Volunteer
             // Update the VolunteerList based on the selected call type.
             // If the call type is 'None', retrieve all volunteers.
             // Otherwise, filter the volunteers by the selected call type.
-                // Update the VolunteerList based on the selected call type.
-
             VolunteerList = (callType == BO.CallType.None) ?
                 s_bl?.Volunteer.GetCallTypsOfVolunteers(BO.CallType.None)! :
                 s_bl?.Volunteer.GetCallTypsOfVolunteers(callType)!;
@@ -93,6 +91,37 @@ namespace PL.Volunteer
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             new WindowVolunteer().Show();
+        }
+
+        // Event handler for clicking the Delete button.
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            if (button != null)
+            {
+                int volunteerId = (int)button.Tag;
+                var result = MessageBox.Show("Are you sure you want to delete this volunteer?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        s_bl.Volunteer.DeleteVolunteer(volunteerId);
+                        MessageBox.Show("Volunteer deleted successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    catch (BO.BlDoesNotExistException ex)
+                    {
+                        MessageBox.Show("Volunteer not found: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    catch (BO.BlSystemException ex)
+                    {
+                        MessageBox.Show("An error occurred while deleting the volunteer: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("An unexpected error occurred: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
         }
     }
 }

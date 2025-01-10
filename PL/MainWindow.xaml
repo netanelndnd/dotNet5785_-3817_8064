@@ -63,6 +63,12 @@
             <Label Content="Time Risk:" VerticalAlignment="Center" Width="100"/>
             <TextBox Text="{Binding TimeRisk}" VerticalAlignment="Center"/>
             <Button Content="Update Time Risk" Click="btnUpdateTimeSpan_Click" VerticalAlignment="Center"/>
+            <StackPanel x:Name="buttonPanel" Orientation="Horizontal">
+
+                <!-- New buttons -->
+                <Button Content="Initialize" Click="btnInitialize_Click" />
+                <Button Content="Reset" Click="btnReset_Click" />
+            </StackPanel>
         </StackPanel>
 
         <!-- Action Buttons -->

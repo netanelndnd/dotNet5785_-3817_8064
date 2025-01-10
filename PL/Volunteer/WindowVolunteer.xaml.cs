@@ -23,17 +23,12 @@ namespace PL.Volunteer
 
         public WindowVolunteer(int id = 0)
         {
-            InitializeComponent();
-
             // Assign the CurrentVolunteer property based on the id parameter
             CurrentVolunteer = (id != 0) ? s_bl.Volunteer.GetVolunteerDetails(id) : new BO.Volunteer();
             ButtonText = (id != 0) ? "Update" : "Add";
 
-            // Debugging: Check if the email is set correctly
-            if (CurrentVolunteer != null)
-            {
-                Console.WriteLine($"Email: {CurrentVolunteer.Email}");
-            }
+            InitializeComponent();
+
 
             // Register event handlers for loading and closing the window
             this.Loaded += Window_Loaded;

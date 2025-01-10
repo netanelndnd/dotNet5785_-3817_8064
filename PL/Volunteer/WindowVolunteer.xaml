@@ -1,7 +1,7 @@
 ﻿<Window x:Class="PL.Volunteer.WindowVolunteer"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Volunteer" Height="506" Width="400"
+        Title="Volunteer" Height="484" Width="838"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         WindowStartupLocation="CenterScreen"
         Background="#F0F0F0">
@@ -14,6 +14,7 @@
         </Style>
         <Style TargetType="TextBox">
             <Setter Property="Width" Value="250"/>
+            <Setter Property="MaxWidth" Value="250"/>
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Padding" Value="5"/>
             <Setter Property="BorderBrush" Value="#CCCCCC"/>
@@ -22,6 +23,7 @@
         </Style>
         <Style TargetType="ComboBox">
             <Setter Property="Width" Value="250"/>
+            <Setter Property="MaxWidth" Value="250"/>
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Padding" Value="5"/>
             <Setter Property="BorderBrush" Value="#CCCCCC"/>
@@ -51,68 +53,137 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <!-- Volunteer Details GroupBox -->
-        <GroupBox Header="Volunteer Details" Grid.Row="0">
-            <StackPanel>
+        <GroupBox Header="Volunteer Details" Grid.Row="0" Grid.ColumnSpan="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
                 <!-- Id -->
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
                     <Label Content="Id:" VerticalAlignment="Center" Width="100"/>
-                    <TextBox Text="{Binding CurrentVolunteer.Id, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"
-                             IsReadOnly="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueKey}}"/>
+                    <TextBox Text="{Binding CurrentVolunteer.Id, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
                 <!-- Full Name -->
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
                     <Label Content="Full Name:" VerticalAlignment="Center" Width="100"/>
-                    <TextBox Text="{Binding CurrentVolunteer.FullName, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                    <TextBox Text="{Binding CurrentVolunteer.FullName, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
                 <!-- Phone Number -->
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
                     <Label Content="Phone Number:" VerticalAlignment="Center" Width="100"/>
-                    <TextBox Text="{Binding CurrentVolunteer.PhoneNumber, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                    <TextBox Text="{Binding CurrentVolunteer.PhoneNumber, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
                 <!-- Email -->
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
                     <Label Content="Email:" VerticalAlignment="Center" Width="100"/>
-                    <TextBox Text="{Binding CurrentVolunteer.Email, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                    <TextBox Text="{Binding CurrentVolunteer.Email, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch"/>
+                </StackPanel>
+
+                <!-- Password -->
+                <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
+                    <Label Content="Password:" VerticalAlignment="Center" Width="100"/>
+                    <TextBox Text="{Binding CurrentVolunteer.Password, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch"/>
+                </StackPanel>
+
+                <!-- Current Address -->
+                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                    <Label Content="Current Address:" VerticalAlignment="Center" Width="100"/>
+                    <TextBox Text="{Binding CurrentVolunteer.CurrentAddress, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch"/>
+                </StackPanel>
+
+                <!-- Latitude -->
+                <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal">
+                    <Label Content="Latitude:" VerticalAlignment="Center" Width="100"/>
+                    <TextBox Text="{Binding CurrentVolunteer.Latitude, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch"/>
+                </StackPanel>
+
+                <!-- Longitude -->
+                <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                    <Label Content="Longitude:" VerticalAlignment="Center" Width="100"/>
+                    <TextBox Text="{Binding CurrentVolunteer.Longitude, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch"/>
+                </StackPanel>
+
+                <!-- Role -->
+                <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Horizontal">
+                    <Label Content="Role:" VerticalAlignment="Center" Width="100"/>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource VolunteerRolesCollectionKey}}" 
+                              SelectedValue="{Binding CurrentVolunteer.Role, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
                 <!-- Is Active -->
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
                     <Label Content="Is Active:" VerticalAlignment="Center" Width="100"/>
-                    <CheckBox IsChecked="{Binding CurrentVolunteer.IsActive, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                    <CheckBox IsChecked="{Binding CurrentVolunteer.IsActive, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch"/>
                 </StackPanel>
-            </StackPanel>
-        </GroupBox>
 
-        <!-- Volunteer Preferences GroupBox -->
-        <GroupBox Header="Volunteer Preferences" Grid.Row="1">
-            <StackPanel>
                 <!-- Max Distance -->
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Grid.Row="5" Grid.Column="0" Orientation="Horizontal">
                     <Label Content="Max Distance:" VerticalAlignment="Center" Width="100"/>
-                    <TextBox Text="{Binding CurrentVolunteer.MaxDistance, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                    <TextBox Text="{Binding CurrentVolunteer.MaxDistance, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
                 <!-- Distance Type -->
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
                     <Label Content="Distance Type:" VerticalAlignment="Center" Width="100"/>
                     <ComboBox ItemsSource="{Binding Source={StaticResource DistanceTypesCollectionKey}}" 
-                              SelectedValue="{Binding CurrentVolunteer.DistanceType, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                              SelectedValue="{Binding CurrentVolunteer.DistanceType, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch"/>
                 </StackPanel>
-            </StackPanel>
+
+                <!-- Total Calls Handled -->
+                <StackPanel Grid.Row="6" Grid.Column="0" Orientation="Horizontal">
+                    <Label Content="Total Calls Handled:" VerticalAlignment="Center" Width="142"/>
+                    <TextBox Text="{Binding CurrentVolunteer.TotalCallsHandled, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" Width="207"/>
+                </StackPanel>
+
+                <!-- Total Calls Cancelled -->
+                <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
+                    <Label Content="Total Calls Cancelled:" VerticalAlignment="Center" Width="150"/>
+                    <TextBox Text="{Binding CurrentVolunteer.TotalCallsCancelled, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" Width="200"/>
+                </StackPanel>
+
+                <!-- Total Expired Calls -->
+                <StackPanel Grid.Row="7" Grid.Column="0" Orientation="Horizontal">
+                    <Label Content="Total Expired Calls:" VerticalAlignment="Center" Width="100"/>
+                    <TextBox Text="{Binding CurrentVolunteer.TotalExpiredCalls, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch" IsReadOnly="True"/>
+                </StackPanel>
+
+                <!-- Current Call -->
+                <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal">
+                    <Label Content="Current Call:" VerticalAlignment="Center" Width="100"/>
+                    <TextBox Text="{Binding CurrentVolunteer.CurrentCall, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch" IsReadOnly="True"/>
+                </StackPanel>
+            </Grid>
         </GroupBox>
 
         <!-- Add/Update Button -->
-        <Button Content="{Binding ButtonText}" Grid.Row="2" HorizontalAlignment="Center" Click="btnAddUpdate_Click"/>
+        <Button Content="{Binding ButtonText}" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Click="btnAddUpdate_Click"/>
     </Grid>
 </Window>

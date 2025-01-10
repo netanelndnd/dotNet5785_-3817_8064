@@ -28,4 +28,17 @@ namespace PL
         // Implementation of GetEnumerator to allow iteration over DistanceType values
         public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
     }
+    // Collection class for VolunteerRoles enum
+    internal class VolunteerRolesCollection : IEnumerable
+    {
+        // Static readonly field containing all values of VolunteerRoles enum
+        static readonly IEnumerable<BO.VolunteerRole> s_enums =
+           (Enum.GetValues(typeof(BO.VolunteerRole)) as IEnumerable<BO.VolunteerRole>)!;
+
+        // Implementation of GetEnumerator to allow iteration over VolunteerRoles values
+        public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
+    }
+
+
+
 }

@@ -89,6 +89,8 @@ namespace PL
         {
             s_bl.Admin.SetRiskTimeSpan(TimeRisk);
         }
+
+
         private void btnListVolunteers_Click(object sender, RoutedEventArgs e)
         { new VolunteerInListWindow().Show(); }
 

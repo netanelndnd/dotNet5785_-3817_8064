@@ -83,9 +83,16 @@ public static class Tools
     {
         string apiKey = "AIzaSyBnuV561P8tA08Y7DQDH0GAu5AhQ86m5xs";
 
-        if (string.IsNullOrWhiteSpace(address))
+        try
         {
-            throw new ArgumentException("הכתובת אינה תקינה או ריקה.");
+            if (string.IsNullOrWhiteSpace(address))
+            {
+                throw new ArgumentException("התרחש ניסיון לקבל את נקודות הציון אבל הכתובת אינה תקינה או ריקה.");
+            }
+        }
+        catch (ArgumentException ex)
+        {
+            throw new BO.BlSystemException("Error processing address: " + ex.Message, ex);
         }
 
         string encodedAddress = Uri.EscapeDataString(address);

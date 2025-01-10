@@ -6,6 +6,7 @@
     <Application.Resources>
         <local:CallTypeCollection x:Key="CallTypeCollectionKey" />
         <local:DistanceTypeCollection x:Key="DistanceTypesCollectionKey" />
+        <local:VolunteerRolesCollection x:Key="VolunteerRolesCollectionKey" />
         <local:ConvertUpdateToTrueConverter x:Key="ConvertUpdateToTrueKey" />
         <local:ConvertUpdateToVisibleConverter x:Key="ConvertUpdateToVisibleKey" />
     </Application.Resources>
