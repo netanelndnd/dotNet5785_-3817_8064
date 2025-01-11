@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using BlImplementation;
 namespace Helpers;
 
-internal static class VolunteerManager  
+public static class VolunteerManager  
 {
     private static IDal s_dal = Factory.Get; //stage 4
 

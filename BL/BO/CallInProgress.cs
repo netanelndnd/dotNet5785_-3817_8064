@@ -7,6 +7,7 @@ namespace BO;
 /// </summary>
 public class CallInProgress
 {
+    //ההקצאה
     public int Id { get; set; } // Will not appear in the view.
                                 // Found by searching DO.Assignment by volunteer Id and appropriate call status (call that has not been completed in any way)
 

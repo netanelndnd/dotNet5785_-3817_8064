@@ -48,7 +48,8 @@ internal static class CallManager
 
         var callInProgress = new BO.CallInProgress
         {
-            Id = callDetails.Id,
+            Id = assignment.Id,
+            CallId = callDetails.Id,
             CallType = (BO.CallType)callDetails.CallType,
             Description = callDetails.Description,
             FullAddress = callDetails.Address,

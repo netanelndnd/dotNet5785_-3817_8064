@@ -53,6 +53,20 @@ namespace PL.Volunteer
         {
             try
             {
+                // Validate email format
+                if (string.IsNullOrWhiteSpace(CurrentVolunteer?.Email) || !Helpers.VolunteerManager.IsValidEmail(CurrentVolunteer.Email))
+                {
+                    MessageBox.Show("Invalid email format.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Validate phone number format
+                if (string.IsNullOrWhiteSpace(CurrentVolunteer?.PhoneNumber) || !Helpers.VolunteerManager.IsValidPhoneNumber(CurrentVolunteer.PhoneNumber))
+                {
+                    MessageBox.Show("Invalid phone number format.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 if (ButtonText == "Add")
                 {
                     s_bl.Volunteer.AddVolunteer(CurrentVolunteer!);
