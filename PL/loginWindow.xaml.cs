@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using PL.Volunteer;
 
 namespace PL
 {
@@ -19,43 +20,126 @@ namespace PL
     /// </summary>
     public partial class LoginWindow : Window
     {
+
+
+        //access to the BL
+        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+
+
+        public string UserID
+        {
+            get { return (string)GetValue(UserIDValueProperty); }
+            set { SetValue(UserIDValueProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for UserID
+        public static readonly DependencyProperty UserIDValueProperty =
+            DependencyProperty.Register("TzValue", typeof(string), typeof(LoginWindow));
+
+
+
+        public string PasswordValue
+        {
+            get { return (string)GetValue(PasswordValueProperty); }
+            set { SetValue(PasswordValueProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PasswordValue.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PasswordValueProperty =
+            DependencyProperty.Register("PasswordValue", typeof(string), typeof(LoginWindow));
+
+
         public LoginWindow()
         {
             InitializeComponent();
         }
 
-        private void btnLogin_Click(object sender, RoutedEventArgs e)
-        {
-            string userId = txtUserId.Text;
-            string password = txtPassword.Password;
 
-            // בדיקת תעודת זהות וסיסמא
-            if (IsValidUser(userId, password, out bool isManager))
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (sender is PasswordBox passwordBox)
             {
-                if (isManager)
-                {
-                    // פתיחת חלון לבחירת סוג המסך למנהל
-                    ManagerChoiceWindow managerChoiceWindow = new ManagerChoiceWindow();
-                    managerChoiceWindow.Show();
-                }
-                else
-                {
-                    // פתיחת מסך מתנדב
-                }
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("Invalid User ID or Password", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                PasswordValue = passwordBox.Password;
             }
         }
 
-        private bool IsValidUser(string userId, string password, out bool isManager)
+
+        /// <summary>
+        /// login function : checks the role and open the right window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            // לוגיקה לבדיקה אם המשתמש תקין ואם הוא מנהל
-            isManager = false;
-            // כאן יש להוסיף את הלוגיקה המתאימה לבדיקה
-            return true;
+            if (string.IsNullOrWhiteSpace(UserID) || string.IsNullOrWhiteSpace(PasswordValue))
+            {
+                MessageBox.Show("Please fill all the required fields.", "Missing Values", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                if (!int.TryParse(UserID, out int userId))
+                {
+                    MessageBox.Show("Invalid ID format. Please enter numeric ID.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                string email  = s_bl.Volunteer.GetVolunteerDetails(userId).Email;
+
+                var role = s_bl.Volunteer.Login(email, PasswordValue);
+
+                switch (role)
+                {
+                    case "Volunteer":
+                        var volunteerWindow = new WindowMyVolunteer(userId);
+                        volunteerWindow.Show();
+                        this.Close();
+                        break;
+
+                    case "Manager":
+                        var result = MessageBox.Show("Which screen do you want to open ?\n" +
+                                 " 'Yes' for Manager or 'No' for Volunteer.",
+                                 "Choice of  screen",
+                                 MessageBoxButton.YesNo,
+                                 MessageBoxImage.Question);
+
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            var MainWindow = new MainWindow();
+                            MainWindow.Show();
+                        }
+                        else if (result == MessageBoxResult.No)
+                        {
+                            var volunteer2Window = new WindowMyVolunteer(userId);
+                            volunteer2Window.Show();
+                        }
+
+                        this.Close();
+                        break;
+
+
+                    default:
+                        MessageBox.Show("Unknown role. Please contact support.", "Unknown Role", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        break;
+                }
+            }
+            catch (BO.BlLoginException ex)
+            {
+                MessageBox.Show(ex.Message, "Login Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (BO.BlSystemException ex)
+            {
+                MessageBox.Show(ex.Message, "Login Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An unexpected error occurred: " + ex.Message + " " + ex.InnerException, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
     }
 }
+
+

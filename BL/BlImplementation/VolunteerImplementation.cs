@@ -96,7 +96,7 @@ namespace BlImplementation
             }
             catch (BO.BlValidationException ex)
             {
-                throw;
+                throw ex;
             }
             catch (DO.DalAlreadyExistsException ex)
             {
