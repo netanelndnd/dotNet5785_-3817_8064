@@ -100,15 +100,12 @@ public static class Tools
 
         try
         {
-            var request = WebRequest.Create(url);
-            request.Method = "GET";
-            request.Timeout = 10000;
-
-            using (var response = request.GetResponse())
-            using (var stream = response.GetResponseStream())
-            using (var reader = new StreamReader(stream))
+            using (var httpClient = new HttpClient())
             {
-                string jsonResponse = reader.ReadToEnd();
+                var response = httpClient.GetAsync(url).Result;
+                response.EnsureSuccessStatusCode();
+
+                string jsonResponse = response.Content.ReadAsStringAsync().Result;
                 JsonDocument jsonDocument = JsonDocument.Parse(jsonResponse);
 
                 var status = jsonDocument.RootElement.GetProperty("status").GetString();
@@ -131,7 +128,7 @@ public static class Tools
                 return (latitude, longitude, isInIsrael);
             }
         }
-        catch (WebException ex)
+        catch (HttpRequestException ex)
         {
             throw new Exception("Error in network request: " + ex.Message, ex);
         }

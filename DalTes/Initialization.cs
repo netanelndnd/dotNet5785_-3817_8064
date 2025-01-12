@@ -86,11 +86,27 @@ public static class Initialization
             34.8618141278376, 35.19590856003538, 34.743271985523506, 34.752186728407715, 34.74362385383784, 34.747229546496264, 34.745333810322535, 34.748627700497515, 34.77308048033317, 34.784702171018964, 34.78533897059906, 34.77990632146705, 34.78262253224672, 34.80778224155118, 34.96942136688308, 34.98523717981069, 34.98876182539728, 34.99657405678095, 34.99240903307264, 35.01498376162042, 35.008282393139794, 35.12234042641816, 35.1139504148565, 35.11011456487845, 35.10917157396484, 35.10525108926754, 35.112780076486196, 35.10462231648692, 35.101859943618564, 35.10342631423813, 35.10634890958312, 35.204097845199364, 35.20240377805922, 35.20038113098719, 35.18947099850603, 35.1864233661719, 35.187628477045756, 35.19075423337481, 35.18204009422545, 35.18112523364712, 34.99378563017565, 34.99482705774016, 34.98983391964748, 34.982859631374865, 34.9808196442101, 34.99371105686167, 34.98401323833724, 34.991448806063076, 34.99613311692805, 34.998070548696916
         };
 
+        // מערך תעודות זהות חוקיות
+        int[] validIDs = new int[]
+        {
+    212041966, 437208333, 110115870, 772602942, 327448890,
+    846816759, 502724511, 328030119, 147250120, 988011417,
+    478346588, 465589265, 717759393, 803305234, 347882722,
+    271468613, 625830781, 817591332, 129652475, 353771595
+        };
+
+        // אינדקס עוקב כדי לבחור מזהים בסדר
+        int idIndex = 0;
+
+        // יצירת מתנדבים
         for (int i = 0; i < names.Length; i++)
         {
-            int id = s_rand.Next(200000000, 400000000);
-            double? maxDistance = s_rand.NextDouble() * 100; // Random max distance up to 100 km
-            Role role = i == 0 ? Role.Manager : Role.Volunteer; // First volunteer is a manager
+            // שימוש בתעודת זהות מהמערך
+            int id = validIDs[idIndex];
+            idIndex = (idIndex + 1) % validIDs.Length; // מעבר לתעודת הזהות הבאה במעגליות
+
+            double? maxDistance = s_rand.NextDouble() * 100; // מרחק מקסימלי רנדומלי
+            Role role = i == 0 ? Role.Manager : Role.Volunteer; // המתנדב הראשון הוא מנהל
             int addressIndex = 10;
 
             Volunteer volunteer = new Volunteer(
@@ -98,20 +114,21 @@ public static class Initialization
                 names[i],
                 phoneNumbers[i],
                 emails[i],
-                "",
+                emails[i],
                 addresses[addressIndex],
-                latitudes[addressIndex], 
-                longitudes[addressIndex], 
+                latitudes[addressIndex],
+                longitudes[addressIndex],
                 maxDistance,
                 role,
                 true,
                 DistanceType.AirDistance
             );
 
-            addressIndex++; // Move to the next address
+            addressIndex++; // מעבר לכתובת הבאה
 
-            s_dal?.Volunteer?.Create(volunteer);
+            s_dal?.Volunteer?.Create(volunteer); // שמירת המתנדב בבסיס הנתונים
         }
+
     }
     /// <summary>
     /// Creates a list of calls with random data and adds them to the DAL.
