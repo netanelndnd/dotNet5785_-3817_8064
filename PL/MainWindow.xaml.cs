@@ -1,4 +1,5 @@
-﻿using PL.Volunteer;
+﻿using PL.call;
+using PL.Volunteer;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -93,6 +94,10 @@ namespace PL
 
         private void btnListVolunteers_Click(object sender, RoutedEventArgs e)
         { new VolunteerInListWindow().Show(); }
+
+        private void btnListCalls_Click(object sender, RoutedEventArgs e)
+        { new CallInListWindow().Show(); }
+              
 
 
 

@@ -119,7 +119,7 @@ internal static class CallManager
     /// <param name="volunteerId">The identifier of the volunteer (optional).</param>
     /// <returns>The updated status of the call.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the call with the specified ID is not found.</exception>
-    public static BO.CallStatus GetCallStatus(int callId, int? volunteerId = null)
+    public static BO.CallStatus GetCallStatus(int callId)
     {
         // Get the call details
         var callDetails = s_dal.Call.Read(a => a.Id == callId);
@@ -129,28 +129,17 @@ internal static class CallManager
             throw new InvalidOperationException($"Call with ID {callId} not found.");
         }
         // Get the assignment details
-        var assignment = s_dal.Assignment.Read(a => a.CallId == callId && a.CompletionTime == null);
+        var assignment = s_dal.Assignment.Read(a => a.CallId == callId);
         var now = AdminManager.Now;
         var riskRange = s_dal.Config.RiskRange;
 
-        if (volunteerId.HasValue)
-        {
-            // Check if the call is assigned to the given volunteer
-            if (assignment != null && assignment.VolunteerId == volunteerId.Value)
-            {
-                // Check if the call is in progress and in risk of expiring
-                if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value - riskRange)
-                {
-                    return BO.CallStatus.InProgressInRisk;
-                }
-                // The call is in progress
-                return BO.CallStatus.InProgress;
-            }
-        }
+
         //מדבור בקיראה שעדיין לא הוקצאה למתנדב
+        //לכן גם אין הקצאה
         if (assignment == null)
         {
             // Check if the call has expired
+            //הזמן כרגע גדול יותר מזמן הסיום של הקיראה
             if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value)
             {
                 return BO.CallStatus.Expired;

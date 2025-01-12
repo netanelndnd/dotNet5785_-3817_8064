@@ -2,7 +2,7 @@
 
 namespace Helpers;
 
-internal static class AssignmentManager 
+public static class AssignmentManager 
 {
     private static IDal s_dal = Factory.Get; //stage 4
 
@@ -95,7 +95,7 @@ internal static class AssignmentManager
             return null;
         }
         // Return the time difference between the completion time and entry time
-        return call.OpenTime - assignment.CompletionTime;
+        return (call.OpenTime - assignment.CompletionTime)*-1;
     }
 
     /// <summary>

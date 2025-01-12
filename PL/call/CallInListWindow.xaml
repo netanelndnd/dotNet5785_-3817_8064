@@ -49,13 +49,14 @@
         <ListView Margin="10" Grid.Row="1" ItemsSource="{Binding Path=CallList}" SelectedItem="{Binding SelectedCall}" MouseDoubleClick="lsvCallsList_MouseDoubleClick" Background="White" BorderBrush="#2E8B57" BorderThickness="1">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="Auto"/>
+                    <GridViewColumn Header="Call Id" DisplayMemberBinding="{Binding CallId}" Width="Auto"/>
                     <GridViewColumn Header="Call Type" DisplayMemberBinding="{Binding CallType}" Width="Auto"/>
-                    <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}" Width="Auto"/>
-                    <GridViewColumn Header="Full Address" DisplayMemberBinding="{Binding FullAddress}" Width="Auto"/>
-                    <GridViewColumn Header="Opened At" DisplayMemberBinding="{Binding OpenedAt}" Width="Auto"/>
-                    <GridViewColumn Header="Max Completion Time" DisplayMemberBinding="{Binding MaxCompletionTime}" Width="Auto"/>
+                    <GridViewColumn Header="Opening Time" DisplayMemberBinding="{Binding OpeningTime}" Width="Auto"/>
+                    <GridViewColumn Header="Remaining Time" DisplayMemberBinding="{Binding RemainingTime}" Width="Auto"/>
+                    <GridViewColumn Header="Last Volunteer Name" DisplayMemberBinding="{Binding LastVolunteerName}" Width="Auto"/>
+                    <GridViewColumn Header="Completion Duration" DisplayMemberBinding="{Binding CompletionDuration}" Width="Auto"/>
                     <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="Auto"/>
+                    <GridViewColumn Header="Total Assignments" DisplayMemberBinding="{Binding TotalAssignments}" Width="Auto"/>
                 </GridView>
             </ListView.View>
         </ListView>

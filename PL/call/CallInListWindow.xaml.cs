@@ -84,7 +84,7 @@ namespace PL.call
         private void lsvCallsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (SelectedCall != null)
-                new WindowCall(SelectedCall.Id).Show();
+                new WindowCall(SelectedCall.CallId).Show();
         }
 
         // Event handler for clicking the Add button.
@@ -93,35 +93,6 @@ namespace PL.call
             new WindowCall().Show();
         }
 
-        // Event handler for clicking the Delete button.
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
-        {
-            var button = sender as Button;
-            if (button != null)
-            {
-                int callId = (int)button.Tag;
-                var result = MessageBox.Show("Are you sure you want to delete this call?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                if (result == MessageBoxResult.Yes)
-                {
-                    try
-                    {
-                        s_bl.Call.DeleteCall(callId);
-                        MessageBox.Show("Call deleted successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                    catch (BO.BlDoesNotExistException ex)
-                    {
-                        MessageBox.Show("Call not found: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    catch (BO.BlSystemException ex)
-                    {
-                        MessageBox.Show("An error occurred while deleting the call: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("An unexpected error occurred: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-            }
-        }
+        
     }
 }

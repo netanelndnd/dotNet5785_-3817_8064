@@ -272,7 +272,12 @@
             </Grid>
         </GroupBox>
 
-        <!-- Add/Update Button -->
-        <Button Content="{Binding ButtonText}" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Click="btnAddUpdate_Click"/>
+        <!-- Add/Update/Delete Buttons -->
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="10">
+            <Button Content="{Binding ButtonText}" Click="btnAddUpdate_Click"/>
+            <Button Content="Delete" Click="btnDelete_Click" Background="Red" BorderBrush="Red"
+                    IsEnabled="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}, ConverterParameter=False}"/>
+        </StackPanel>
     </Grid>
 </Window>
+
