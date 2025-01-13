@@ -1,0 +1,65 @@
+﻿<Window x:Class="PL.Volunteer.SelectCallWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PL"
+        mc:Ignorable="d"
+        Title="Select Call for Handling" Height="450" Width="800"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#2E8B57"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#2E8B57"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="200"/>
+        </Style>
+    </Window.Resources>
+    <Grid Background="#F0F0F0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Header Section -->
+        <Grid Grid.Row="0" Background="#2E8B57" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Filter by Call Type:" Foreground="White" VerticalAlignment="Center" Grid.Column="0" Margin="5"/>
+            <ComboBox ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}" 
+                      SelectedValue="{Binding Path=callType, Mode=TwoWay}" 
+                      SelectionChanged="CallTyps_CB" 
+                      VerticalAlignment="Center" Grid.Column="1" Margin="5"/>
+        </Grid>
+        
+        <!-- DataGrid Section -->
+        <DataGrid x:Name="CallsDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Margin="10" Grid.Row="1" Background="White" BorderBrush="#2E8B57" BorderThickness="1" ItemsSource="{Binding OpenCalls}" MouseDoubleClick="CallsDataGrid_MouseDoubleClick">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*"/>
+                <DataGridTextColumn Header="Type" Binding="{Binding CallType}" Width="*"/>
+                <DataGridTextColumn Header="Address" Binding="{Binding FullAddress}" Width="*"/>
+                <DataGridTextColumn Header="Opened At" Binding="{Binding OpenedAt}" Width="*"/>
+                <DataGridTextColumn Header="Max Completion Time" Binding="{Binding MaxCompletionTime}" Width="*"/>
+                <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromVolunteer}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <!-- Footer Section -->
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Update Address" Click="BtnUpdateAddress_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

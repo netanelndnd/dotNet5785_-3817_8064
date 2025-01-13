@@ -8,6 +8,9 @@
         Background="#F0F0F0">
     <Window.Resources>
         <local:ConvertUpdateToTrueConverter x:Key="ConvertUpdateToTrueConverter"/>
+        <local:ConvertUpdateToVisibleConverter x:Key="ConvertUpdateToVisibleConverter"/>
+        <local:CurrentCallVisibilityConverter x:Key="CurrentCallVisibilityConverter"/>
+        <local:CurrentCallEnabledConverter x:Key="CurrentCallEnabledConverter"/>
         <Style TargetType="Label">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -94,9 +97,8 @@
                 <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
                     <Label Content="Id:" VerticalAlignment="Center" Width="100"/>
                     <TextBox Text="{Binding CurrentVolunteer.Id, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" 
-                             HorizontalAlignment="Stretch" 
-                             IsReadOnly="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}}"
-                             Background="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}, ConverterParameter=Transparent}"/>
+                             HorizontalAlignment="Stretch" IsReadOnly="True"
+                             Background="Transparent"/>
                 </StackPanel>
 
                 <!-- Full Name -->
@@ -120,23 +122,22 @@
                 <!-- Password -->
                 <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
                     <Label Content="Password:" VerticalAlignment="Center" Width="100"/>
-                    <TextBox Text="" HorizontalAlignment="Stretch" IsReadOnly="True" Background="Transparent"/>
+                    <TextBox Text="" HorizontalAlignment="Stretch" />
                 </StackPanel>
 
                 <!-- Current Address -->
                 <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
                     <Label Content="Current Address:" VerticalAlignment="Center" Width="100"/>
                     <TextBox Text="{Binding CurrentVolunteer.CurrentAddress, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" 
-                             HorizontalAlignment="Stretch"
-                             IsReadOnly="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}}"
-                             Background="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}, ConverterParameter=Transparent}"/>
+                             HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
                 <!-- Role -->
                 <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal">
                     <Label Content="Role:" VerticalAlignment="Center" Width="100"/>
-                    <ComboBox ItemsSource="{Binding Source={StaticResource VolunteerRolesCollectionKey}}" 
-                              SelectedValue="{Binding CurrentVolunteer.Role, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch"/>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource VolunteerRolesCollectionKey}}" IsReadOnly="True"
+                             Background="Transparent" />
+                    
                 </StackPanel>
 
                 <!-- Is Active -->
@@ -150,8 +151,7 @@
                     <Label Content="Max Distance:" VerticalAlignment="Center" Width="100"/>
                     <TextBox Text="{Binding CurrentVolunteer.MaxDistance, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" 
                              HorizontalAlignment="Stretch"
-                             IsReadOnly="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}}"
-                             Background="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}, ConverterParameter=Transparent}"/>
+                             />
                 </StackPanel>
 
                 <!-- Distance Type -->
@@ -159,8 +159,7 @@
                     <Label Content="Distance Type:" VerticalAlignment="Center" Width="100"/>
                     <ComboBox ItemsSource="{Binding Source={StaticResource DistanceTypesCollectionKey}}" 
                               SelectedValue="{Binding CurrentVolunteer.DistanceType, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" 
-                              HorizontalAlignment="Stretch"
-                              IsEnabled="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}, ConverterParameter=False}"/>
+                              HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
                 <!-- Total Calls Handled -->
@@ -188,7 +187,7 @@
                 </StackPanel>
 
                 <!-- Current Call -->
-                <GroupBox Header="Current Call" Grid.Row="7" Grid.ColumnSpan="2">
+                <GroupBox Header="Current Call" Grid.Row="7" Grid.ColumnSpan="2" Visibility="{Binding CurrentVolunteer.CurrentCall, Converter={StaticResource CurrentCallVisibilityConverter}}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -270,21 +269,21 @@
 
                         <!-- Complete Call Button -->
                         <Button Content="Complete Call" Grid.Row="5" Grid.Column="0" Click="btnCompleteCall_Click" 
-                                IsEnabled="{Binding CurrentVolunteer.CurrentCall, Converter={StaticResource ConvertUpdateToTrueConverter}, ConverterParameter=True}"/>
+                                IsEnabled="{Binding CurrentVolunteer.CurrentCall, Converter={StaticResource CurrentCallEnabledConverter}}"/>
 
                         <!-- Cancel Call Button -->
                         <Button Content="Cancel Call" Grid.Row="5" Grid.Column="1" Click="btnCancelCall_Click" 
-                                IsEnabled="{Binding CurrentVolunteer.CurrentCall, Converter={StaticResource ConvertUpdateToTrueConverter}, ConverterParameter=True}"/>
+                                IsEnabled="{Binding CurrentVolunteer.CurrentCall, Converter={StaticResource CurrentCallEnabledConverter}}"/>
                     </Grid>
                 </GroupBox>
             </Grid>
         </GroupBox>
 
-        <!-- Add/Update/Delete Buttons -->
+        <!-- Buttons -->
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Select Call" Click="btnSelectCall_Click" Margin="10"/>
+            <Button Content="Select Call" Click="btnSelectCall_Click" Margin="10" IsEnabled="{Binding CurrentVolunteer.CurrentCall, Converter={StaticResource CurrentCallEnabledConverter}}"/>
             <Button Content="Call History" Click="btnCallHistory_Click" Margin="10"/>
-            
+            <Button Content="Update" Click="BtnAddUpdate_Click"/>
         </StackPanel>
     </Grid>
 </Window>

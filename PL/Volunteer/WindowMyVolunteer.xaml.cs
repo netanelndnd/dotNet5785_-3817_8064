@@ -5,12 +5,18 @@ namespace PL.Volunteer
     public partial class WindowMyVolunteer : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+
+        // Property to hold the current volunteer
         public BO.Volunteer? CurrentVolunteer { get; set; }
 
         public WindowMyVolunteer(int id)
         {
-            InitializeComponent();
             CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(id);
+            InitializeComponent();
+
+            // Register event handlers for loading and closing the window
+            this.Loaded += Window_Loaded;
+            this.Closed += Window_Closed;
         }
 
         // Event handler for window loaded event
@@ -18,26 +24,12 @@ namespace PL.Volunteer
         {
             if (CurrentVolunteer!.Id != 0)
                 s_bl.Volunteer.AddObserver(CurrentVolunteer!.Id, VolunteerObserver);
-            LoadVolunteerData();
         }
 
         // Event handler for button click event
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void BtnAddUpdate_Click(object sender, RoutedEventArgs e)
         {
             SaveVolunteerData();
-        }
-
-        // Method to load volunteer data
-        private void LoadVolunteerData()
-        {
-            if (CurrentVolunteer != null)
-            {
-                // Load data into UI elements
-                // Example:
-                // txtFullName.Text = CurrentVolunteer.FullName;
-                // txtPhoneNumber.Text = CurrentVolunteer.PhoneNumber;
-                // txtEmail.Text = CurrentVolunteer.Email;
-            }
         }
 
         // Method to save volunteer data
@@ -79,6 +71,27 @@ namespace PL.Volunteer
             if (string.IsNullOrWhiteSpace(CurrentVolunteer?.PhoneNumber) || !Helpers.VolunteerManager.IsValidPhoneNumber(CurrentVolunteer.PhoneNumber))
             {
                 MessageBox.Show("Invalid phone number format.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            // Validate full name is not null or empty
+            if (string.IsNullOrWhiteSpace(CurrentVolunteer?.FullName))
+            {
+                MessageBox.Show("Full name cannot be empty.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            // Validate current address is not null or empty
+            if (string.IsNullOrWhiteSpace(CurrentVolunteer?.CurrentAddress))
+            {
+                MessageBox.Show("Current address cannot be empty.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            // Validate max distance is not null and is a number
+            if (CurrentVolunteer?.MaxDistance == null || !double.TryParse(CurrentVolunteer.MaxDistance.ToString(), out _))
+            {
+                MessageBox.Show("Max distance must be a valid number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -137,8 +150,9 @@ namespace PL.Volunteer
         // Event handler for selecting a call
         private void btnSelectCall_Click(object sender, RoutedEventArgs e)
         {
-            // Logic to select a call
-            MessageBox.Show("Select Call button clicked.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            // Logic to navigate to the "Select Call for Handling" screen
+            SelectCallWindow selectCallWindow = new SelectCallWindow(CurrentVolunteer!.Id);
+            selectCallWindow.ShowDialog();
         }
 
         // Event handler for viewing call history
