@@ -126,5 +126,25 @@ public static class AssignmentManager
         return callAssignInList;
     }
 
+    // פונקציה לבדיקת הקצאות שפג תוקפן
+    public static void CheckAndExpireAssignments()
+    {
+        var assignments = s_dal.Assignment.ReadAll();
+        var now = DateTime.Now;
+
+        foreach (var assignment in assignments)
+        {
+            // אם סטטוס הסיום של ההקצאה הוא NULL והזמן הנוכחי גדול מזמן הסיום המוקצה
+            if (assignment.CompletionStatus == null && assignment.CompletionTime.HasValue && now > assignment.CompletionTime.Value)
+            {
+                // יצירת אובייקט חדש עם הערכים המעודכנים
+                var updatedAssignment = assignment with { CompletionStatus = DO.CompletionType.Expired };
+                s_dal.Assignment.Update(updatedAssignment);
+                Observers.NotifyItemUpdated(updatedAssignment.Id);
+            }
+        }
+        Observers.NotifyListUpdated();
+    }
+
 
 }
