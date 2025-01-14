@@ -394,7 +394,8 @@ namespace BlImplementation
         {
             // Retrieve all open calls from CallManager
             var openCalls = CallManager.GetOpenCallsForVolunteer(volunteerId);
-
+            if (openCalls == null)
+                return null;
             // Filter the list by callType if provided
             if (callType.HasValue)
             {

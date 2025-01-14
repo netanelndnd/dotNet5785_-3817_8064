@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using BlImplementation;
 namespace Helpers;
 
-internal static class CallManager 
+internal static class CallManager
 {
     private static IDal s_dal = Factory.Get; //stage 4
 
@@ -109,7 +109,7 @@ internal static class CallManager
             CompletionDuration = AssignmentManager.GetTimeDifferenceForLastAssignment(call.Id),
             Status = GetCallStatus(call.Id),
             TotalAssignments = AssignmentManager.CountAssignmentsByCallId(call.Id)
-        }).ToList();
+        });
     }
 
     /// <summary>
@@ -258,7 +258,7 @@ internal static class CallManager
             StartedAt = s_dal.Assignment.Read(a => a.CallId == call.Id && a.VolunteerId == volunteerId)?.EntryTime ?? DateTime.MinValue,
             CompletedAt = s_dal.Assignment.Read(a => a.CallId == call.Id && a.VolunteerId == volunteerId)?.CompletionTime,
             CompletionStatus = (BO.CompletionType)s_dal.Assignment.Read(a => a.CallId == call.Id && a.VolunteerId == volunteerId)?.CompletionStatus
-        }).ToList();
+        });
     }
 
     /// <summary>
@@ -269,12 +269,12 @@ internal static class CallManager
     public static IEnumerable<BO.OpenCallInList>? GetOpenCallsForVolunteer(int volunteerId)
     {
         var openCalls = s_dal.Call.ReadAll().Where(c => c.MaxCompletionTime == null || c.MaxCompletionTime > AdminManager.Now);
-        if (openCalls == null || !openCalls.Any())
+        var volunteer = s_dal.Volunteer.Read(volunteerId);
+        if (openCalls == null || !openCalls.Any()||volunteer==null)
         {
             return null;
         }
-
-
+       
 
         return openCalls.Select(call => new BO.OpenCallInList
         {
@@ -282,17 +282,9 @@ internal static class CallManager
             CallType = (BO.CallType)call.CallType,
             FullAddress = call.Address,
             OpenedAt = call.OpenTime,
-            DistanceFromVolunteer = CalculateDistance((double)s_dal.Volunteer.Read(volunteerId).Latitude
-            , (double)s_dal.Volunteer.Read(volunteerId).Longitude
+            DistanceFromVolunteer = CalculateDistance((double)volunteer.Latitude
+            , (double)volunteer.Longitude
             , call.Latitude, call.Longitude),
-        }).ToList();
+        });
     }
-
-
-    
-
-
-
-
-
 }

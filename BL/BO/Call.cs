@@ -47,7 +47,7 @@ public class Call
     // OpenInRisk - Open and approaching MaxCompletionTime
     // InProgressInRisk - InProgress and approaching MaxCompletionTime
 
-    public List<CallAssignInList>? Assignments { get; set; }
+    public IEnumerable<CallAssignInList>? Assignments { get; set; }
     // A list of assignments related to this call. Each assignment is of type BO.CallAssignInList.
     // If no assignments exist yet, this will be null.
     public override string ToString() => this.ToStringProperty();

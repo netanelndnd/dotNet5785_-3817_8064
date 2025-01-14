@@ -25,7 +25,7 @@ public class OpenCallInList
     public DateTime? MaxCompletionTime { get; set; }
     // The maximum allowed time to complete the call (nullable, retrieved from DO.Call)
 
-    public double DistanceFromVolunteer { get; set; }
+    public double? DistanceFromVolunteer { get; set; }
     // The distance from the volunteer to the call, calculated in the logical layer
     public override string ToString() => this.ToStringProperty();
 }

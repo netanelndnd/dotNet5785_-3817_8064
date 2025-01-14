@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using PL.call;
+using System.Windows;
 
 namespace PL.Volunteer
 {
@@ -8,7 +9,7 @@ namespace PL.Volunteer
 
         // Property to hold the current volunteer
         public BO.Volunteer? CurrentVolunteer { get; set; }
-
+       
         public WindowMyVolunteer(int id)
         {
             CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(id);
@@ -159,7 +160,8 @@ namespace PL.Volunteer
         private void btnCallHistory_Click(object sender, RoutedEventArgs e)
         {
             // Logic to view call history
-            MessageBox.Show("Call History button clicked.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            CallHistoryOfVolunteer callHistory= new CallHistoryOfVolunteer(CurrentVolunteer!.Id);
+            callHistory.ShowDialog();
         }
     }
 }

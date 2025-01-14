@@ -103,11 +103,10 @@ public static class AssignmentManager
     /// </summary>
     /// <param name="callId">The identifier of the call.</param>
     /// <returns>A list of call assignments or null if none found.</returns>
-    public static List<BO.CallAssignInList>? GetCallAssignmentsByCallId(int callId)
+    public static IEnumerable<BO.CallAssignInList>? GetCallAssignmentsByCallId(int callId)
     {
         var assignments = s_dal.Assignment.ReadAll()
-            .Where(a => a.CallId == callId)
-            .ToList();
+            .Where(a => a.CallId == callId);
 
         if (!assignments.Any())
         {
@@ -121,7 +120,7 @@ public static class AssignmentManager
             StartTime = a.EntryTime,
             EndTime = a.CompletionTime,
             CompletionType = (BO.CompletionType?)a.CompletionStatus
-        }).ToList();
+        });
 
         return callAssignInList;
     }

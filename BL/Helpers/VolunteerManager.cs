@@ -19,7 +19,7 @@ public static class VolunteerManager
         var assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId);
         return assignments.Count(a => a.CompletionStatus.ToString() == "Treated");
     }
-
+    
     /// <summary>
     /// Get the number of calls that a volunteer has canceled
     /// </summary>
