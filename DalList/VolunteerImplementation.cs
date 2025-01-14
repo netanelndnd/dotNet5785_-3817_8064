@@ -17,7 +17,7 @@ internal class VolunteerImplementation : IVolunteer
         // For entities with normal id (not auto id)
         if (Read(item.Id) is not null)
             throw new DalAlreadyExistsException($"Volunteer with ID={item.Id} already exists");
-        DataSource.Volunteers.Append(item);
+        DataSource.Volunteers = DataSource.Volunteers.Append(item);
     }
 
     /// <summary>

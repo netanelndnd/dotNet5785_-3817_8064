@@ -1,6 +1,7 @@
 ﻿namespace DalTest;
 using DalApi;
 using DO;
+using System.Linq;
 
 /// <summary>
 /// A class that initializes the DAL with random data.
@@ -259,13 +260,15 @@ public static class Initialization
 
         // Ensure at least 15 calls are not assigned
         var unassignedCalls = calls.OrderBy(x => s_rand.Next()).Take(15);
-        var assignableCalls = calls.Except(unassignedCalls).ToList();
+        var assignableCalls = calls.Except(unassignedCalls);
 
         // Assign 5 calls to 5 volunteers who never handled calls
         var assignments = volunteers.Take(5).Select(volunteer =>
         {
-            var call = assignableCalls.ElementAt(s_rand.Next(assignableCalls.Count));
-            assignableCalls.Remove(call);
+            var call = assignableCalls.ElementAtOrDefault(s_rand.Next(assignableCalls.Count()));
+            if (call == null) return null;
+
+            assignableCalls = assignableCalls.Except(new[] { call });
             DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
             DateTime? completionTime = entryTime.AddMinutes(s_rand.Next(1, (int)((call.MaxCompletionTime - entryTime)?.TotalMinutes ?? 0)));
             CompletionType? completionType = (CompletionType?)s_rand.Next(Enum.GetValues(typeof(CompletionType)).Length);
@@ -278,14 +281,14 @@ public static class Initialization
                 completionTime,
                 completionType
             );
-        }).ToList();
-
+        }).Where(a => a != null); // Remove null assignments (in case no call was found)
         // Assign 10 calls to 1 volunteers with random CompletionType
-        assignments.AddRange(Enumerable.Range(0, 10).Select(_ =>
+        assignments = assignments.Concat(Enumerable.Range(0, 10).Select(_ =>
         {
             var volunteer = volunteers.ElementAt(10);
-            var call = assignableCalls.ElementAt(s_rand.Next(assignableCalls.Count));
-            assignableCalls.Remove(call);
+            var call = assignableCalls.ElementAtOrDefault(s_rand.Next(assignableCalls.Count()));
+            if (call == null) return null;
+            assignableCalls = assignableCalls.Except(new[] { call });
             DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
             DateTime? completionTime = entryTime.AddMinutes(s_rand.Next(1, (int)((call.MaxCompletionTime - entryTime)?.TotalMinutes ?? 0)));
             CompletionType? completionType = (CompletionType?)s_rand.Next(Enum.GetValues(typeof(CompletionType)).Length);
@@ -298,15 +301,16 @@ public static class Initialization
                 completionTime,
                 completionType
             );
-        }));
+        })).Where(a => a != null);
+
 
         // Assign 10 calls that are still open (CompletionType is null)
-        assignments.AddRange(Enumerable.Range(0, 10).Select(_ =>
+        assignments = assignments.Concat(Enumerable.Range(0, 10).Select(_ =>
         {
             // רשימה זמנית של מתנדבים פנויים (כאלה שלא שובצו למשימות עד כה)
             var availableVolunteers = volunteers
-                .Where(v => !assignments.Any(a => a.VolunteerId == v.Id)) // סינון מתנדבים שכבר יש להם משימות
-                .ToList();
+                .Where(v => !assignments.Any(a => a.VolunteerId == v.Id)); // סינון מתנדבים שכבר יש להם משימות
+             
 
             // בחירת מתנדב אקראי מרשימת המתנדבים 
             var volunteer = volunteers.ElementAt(s_rand.Next(volunteers.Count()));
@@ -315,8 +319,8 @@ public static class Initialization
             if (!assignableCalls.Any())
                 throw new InvalidOperationException("No assignable calls available.");
 
-            var call = assignableCalls[s_rand.Next(assignableCalls.Count)];
-            assignableCalls.Remove(call); // הסרה של הקריאה מרשימת הקריאות הזמינות
+            var call = assignableCalls.ElementAtOrDefault(s_rand.Next(assignableCalls.Count()));
+            assignableCalls = assignableCalls.Except(new[] { call }); // הסרה של הקריאה מרשימת הקריאות הזמינות
 
             // חישוב זמן כניסה וזמן סיום למשימה
             DateTime entryTime = call.OpenTime.AddMinutes(
@@ -336,26 +340,27 @@ public static class Initialization
                 completionTime, // זמן סיום (יכול להיות null אם לא הוגדר נכון)
                 null // סטטוס המשימה - פתוחה
             );
-        }));
+        })).Where(a => a != null);
+
 
         // Assign 5 calls that were closed after the maximum completion time
-        assignments.AddRange(Enumerable.Range(0, 5).Select(_ =>
+        assignments = assignments.Concat(Enumerable.Range(0, 5).Select(_ =>
         {
             // רשימה זמנית של מתנדבים פנויים
             var availableVolunteers = volunteers
-                .Where(v => !assignments.Any(a => a.VolunteerId == v.Id)) // סינון מתנדבים שכבר שובצו
-                .ToList();
+                .Where(v => !assignments.Any(a => a.VolunteerId == v.Id)); // סינון מתנדבים שכבר שובצו
+              
 
             // בחירת מתנדב אקראי מרשימת המתנדבים 
             var volunteer = volunteers.ElementAt(s_rand.Next(volunteers.Count()));
 
             // בדיקה אם יש מספיק קריאות זמינות
-            if (assignableCalls.Count < 5)
+            if (assignableCalls.Count() < 5)
                 throw new InvalidOperationException("Not enough assignable calls available.");
 
             // בחירת קריאה אקראית
-            var call = assignableCalls[s_rand.Next(assignableCalls.Count)];
-            assignableCalls.Remove(call); // הסרה של הקריאה מהרשימה
+            var call = assignableCalls.ElementAt(s_rand.Next(assignableCalls.Count()));
+            assignableCalls = assignableCalls.Except(new[] { call }); // הסרה של הקריאה מהרשימה
 
             // חישוב זמן התחלה
             DateTime entryTime = call.OpenTime.AddMinutes(
@@ -377,14 +382,16 @@ public static class Initialization
                 completionTime, // זמן סיום
                 CompletionType.Expired // סטטוס - פגת תוקף
             );
-        }));
+        })).Where(a => a != null);
+
 
         // Add 20 more random assignments
-        assignments.AddRange(Enumerable.Range(0, 25).Select(_ =>
+        assignments = assignments.Concat(Enumerable.Range(0, 25).Select(_ =>
         {
             var volunteer = volunteers.ElementAt(s_rand.Next(volunteers.Count()));
-            var call = assignableCalls.ElementAt(s_rand.Next(assignableCalls.Count));
-            assignableCalls.Remove(call);
+            var call = assignableCalls.ElementAtOrDefault(s_rand.Next(assignableCalls.Count()));
+            if(call == null) return null;
+            assignableCalls = assignableCalls.Except(new[] { call });
             DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
             DateTime? completionTime = entryTime.AddMinutes(s_rand.Next(1, (int)((call.MaxCompletionTime - entryTime)?.TotalMinutes ?? 0)));
             CompletionType? completionType = (CompletionType?)s_rand.Next(Enum.GetValues(typeof(CompletionType)).Length);
@@ -397,7 +404,7 @@ public static class Initialization
                 completionTime,
                 completionType
             );
-        }));
+        })).Where(a => a != null);
 
         // Add all assignments to the DAL
         foreach (var assignment in assignments)
@@ -405,7 +412,7 @@ public static class Initialization
             s_dal?.Assignment.Create(assignment);
         }
     }
-
+    
     //public static void Do(IDal dal) //stage 2
     public static void Do() //stage 4
     {

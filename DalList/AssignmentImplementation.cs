@@ -21,7 +21,7 @@ internal class AssignmentImplementation : IAssignment
         }
         int id = Config.NextAssignmentId;
         Assignment copy = item with { Id = id };
-        DataSource.Assignments.Append(copy);
+        DataSource.Assignments = DataSource.Assignments.Append(copy);
     }
 
     /// <summary>

@@ -57,7 +57,6 @@ internal static class AdminManager //stage 4
     {
         var oldClock = s_dal.Config.Clock; //stage 4
         s_dal.Config.Clock = newClock; //stage 4
-
         //TO_DO:
         //Add calls here to any logic method that should be called periodically,
         //after each clock update

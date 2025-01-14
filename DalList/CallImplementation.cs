@@ -22,7 +22,7 @@ internal class CallImplementation : ICall
         // For entities with auto id
         int id = Config.NextCallId;
         Call copy = item with { Id = id };
-        DataSource.Calls.Append(copy);
+        DataSource.Calls = DataSource.Calls.Append(copy);
     }
 
     /// <summary>

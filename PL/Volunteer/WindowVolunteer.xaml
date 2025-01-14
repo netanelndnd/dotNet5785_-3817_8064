@@ -128,7 +128,6 @@
                     <Label Content="Current Address:" VerticalAlignment="Center" Width="100"/>
                     <TextBox Text="{Binding CurrentVolunteer.CurrentAddress, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" 
                              HorizontalAlignment="Stretch"
-                             IsReadOnly="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}}"
                              Background="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}, ConverterParameter=Transparent}"/>
                 </StackPanel>
 
