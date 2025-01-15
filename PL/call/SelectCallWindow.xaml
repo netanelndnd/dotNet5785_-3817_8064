@@ -54,6 +54,7 @@
                 <DataGridTextColumn Header="Opened At" Binding="{Binding OpenedAt}" Width="*"/>
                 <DataGridTextColumn Header="Max Completion Time" Binding="{Binding MaxCompletionTime}" Width="*"/>
                 <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromVolunteer}" Width="*"/>
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
         

@@ -22,10 +22,11 @@ namespace PL.call
     {
         private readonly int _volunteerId;
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+        private IEnumerable<BO.ClosedCallInList> _CallHistory;
         public CallHistoryOfVolunteer(int volunterrID)
         {
-            InitializeComponent();
             _volunteerId = volunterrID;
+            InitializeComponent();
         }
         public BO.CallType callType { get; set; } = BO.CallType.None;
         public IEnumerable<BO.ClosedCallInList> callHistory

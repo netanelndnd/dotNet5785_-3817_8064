@@ -61,7 +61,7 @@ internal static class CallManager
                                                   callDetails.Latitude, callDetails.Longitude),
             Status = GetCallStatus(callId)
         };
-
+      
         return callInProgress;
     }
 
@@ -270,18 +270,19 @@ internal static class CallManager
     {
         var openCalls = s_dal.Call.ReadAll().Where(c => c.MaxCompletionTime == null || c.MaxCompletionTime > AdminManager.Now);
         var volunteer = s_dal.Volunteer.Read(volunteerId);
-        if (openCalls == null || !openCalls.Any()||volunteer==null)
+        if (openCalls == null || !openCalls.Any())
         {
             return null;
         }
-       
-
+        
         return openCalls.Select(call => new BO.OpenCallInList
         {
             Id = call.Id,
             CallType = (BO.CallType)call.CallType,
+            Description = call.Description,
             FullAddress = call.Address,
             OpenedAt = call.OpenTime,
+            MaxCompletionTime =call.MaxCompletionTime,
             DistanceFromVolunteer = CalculateDistance((double)volunteer.Latitude
             , (double)volunteer.Longitude
             , call.Latitude, call.Longitude),

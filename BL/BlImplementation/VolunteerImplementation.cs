@@ -57,11 +57,11 @@ namespace BlImplementation
                     throw new BO.BlValidationException("Current address cannot be null or empty.");
                 var coordinates = Tools.GetCoordinates(volunteerB.CurrentAddress);
 
-        // Check if the location is within Israel
-        bool isLocationValid = coordinates.IsInIsrael;
+                // Check if the location is within Israel
+                bool isLocationValid = coordinates.IsInIsrael;
 
-        // Collect invalid details
-        List<string> invalidDetails = new();
+                // Collect invalid details
+                List<string> invalidDetails = new();
                 if (!isEmailValid) invalidDetails.Add("Email");
                 if (!isIdValid) invalidDetails.Add("ID");
                 if (!isPhoneNumberValid) invalidDetails.Add("Phone Number");
@@ -86,7 +86,7 @@ namespace BlImplementation
                         DistanceType = (DO.DistanceType)volunteerB.DistanceType,
                     };
 
-        _dal.Volunteer.Create(volunteerD);
+                    _dal.Volunteer.Create(volunteerD);
                     VolunteerManager.Observers.NotifyListUpdated();
                 }
                 else
@@ -226,7 +226,7 @@ namespace BlImplementation
                 throw new BO.BlSystemException("An error occurred during login.", ex);
             }
         }
-
+        
         /// <summary>
         /// Updates the details of an existing volunteer.
         /// </summary>
@@ -269,6 +269,7 @@ namespace BlImplementation
                         IsActive = true,
                         Role = (BO.VolunteerRole)volunteer.Role,
                         DistanceType = (BO.DistanceType)volunteer.DistanceType,
+                        CurrentCall = volunteer.CurrentCall,
                     };
 
                     if (!isManager)

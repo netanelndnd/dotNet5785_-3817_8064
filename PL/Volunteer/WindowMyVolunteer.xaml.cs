@@ -152,15 +152,18 @@ namespace PL.Volunteer
         private void btnSelectCall_Click(object sender, RoutedEventArgs e)
         {
             // Logic to navigate to the "Select Call for Handling" screen
-            SelectCallWindow selectCallWindow = new SelectCallWindow(CurrentVolunteer!.Id);
-            selectCallWindow.ShowDialog();
+            if (CurrentVolunteer?.CurrentCall == null)
+            {
+                SelectCallWindow selectCallWindow = new SelectCallWindow(CurrentVolunteer!.Id);
+                selectCallWindow.ShowDialog();
+            }
         }
 
         // Event handler for viewing call history
         private void btnCallHistory_Click(object sender, RoutedEventArgs e)
         {
             // Logic to view call history
-            CallHistoryOfVolunteer callHistory= new CallHistoryOfVolunteer(CurrentVolunteer!.Id);
+            CallHistoryOfVolunteer callHistory = new CallHistoryOfVolunteer(CurrentVolunteer!.Id);
             callHistory.ShowDialog();
         }
     }

@@ -18,12 +18,12 @@ namespace PL.Volunteer
     {
         private readonly int _volunteerId;
         private readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        private List<BO.OpenCallInList> _openCalls;
+        private IEnumerable<BO.OpenCallInList> _openCalls;
 
         public SelectCallWindow(int volunteerId)
         {
-            InitializeComponent();
             _volunteerId = volunteerId;
+            InitializeComponent();
         }
 
 
@@ -88,6 +88,8 @@ namespace PL.Volunteer
                 try
                 {
                     s_bl.Call.AssignCallToVolunteer(_volunteerId, selectedCall.Id);
+                    
+                  
                     MessageBox.Show("Call assigned successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     queryOpenCalls();
                 }

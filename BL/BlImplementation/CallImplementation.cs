@@ -82,9 +82,9 @@ namespace BlImplementation
         {
             var call = _dal.Call.Read(callId);
             var callStatus = CallManager.GetCallStatus(callId);
-
+            
             // Check if the call is open or open in risk and the maximum completion time has not passed
-            if ((callStatus == CallStatus.Open || callStatus == CallStatus.OpenInRisk) && call.MaxCompletionTime < AdminManager.Now)
+            if ((callStatus == CallStatus.Open || callStatus == CallStatus.OpenInRisk) && call.MaxCompletionTime > AdminManager.Now)
             {
                 DO.Assignment newAssignment = new DO.Assignment
                 {
@@ -92,6 +92,9 @@ namespace BlImplementation
                     VolunteerId = volunteerId,
                     EntryTime = AdminManager.Now
                 };
+                _dal.Assignment.Create(newAssignment);
+                VolunteerManager.ConvertVolunteerIdToBO(volunteerId);
+                CallManager.ConvertDOCallToBOCall(callId);
             }
             else
             {
