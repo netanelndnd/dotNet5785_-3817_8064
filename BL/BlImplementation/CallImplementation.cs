@@ -95,6 +95,10 @@ namespace BlImplementation
                 _dal.Assignment.Create(newAssignment);
                 VolunteerManager.ConvertVolunteerIdToBO(volunteerId);
                 CallManager.ConvertDOCallToBOCall(callId);
+                VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
+                VolunteerManager.Observers.NotifyListUpdated();
+                CallManager.Observers.NotifyItemUpdated(newAssignment.Id);
+                CallManager.Observers.NotifyListUpdated();
             }
             else
             {
@@ -131,6 +135,9 @@ namespace BlImplementation
                         CompletionTime = AdminManager.Now
                     };
                     _dal.Assignment.Update(newAssignment);
+                    VolunteerManager.ConvertVolunteerIdToBO(requesterId);
+                    VolunteerManager.Observers.NotifyItemUpdated(requesterId);
+                    VolunteerManager.Observers.NotifyListUpdated();
                     CallManager.Observers.NotifyItemUpdated(newAssignment.Id);
                     CallManager.Observers.NotifyListUpdated();
                 }
@@ -190,6 +197,9 @@ namespace BlImplementation
                             CompletionTime = AdminManager.Now
                         };
                         _dal.Assignment.Update(newAssignment);
+                        VolunteerManager.ConvertVolunteerIdToBO(volunteerId);
+                        VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
+                        VolunteerManager.Observers.NotifyListUpdated();
                         CallManager.Observers.NotifyItemUpdated(newAssignment.Id);
                         CallManager.Observers.NotifyListUpdated();
                     }

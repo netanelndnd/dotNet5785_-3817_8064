@@ -202,7 +202,7 @@ internal static class CallManager
             OpenedAt = callDetails.OpenTime,
             MaxCompletionTime = callDetails.MaxCompletionTime,
             Status = GetCallStatus(callId),
-            Assignments = assignments.Any() ? assignments : null
+            Assignments = assignments != null && assignments.Any() ? assignments : null
         };
     }
 
@@ -248,6 +248,7 @@ internal static class CallManager
         {
             return null;
         }
+
         // Return a list of closed calls handled by the volunteer
         return closedCalls.Select(call => new BO.ClosedCallInList
         {
@@ -257,7 +258,7 @@ internal static class CallManager
             OpenedAt = call.OpenTime,
             StartedAt = s_dal.Assignment.Read(a => a.CallId == call.Id && a.VolunteerId == volunteerId)?.EntryTime ?? DateTime.MinValue,
             CompletedAt = s_dal.Assignment.Read(a => a.CallId == call.Id && a.VolunteerId == volunteerId)?.CompletionTime,
-            CompletionStatus = (BO.CompletionType)s_dal.Assignment.Read(a => a.CallId == call.Id && a.VolunteerId == volunteerId)?.CompletionStatus
+            CompletionStatus = (BO.CompletionType?)s_dal.Assignment.Read(a => a.CallId == call.Id && a.VolunteerId == volunteerId)?.CompletionStatus
         });
     }
 
@@ -268,15 +269,18 @@ internal static class CallManager
     /// <returns>A list of OpenCallInList objects containing details of open calls available for the volunteer.</returns>
     public static IEnumerable<BO.OpenCallInList>? GetOpenCallsForVolunteer(int volunteerId)
     {
-        var openCalls = s_dal.Call.ReadAll().Where(c => c.MaxCompletionTime == null || c.MaxCompletionTime > AdminManager.Now);
+        var Calls = s_dal.Call.ReadAll();
+        
+        var openCalls = Calls.Where(c => (GetCallStatus(c.Id)==BO.CallStatus.OpenInRisk|| GetCallStatus(c.Id) == BO.CallStatus.Open));
         var volunteer = s_dal.Volunteer.Read(volunteerId);
         if (openCalls == null || !openCalls.Any())
         {
             return null;
         }
         
-        return openCalls.Select(call => new BO.OpenCallInList
+        return openCalls.Select(call =>  new BO.OpenCallInList
         {
+           
             Id = call.Id,
             CallType = (BO.CallType)call.CallType,
             Description = call.Description,

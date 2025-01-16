@@ -88,8 +88,6 @@ namespace PL.Volunteer
                 try
                 {
                     s_bl.Call.AssignCallToVolunteer(_volunteerId, selectedCall.Id);
-                    
-                  
                     MessageBox.Show("Call assigned successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     queryOpenCalls();
                 }
@@ -98,6 +96,7 @@ namespace PL.Volunteer
                     MessageBox.Show("An error occurred while assigning the call: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+            
         }
 
         private void BtnUpdateAddress_Click(object sender, RoutedEventArgs e)

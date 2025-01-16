@@ -60,7 +60,21 @@ namespace PL
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value == null;
+            // Improved readability by using a ternary operator
+            return value == null ? true : false;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class CurrentCallbackEnabledConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            // Improved readability by using a ternary operator
+            return value != null ? true : false;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

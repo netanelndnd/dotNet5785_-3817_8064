@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.call"
         mc:Ignorable="d"
-        Title="Call History Of" Height="450" Width="800"
+        Title="Call History Of volunteer" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
     <Window.Resources>
+
         <Style TargetType="Label">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -40,13 +41,13 @@
             </Grid.ColumnDefinitions>
             <Label Content="Filter by Completion Status:" Foreground="White" VerticalAlignment="Center" Grid.Column="0" Margin="5"/>
             <ComboBox ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}" 
-                      SelectedValue="{Binding Path=callHistory, Mode=TwoWay}" 
-                      SelectionChanged="callHistory_CB" 
-                      VerticalAlignment="Center" Grid.Column="1" Margin="5"/>
+                      SelectedValue="{Binding Path=callType, Mode=TwoWay}" 
+                      SelectionChanged="callsHistory_CB" 
+                      VerticalAlignment="Bottom" Grid.Column="1" Margin="188,0,189,9"/>
         </Grid>
 
         <!-- DataGrid Section -->
-        <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Margin="10" Grid.Row="1" Background="White" BorderBrush="#2E8B57" BorderThickness="1" ItemsSource="{Binding callHistory}" >
+        <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Margin="10" Grid.Row="1" Background="White" BorderBrush="#2E8B57" BorderThickness="1" ItemsSource="{Binding CallHistory}" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*"/>
                 <DataGridTextColumn Header="Type" Binding="{Binding CallType}" Width="*"/>

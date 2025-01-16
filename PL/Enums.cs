@@ -18,6 +18,7 @@ namespace PL
         public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
     }
 
+
     // Collection class for DistanceType enum
     internal class DistanceTypeCollection : IEnumerable
     {

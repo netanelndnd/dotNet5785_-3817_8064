@@ -1,5 +1,4 @@
-﻿using BO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,38 +21,39 @@ namespace PL.call
     {
         private readonly int _volunteerId;
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        private IEnumerable<BO.ClosedCallInList> _CallHistory;
+        private IEnumerable<BO.ClosedCallInList> _callsHistory;
         public CallHistoryOfVolunteer(int volunterrID)
         {
             _volunteerId = volunterrID;
             InitializeComponent();
         }
-        public BO.CallType callType { get; set; } = BO.CallType.None;
-        public IEnumerable<BO.ClosedCallInList> callHistory
+        
+        public IEnumerable<BO.ClosedCallInList> CallHistory
         {
-            get { return (IEnumerable<BO.ClosedCallInList>)GetValue(callHistoryProperty); }
+            get { return (IEnumerable<BO.ClosedCallInList>)GetValue(CallHistoryProperty); }
 
             // Setter method to set the value of the CallListProperty.
-            set { SetValue(callHistoryProperty, value); }
+            set { SetValue(CallHistoryProperty, value); }
         }
-        public static readonly DependencyProperty callHistoryProperty =
-            DependencyProperty.Register("callHistory", typeof(IEnumerable<BO.ClosedCallInList>), typeof(CallInListWindow), new PropertyMetadata(null));
-        private void queryCallHistory() => 
-            callHistory = (callType == BO.CallType.None) ?
+
+        public static readonly DependencyProperty CallHistoryProperty =
+            DependencyProperty.Register("CallHistory", typeof(IEnumerable<BO.ClosedCallInList>), typeof(CallHistoryOfVolunteer), new PropertyMetadata(null));
+        private void queryCallHistory() =>
+            CallHistory = (callType == BO.CallType.None) ?
             s_bl.Call.GetClosedCallsByVolunteer(_volunteerId, null, null)! : s_bl?.Call.GetClosedCallsByVolunteer(_volunteerId, callType, null)!;
-        private void callHistoryObserver() => queryCallHistory();
+        private void callsHistoryObserver() => queryCallHistory();
         private void Window_Loaded(object sender, RoutedEventArgs e)
-            => s_bl.Call.AddObserver(callHistoryObserver);
+            => s_bl.Call.AddObserver(callsHistoryObserver);
 
         // Event handler for when the window is closed.
         // Removes the callListObserver from the Call service.
         private void Window_Closed(object sender, EventArgs e)
-            => s_bl.Call.RemoveObserver(callHistoryObserver);
+            => s_bl.Call.RemoveObserver(callsHistoryObserver);
 
-        
-        private void callHistory_CB(object sender, SelectionChangedEventArgs e)
+        public BO.CallType callType { get; set; } = BO.CallType.None;
+        private void callsHistory_CB(object sender, SelectionChangedEventArgs e)
         {
-            callHistory = (callType == BO.CallType.None) ?
+            CallHistory = (callType == BO.CallType.None) ?
                 s_bl?.Call.GetClosedCallsByVolunteer(_volunteerId, null, null)! :
                 s_bl?.Call.GetClosedCallsByVolunteer(_volunteerId, callType, null)!;
         }

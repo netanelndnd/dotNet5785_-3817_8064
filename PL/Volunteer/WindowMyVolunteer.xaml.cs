@@ -129,6 +129,7 @@ namespace PL.Volunteer
                     MessageBox.Show("An error occurred while completing the call: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+            
         }
 
         // Event handler for canceling a call
@@ -139,13 +140,16 @@ namespace PL.Volunteer
                 try
                 {
                     s_bl.Call.CancelCallHandling(CurrentVolunteer.Id, CurrentVolunteer.CurrentCall.Id);
+                    
                     MessageBox.Show("Call canceled successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred while canceling the call: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+           
         }
 
         // Event handler for selecting a call
