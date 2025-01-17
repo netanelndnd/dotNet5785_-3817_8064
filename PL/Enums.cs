@@ -17,7 +17,15 @@ namespace PL
         // Implementation of GetEnumerator to allow iteration over CallType values
         public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
     }
+    internal class CallstatusCollection : IEnumerable
+    {
+        // Static readonly field containing all values of CallType enum
+        static readonly IEnumerable<BO.ClosedCallInListFields> s_enums =
+           (Enum.GetValues(typeof(BO.ClosedCallInListFields)) as IEnumerable<BO.ClosedCallInListFields>)!;
 
+        // Implementation of GetEnumerator to allow iteration over CallType values
+        public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
+    }
 
     // Collection class for DistanceType enum
     internal class DistanceTypeCollection : IEnumerable

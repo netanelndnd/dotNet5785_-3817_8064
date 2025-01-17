@@ -322,7 +322,7 @@ public static class Initialization
             if (!assignableCalls.Any())
                 throw new InvalidOperationException("No assignable calls available.");
 
-            var call = assignableCalls.ElementAtOrDefault(s_rand.Next(assignableCalls.Count()));
+            var call = assignableCalls.ElementAt(s_rand.Next(assignableCalls.Count()));
             assignableCalls = assignableCalls.Except(new[] { call }); // הסרה של הקריאה מרשימת הקריאות הזמינות
 
             // חישוב זמן כניסה וזמן סיום למשימה

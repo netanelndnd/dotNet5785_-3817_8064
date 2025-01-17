@@ -90,13 +90,13 @@ namespace PL.Volunteer
                     s_bl.Call.AssignCallToVolunteer(_volunteerId, selectedCall.Id);
                     MessageBox.Show("Call assigned successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     queryOpenCalls();
+                    this.Close(); // Close the SelectCallWindow
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred while assigning the call: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            
         }
 
         private void BtnUpdateAddress_Click(object sender, RoutedEventArgs e)

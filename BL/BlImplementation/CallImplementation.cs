@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace BlImplementation
 {
-    internal class CallImplementation : ICall
+    internal class CallImplementation : BlApi.ICall
     {
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
@@ -95,9 +95,12 @@ namespace BlImplementation
                 _dal.Assignment.Create(newAssignment);
                 VolunteerManager.ConvertVolunteerIdToBO(volunteerId);
                 CallManager.ConvertDOCallToBOCall(callId);
+                
+                AssignmentManager.Observers.NotifyListUpdated();
+                AssignmentManager.Observers.NotifyItemUpdated(newAssignment.Id);
                 VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
                 VolunteerManager.Observers.NotifyListUpdated();
-                CallManager.Observers.NotifyItemUpdated(newAssignment.Id);
+                CallManager.Observers.NotifyItemUpdated(callId);
                 CallManager.Observers.NotifyListUpdated();
             }
             else
@@ -136,9 +139,11 @@ namespace BlImplementation
                     };
                     _dal.Assignment.Update(newAssignment);
                     VolunteerManager.ConvertVolunteerIdToBO(requesterId);
+                    AssignmentManager.Observers.NotifyListUpdated();
+                    AssignmentManager.Observers.NotifyItemUpdated(newAssignment.Id);
                     VolunteerManager.Observers.NotifyItemUpdated(requesterId);
                     VolunteerManager.Observers.NotifyListUpdated();
-                    CallManager.Observers.NotifyItemUpdated(newAssignment.Id);
+                    CallManager.Observers.NotifyItemUpdated(newAssignment.CallId);
                     CallManager.Observers.NotifyListUpdated();
                 }
                 // If the requester is a manager
@@ -155,7 +160,12 @@ namespace BlImplementation
                         CompletionTime = AdminManager.Now
                     };
                     _dal.Assignment.Update(newAssignment);
-                    CallManager.Observers.NotifyItemUpdated(newAssignment.Id);
+                    VolunteerManager.ConvertVolunteerIdToBO(requesterId);
+                    AssignmentManager.Observers.NotifyListUpdated();
+                    AssignmentManager.Observers.NotifyItemUpdated(newAssignment.Id);
+                    VolunteerManager.Observers.NotifyItemUpdated(requesterId);
+                    VolunteerManager.Observers.NotifyListUpdated(); 
+                    CallManager.Observers.NotifyItemUpdated(newAssignment.CallId);
                     CallManager.Observers.NotifyListUpdated();
                 }
             }
@@ -197,11 +207,13 @@ namespace BlImplementation
                             CompletionTime = AdminManager.Now
                         };
                         _dal.Assignment.Update(newAssignment);
-                        VolunteerManager.ConvertVolunteerIdToBO(volunteerId);
+                        AssignmentManager.Observers.NotifyListUpdated();
+                        AssignmentManager.Observers.NotifyItemUpdated(assignmentId);
+                        VolunteerManager.ConvertVolunteerIdToBO(volunteerId); 
                         VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
                         VolunteerManager.Observers.NotifyListUpdated();
-                        CallManager.Observers.NotifyItemUpdated(newAssignment.Id);
-                        CallManager.Observers.NotifyListUpdated();
+                       
+                       
                     }
                     else
                     {
@@ -245,6 +257,7 @@ namespace BlImplementation
             {
                 // Attempt to delete the call in the data layer
                 _dal.Call.Delete(id);
+                CallManager.Observers.NotifyItemUpdated(id);
                 CallManager.Observers.NotifyListUpdated();
             }
             catch (Exception ex)

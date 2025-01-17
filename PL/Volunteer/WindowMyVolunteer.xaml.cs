@@ -9,7 +9,7 @@ namespace PL.Volunteer
 
         // Property to hold the current volunteer
         public BO.Volunteer? CurrentVolunteer { get; set; }
-       
+
         public WindowMyVolunteer(int id)
         {
             CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(id);
@@ -102,7 +102,7 @@ namespace PL.Volunteer
         // Observer method to refresh the volunteer details
         private void VolunteerObserver()
         {
-            int id = CurrentVolunteer!.Id;
+            int id =CurrentVolunteer!.Id;
             CurrentVolunteer = null;
             CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(id);
         }
@@ -122,6 +122,7 @@ namespace PL.Volunteer
                 try
                 {
                     s_bl.Call.CompleteCallHandling(CurrentVolunteer.Id, CurrentVolunteer.CurrentCall.Id);
+
                     MessageBox.Show("Call completed successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
@@ -129,7 +130,7 @@ namespace PL.Volunteer
                     MessageBox.Show("An error occurred while completing the call: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            
+
         }
 
         // Event handler for canceling a call
@@ -140,16 +141,16 @@ namespace PL.Volunteer
                 try
                 {
                     s_bl.Call.CancelCallHandling(CurrentVolunteer.Id, CurrentVolunteer.CurrentCall.Id);
-                    
+
                     MessageBox.Show("Call canceled successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                    
+
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred while canceling the call: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-           
+
         }
 
         // Event handler for selecting a call
@@ -160,6 +161,7 @@ namespace PL.Volunteer
             {
                 SelectCallWindow selectCallWindow = new SelectCallWindow(CurrentVolunteer!.Id);
                 selectCallWindow.ShowDialog();
+
             }
         }
 

@@ -51,11 +51,13 @@ namespace PL.call
             => s_bl.Call.RemoveObserver(callsHistoryObserver);
 
         public BO.CallType callType { get; set; } = BO.CallType.None;
+
+        public BO.ClosedCallInListFields callstatus = BO.ClosedCallInListFields.CompletionStatus;
         private void callsHistory_CB(object sender, SelectionChangedEventArgs e)
         {
             CallHistory = (callType == BO.CallType.None) ?
-                s_bl?.Call.GetClosedCallsByVolunteer(_volunteerId, null, null)! :
-                s_bl?.Call.GetClosedCallsByVolunteer(_volunteerId, callType, null)!;
+                s_bl?.Call.GetClosedCallsByVolunteer(_volunteerId, null, callstatus)! :
+                s_bl?.Call.GetClosedCallsByVolunteer(_volunteerId, callType, callstatus)!;
         }
     }
 }

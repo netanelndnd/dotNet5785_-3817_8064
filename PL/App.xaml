@@ -9,5 +9,6 @@
         <local:VolunteerRolesCollection x:Key="VolunteerRolesCollectionKey" />
         <local:ConvertUpdateToTrueConverter x:Key="ConvertUpdateToTrueKey" />
         <local:ConvertUpdateToVisibleConverter x:Key="ConvertUpdateToVisibleKey" />
+        <local:CallstatusCollection x:Key="CallstatusCollection" />
     </Application.Resources>
 </Application>

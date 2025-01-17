@@ -26,7 +26,6 @@ public static class AssignmentManager
     }
 
 
-
     /// <summary>
     /// Get all assignments sorted by entry time
     /// </summary>

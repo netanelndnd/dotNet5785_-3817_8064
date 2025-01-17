@@ -242,8 +242,9 @@ internal static class CallManager
     /// <returns>A list of ClosedCallInList objects containing details of closed calls handled by the volunteer.</returns>
     public static IEnumerable<BO.ClosedCallInList>? GetClosedCallsByVolunteer(int volunteerId)
     {
-        // Get all closed calls
-        var closedCalls = s_dal.Call.ReadAll().Where(c => c.MaxCompletionTime != null);
+        // Get all closed calls assigned to the specific volunteer
+        var closedCalls = s_dal.Call.ReadAll()
+            .Where(c => c.MaxCompletionTime != null && s_dal.Assignment.Read(a => a.CallId == c.Id && a.VolunteerId == volunteerId) != null);
         if (closedCalls == null || !closedCalls.Any())
         {
             return null;
@@ -258,7 +259,7 @@ internal static class CallManager
             OpenedAt = call.OpenTime,
             StartedAt = s_dal.Assignment.Read(a => a.CallId == call.Id && a.VolunteerId == volunteerId)?.EntryTime ?? DateTime.MinValue,
             CompletedAt = s_dal.Assignment.Read(a => a.CallId == call.Id && a.VolunteerId == volunteerId)?.CompletionTime,
-            CompletionStatus = (BO.CompletionType?)s_dal.Assignment.Read(a => a.CallId == call.Id && a.VolunteerId == volunteerId)?.CompletionStatus
+            CompletionStatus = (BO.CompletionType?)s_dal.Assignment.Read(a => a.CallId == call.Id && a.VolunteerId == volunteerId)?.CompletionStatus,
         });
     }
 

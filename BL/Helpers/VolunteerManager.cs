@@ -139,6 +139,8 @@ public static class VolunteerManager
                           CallManager.ConvertCallIdToCallInProgress((int)GetPendingAssignmentCallId(volunteerId), volunteerId) :
                           null
         };
+        
+
     }
 
     /// <summary>

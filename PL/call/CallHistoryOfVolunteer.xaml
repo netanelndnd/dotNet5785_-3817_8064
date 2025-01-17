@@ -43,7 +43,7 @@
             <ComboBox ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}" 
                       SelectedValue="{Binding Path=callType, Mode=TwoWay}" 
                       SelectionChanged="callsHistory_CB" 
-                      VerticalAlignment="Bottom" Grid.Column="1" Margin="188,0,189,9"/>
+                      VerticalAlignment="Top" Grid.Column="1" Margin="188,8,189,0"/>
         </Grid>
 
         <!-- DataGrid Section -->

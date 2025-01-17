@@ -88,11 +88,9 @@ namespace BlImplementation
         {
             // Reset the database to its initial state
             ResetDatabase();
-            AdminManager.Reset();
+            
             // Initialize the database with initial data
             DalTest.Initialization.Do();
-            AdminManager.UpdateClock(AdminManager.Now);
-            AdminManager.RiskRange = AdminManager.RiskRange;
         }
 
         #region Stage 5
