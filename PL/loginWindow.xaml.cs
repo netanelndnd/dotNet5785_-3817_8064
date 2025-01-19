@@ -20,17 +20,15 @@ namespace PL
     /// </summary>
     public partial class LoginWindow : Window
     {
-
-
-      
-
         public LoginWindow()
         {
             InitializeComponent();
+            s_bl.Admin.InitializeDatabase(); // חייבים לאתחל את זה כי אם לא זה לא יעבוד
         }
-        //access to the BL
 
+        //access to the BL
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+
         public string UserID
         {
             get { return (string)GetValue(UserIDValueProperty); }
@@ -39,9 +37,7 @@ namespace PL
 
         // Using a DependencyProperty as the backing store for UserID
         public static readonly DependencyProperty UserIDValueProperty =
-            DependencyProperty.Register("TzValue", typeof(string), typeof(LoginWindow));
-
-
+            DependencyProperty.Register("UserID", typeof(string), typeof(LoginWindow));
 
         public string PasswordValue
         {
@@ -53,19 +49,13 @@ namespace PL
         public static readonly DependencyProperty PasswordValueProperty =
             DependencyProperty.Register("PasswordValue", typeof(string), typeof(LoginWindow));
 
-
-        
-
-
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (sender is PasswordBox passwordBox)
             {
-
                 PasswordValue = passwordBox.Password;
             }
         }
-
 
         /// <summary>
         /// login function : checks the role and open the right window
@@ -88,7 +78,7 @@ namespace PL
                     return;
                 }
 
-                string email  = s_bl.Volunteer.GetVolunteerDetails(userId).Email;
+                string email = s_bl.Volunteer.GetVolunteerDetails(userId).Email;
 
                 var role = s_bl.Volunteer.Login(email, PasswordValue);
 
@@ -121,7 +111,6 @@ namespace PL
                         this.Close();
                         break;
 
-
                     default:
                         MessageBox.Show("Unknown role. Please contact support.", "Unknown Role", MessageBoxButton.OK, MessageBoxImage.Warning);
                         break;
@@ -140,7 +129,6 @@ namespace PL
                 MessageBox.Show("An unexpected error occurred: " + ex.Message + " " + ex.InnerException, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
     }
 }
 

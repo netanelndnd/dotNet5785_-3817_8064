@@ -208,7 +208,11 @@ internal class Program
                             foreach (var volunteer in volunteers)
                             {
                             Console.WriteLine(volunteer);
-                            }
+
+                            var volunteerDetails3 = s_bl.Volunteer.GetVolunteerDetails(volunteer.Id);
+                            Console.WriteLine($"Role: {volunteerDetails3.Role}");
+
+                        }
                         break;
                     case 5:
                         Console.Write("Enter username: ");
