@@ -17,7 +17,7 @@ internal class VolunteerImplementation : IVolunteer
         // For entities with normal id (not auto id)
         if (Read(item.Id) is not null)
             throw new DalAlreadyExistsException($"Volunteer with ID={item.Id} already exists");
-        DataSource.Volunteers = DataSource.Volunteers.Append(item);
+        DataSource.Volunteers.Add(item);
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ internal class VolunteerImplementation : IVolunteer
         if (volunteer is null)
             throw new DalDeletionImpossible($"Volunteer with ID={id} does not exist");
         else
-            DataSource.Volunteers.Select(v=> v.Id != volunteer.Id);
+            DataSource.Volunteers.Remove(volunteer);
     }
 
     /// <summary>
@@ -39,8 +39,7 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     public void DeleteAll()
     {
-        if (DataSource.Volunteers != null)
-            DataSource.Volunteers.DefaultIfEmpty();
+       DataSource.Volunteers.Clear();
     }
 
     /// <summary>
@@ -50,15 +49,7 @@ internal class VolunteerImplementation : IVolunteer
     /// <returns>The volunteer with the specified ID, or null if not found</returns>
     public Volunteer? Read(int id)
     {
-        if (DataSource.Volunteers != null)
-        {
-            foreach (var item in DataSource.Volunteers)
-            {
-                if (item.Id == id)
-                    return item;
-            }
-        }
-        return null;
+        return DataSource.Volunteers.FirstOrDefault(item => item.Id == id);
     }
 
     /// <summary>
@@ -97,4 +88,5 @@ internal class VolunteerImplementation : IVolunteer
         Delete(existingVolunteer.Id);
         Create(item);
     }
+
 }

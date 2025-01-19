@@ -93,15 +93,9 @@ namespace BlImplementation
                     EntryTime = AdminManager.Now
                 };
                 _dal.Assignment.Create(newAssignment);
-                VolunteerManager.ConvertVolunteerIdToBO(volunteerId);
-                CallManager.ConvertDOCallToBOCall(callId);
                 
-                AssignmentManager.Observers.NotifyListUpdated();
                 AssignmentManager.Observers.NotifyItemUpdated(newAssignment.Id);
-                VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
-                VolunteerManager.Observers.NotifyListUpdated();
-                CallManager.Observers.NotifyItemUpdated(callId);
-                CallManager.Observers.NotifyListUpdated();
+                
             }
             else
             {
@@ -208,11 +202,7 @@ namespace BlImplementation
                         };
                         _dal.Assignment.Update(newAssignment);
                         AssignmentManager.Observers.NotifyListUpdated();
-                        AssignmentManager.Observers.NotifyItemUpdated(assignmentId);
-                        VolunteerManager.ConvertVolunteerIdToBO(volunteerId); 
-                        VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
-                        VolunteerManager.Observers.NotifyListUpdated();
-                       
+
                        
                     }
                     else

@@ -21,7 +21,7 @@ internal class AssignmentImplementation : IAssignment
         }
         int id = Config.NextAssignmentId;
         Assignment copy = item with { Id = id };
-        DataSource.Assignments = DataSource.Assignments.Append(copy);
+        DataSource.Assignments.Add(copy);
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ internal class AssignmentImplementation : IAssignment
         if (assignment is null)
             throw new DalDeletionImpossible($"Assignment with ID={id} does not exist");
         else
-            DataSource.Assignments.Select(v=>v.Id != assignment.Id);
+            DataSource.Assignments.Remove(assignment);
     }
 
     /// <summary>
@@ -43,8 +43,7 @@ internal class AssignmentImplementation : IAssignment
     /// </summary>
     public void DeleteAll()
     {
-        if (DataSource.Assignments!=null)
-           DataSource.Assignments.DefaultIfEmpty();
+        DataSource.Assignments.Clear();
     }
 
     /// <summary>

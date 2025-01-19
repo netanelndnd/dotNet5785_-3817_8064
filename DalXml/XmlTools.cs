@@ -31,18 +31,21 @@ static class XMLTools
     /// <exception cref="DalXMLFileLoadCreateException">Thrown when the XML file cannot be created.</exception>
     public static void SaveListToXMLSerializer<T>(List<T> list, string xmlFileName) where T : class
     {
-        string xmlFilePath = s_xmlDir + xmlFileName;
+        string xmlFilePath = Path.Combine(s_xmlDir, xmlFileName); // שימוש ב-Path.Combine לבנייה בטוחה של נתיבים
 
         try
         {
             using FileStream file = new(xmlFilePath, FileMode.Create, FileAccess.Write, FileShare.None);
-            new XmlSerializer(typeof(List<T>)).Serialize(file, list);
+            var serializer = new XmlSerializer(typeof(List<T>));
+            serializer.Serialize(file, list);
         }
         catch (Exception ex)
         {
             throw new DalXMLFileLoadCreateException($"fail to create xml file: {s_xmlDir + xmlFilePath}, {ex.Message}");
         }
     }
+
+
     /// <summary>
     /// Loads a list of objects from an XML file using XmlSerializer.
     /// </summary>

@@ -22,10 +22,15 @@ namespace PL
     {
 
 
+      
+
+        public LoginWindow()
+        {
+            InitializeComponent();
+        }
         //access to the BL
+
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-
-
         public string UserID
         {
             get { return (string)GetValue(UserIDValueProperty); }
@@ -49,10 +54,7 @@ namespace PL
             DependencyProperty.Register("PasswordValue", typeof(string), typeof(LoginWindow));
 
 
-        public LoginWindow()
-        {
-            InitializeComponent();
-        }
+        
 
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)

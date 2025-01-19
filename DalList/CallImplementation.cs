@@ -22,7 +22,7 @@ internal class CallImplementation : ICall
         // For entities with auto id
         int id = Config.NextCallId;
         Call copy = item with { Id = id };
-        DataSource.Calls = DataSource.Calls.Append(copy);
+        DataSource.Calls.Add(copy);
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ internal class CallImplementation : ICall
         if (call is null)
             throw new DalDeletionImpossible($"Call with ID={id} does not exist");
         else
-            DataSource.Calls.Select(v=> v.Id!=call.Id);
+            DataSource.Calls.Remove(call);
     }
 
     /// <summary>
@@ -44,8 +44,7 @@ internal class CallImplementation : ICall
     /// </summary>
     public void DeleteAll()
     {
-        if(DataSource.Calls!=null)
-           DataSource.Calls.DefaultIfEmpty();
+        DataSource.Calls.Clear();
     }
 
     /// <summary>

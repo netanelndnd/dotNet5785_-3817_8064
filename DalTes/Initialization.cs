@@ -252,8 +252,8 @@ public static class Initialization
     private static void CreateAssignments()
     {
         // Retrieve all volunteers and calls from the DAL
-        IEnumerable<Volunteer> volunteers = s_dal?.Volunteer.ReadAll() ?? throw new DalItIsNullException("s_dalVolunteer is null");
-        IEnumerable<Call> calls = s_dal?.Call.ReadAll() ?? throw new DalItIsNullException("s_dalCall is null");
+        var volunteers = s_dal?.Volunteer.ReadAll() ?? throw new DalItIsNullException("s_dalVolunteer is null");
+        var calls = s_dal?.Call.ReadAll() ?? throw new DalItIsNullException("s_dalCall is null");
 
         // Ensure there are volunteers and calls available
         if (!volunteers.Any() || !calls.Any())
@@ -272,7 +272,7 @@ public static class Initialization
             var call = assignableCalls.ElementAtOrDefault(s_rand.Next(assignableCalls.Count()));
             if (call == null) return null;
 
-            assignableCalls = assignableCalls.Except(new[] { call });
+            assignableCalls = assignableCalls.Where(c => c.Id != call.Id);
             DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
             DateTime? completionTime = entryTime.AddMinutes(s_rand.Next(1, (int)((call.MaxCompletionTime - entryTime)?.TotalMinutes ?? 0)));
             CompletionType? completionType = (CompletionType?)s_rand.Next(Enum.GetValues(typeof(CompletionType)).Length);
@@ -290,9 +290,9 @@ public static class Initialization
         assignments = assignments.Concat(Enumerable.Range(0, 10).Select(_ =>
         {
             var volunteer = volunteers.ElementAt(10);
-            var call = assignableCalls.ElementAtOrDefault(s_rand.Next(assignableCalls.Count()));
+            var call = assignableCalls.ElementAtOrDefault(s_rand.Next(10));
             if (call == null) return null;
-            assignableCalls = assignableCalls.Except(new[] { call });
+            assignableCalls = assignableCalls.Where(c => c.Id != call.Id);
             DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
             DateTime? completionTime = entryTime.AddMinutes(s_rand.Next(1, (int)((call.MaxCompletionTime - entryTime)?.TotalMinutes ?? 0)));
             CompletionType? completionType = (CompletionType?)s_rand.Next(Enum.GetValues(typeof(CompletionType)).Length);
@@ -323,14 +323,15 @@ public static class Initialization
             if (!assignableCalls.Any())
                 throw new InvalidOperationException("No assignable calls available.");
 
-            var call = assignableCalls.ElementAtOrDefault(s_rand.Next(assignableCalls.Count()));
-            assignableCalls = assignableCalls.Except(new[] { call }); // הסרה של הקריאה מרשימת הקריאות הזמינות
+            var call = assignableCalls.ElementAtOrDefault(s_rand.Next(10));
             if (call == null)
             {
 
                 // Handle the case of null
                 throw new InvalidOperationException("No available call found for assignment.");
             }
+            assignableCalls = assignableCalls.Where(c => c.Id != call.Id); // הסרה של הקריאה מרשימת הקריאות הזמינות
+            
             // חישוב זמן כניסה וזמן סיום למשימה
             DateTime entryTime = call.OpenTime.AddMinutes(
                 s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0))
@@ -368,8 +369,13 @@ public static class Initialization
                 throw new InvalidOperationException("Not enough assignable calls available.");
 
             // בחירת קריאה אקראית
-            var call = assignableCalls.ElementAtOrDefault(s_rand.Next(assignableCalls.Count()));
-            assignableCalls = assignableCalls.Except(new[] { call }); // הסרה של הקריאה מהרשימה
+            var call = assignableCalls.ElementAtOrDefault(s_rand.Next(5));
+            if (call == null)
+            {
+                // Handle the case of null
+                throw new InvalidOperationException("No available call found for assignment.");
+            }
+            assignableCalls = assignableCalls.Where(c => c.Id != call.Id); // הסרה של הקריאה מהרשימה
 
             // חישוב זמן התחלה
             DateTime entryTime = call.OpenTime.AddMinutes(
@@ -398,9 +404,9 @@ public static class Initialization
         assignments = assignments.Concat(Enumerable.Range(0, 25).Select(_ =>
         {
             var volunteer = volunteers.ElementAt(s_rand.Next(volunteers.Count()));
-            var call = assignableCalls.ElementAtOrDefault(s_rand.Next(assignableCalls.Count()));
+            var call = assignableCalls.ElementAtOrDefault(s_rand.Next(25));
             if(call == null) return null;
-            assignableCalls = assignableCalls.Except(new[] { call });
+            assignableCalls = assignableCalls.Where(c => c.Id != call.Id);
             DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
             DateTime? completionTime = entryTime.AddMinutes(s_rand.Next(1, (int)((call.MaxCompletionTime - entryTime)?.TotalMinutes ?? 0)));
             CompletionType? completionType = (CompletionType?)s_rand.Next(Enum.GetValues(typeof(CompletionType)).Length);
@@ -420,8 +426,9 @@ public static class Initialization
         {
             s_dal?.Assignment.Create(assignment);
         }
+
     }
-    
+
     //public static void Do(IDal dal) //stage 2
     public static void Do() //stage 4
     {
@@ -450,5 +457,6 @@ public static class Initialization
         Console.WriteLine("Creating assignments..."); //stage 1
         CreateAssignments();//stage 1  
         Console.WriteLine("Initialization completed successfully.");
+
     }
 }
