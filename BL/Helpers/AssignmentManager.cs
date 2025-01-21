@@ -139,9 +139,10 @@ public static class AssignmentManager
                 var updatedAssignment = assignment with { CompletionStatus = DO.CompletionType.Expired };
                 s_dal.Assignment.Update(updatedAssignment);
                 Observers.NotifyItemUpdated(updatedAssignment.Id);
+                Observers.NotifyListUpdated();
             }
         }
-        Observers.NotifyListUpdated();
+        
     }
 
 

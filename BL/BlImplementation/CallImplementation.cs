@@ -201,6 +201,7 @@ namespace BlImplementation
                             CompletionTime = AdminManager.Now
                         };
                         _dal.Assignment.Update(newAssignment);
+                        AssignmentManager.Observers.NotifyItemUpdated(newAssignment.Id);
                         AssignmentManager.Observers.NotifyListUpdated();
 
                        

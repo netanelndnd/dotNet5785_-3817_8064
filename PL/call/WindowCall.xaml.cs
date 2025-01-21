@@ -26,12 +26,13 @@ namespace PL.call
             // Assign the CurrentCall property based on the id parameter
             CurrentCall = (id != 0) ? s_bl.Call.GetCallDetails(id) : new BO.Call();
             ButtonText = (id != 0) ? "Update" : "Add";
-
+            
             InitializeComponent();
-
+            this.DataContext = this;
             // Register event handlers for loading and closing the window
             this.Loaded += Window_Loaded;
             this.Closed += Window_Closed;
+            
         }
 
         // CLR wrapper for the Dependency Property
@@ -138,6 +139,7 @@ namespace PL.call
         }
 
         // Load assignments for the current call
+
         private void LoadAssignments()
         {
             if (CurrentCall != null)
