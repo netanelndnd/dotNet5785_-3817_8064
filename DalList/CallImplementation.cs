@@ -21,7 +21,7 @@ internal class CallImplementation : ICall
 
         // For entities with auto id
         int id = Config.NextCallId;
-        Call copy = item with { Id = id };
+        Call copy = item with { Id = id};
         DataSource.Calls.Add(copy);
     }
 
@@ -92,7 +92,7 @@ internal class CallImplementation : ICall
             throw new DalDoesNotExistException($"Call with ID={item.Id} does not exist");
         }
         Delete(existingCall.Id);
-        Create(item);
+        DataSource.Calls.Add(item); 
     }
 }
 

@@ -91,6 +91,8 @@ namespace PL.call
             {
                 try
                 {
+                    if (CurrentCall!.Id != 0)
+                        s_bl.Call.RemoveObserver(CallObserver);
                     s_bl.Call.DeleteCall(CurrentCall!.Id);
                     MessageBox.Show("Call deleted successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     this.Close();

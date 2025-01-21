@@ -24,6 +24,7 @@ namespace PL.Volunteer
         public UpdateAddressWindow()
         {
             InitializeComponent();
+
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)

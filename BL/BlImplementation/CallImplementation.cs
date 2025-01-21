@@ -247,8 +247,9 @@ namespace BlImplementation
             {
                 // Attempt to delete the call in the data layer
                 _dal.Call.Delete(id);
-                CallManager.Observers.NotifyItemUpdated(id);
+                
                 CallManager.Observers.NotifyListUpdated();
+                
             }
             catch (Exception ex)
             {

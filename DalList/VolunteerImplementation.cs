@@ -86,7 +86,7 @@ internal class VolunteerImplementation : IVolunteer
             throw new DalDoesNotExistException($"Volunteer with ID={item.Id} does not exist");
 
         Delete(existingVolunteer.Id);
-        Create(item);
+        DataSource.Volunteers.Add(item);
     }
 
 }

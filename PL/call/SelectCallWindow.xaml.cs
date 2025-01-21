@@ -24,6 +24,10 @@ namespace PL.Volunteer
         {
             _volunteerId = volunteerId;
             InitializeComponent();
+
+            // Register event handlers for loading and closing the window
+            this.Loaded += Window_Loaded;
+            this.Closed += Window_Closed;
         }
 
 

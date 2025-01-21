@@ -26,6 +26,10 @@ namespace PL.call
         {
             _volunteerId = volunterrID;
             InitializeComponent();
+
+            // Register event handlers for loading and closing the window
+            this.Loaded += Window_Loaded;
+            this.Closed += Window_Closed;
         }
         
         public IEnumerable<BO.ClosedCallInList> CallHistory

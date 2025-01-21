@@ -89,7 +89,7 @@ internal class AssignmentImplementation : IAssignment
         if (existingAssignment is null)
             throw new DalDoesNotExistException($"Assignment with ID={item.Id} does not exist");
         Delete(existingAssignment.Id);
-        Create(item);
+        DataSource.Assignments.Add(item);
     }
 }
 

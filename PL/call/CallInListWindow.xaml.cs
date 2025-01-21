@@ -23,6 +23,10 @@ namespace PL.call
         public CallInListWindow()
         {
             InitializeComponent();
+
+            // Register event handlers for loading and closing the window
+            this.Loaded += Window_Loaded;
+            this.Closed += Window_Closed;
         }
 
         // Property to store and retrieve the list of calls.
