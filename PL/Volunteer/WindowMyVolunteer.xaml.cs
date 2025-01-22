@@ -122,7 +122,7 @@ namespace PL.Volunteer
                 try
                 {
                     s_bl.Call.CompleteCallHandling(CurrentVolunteer.Id, CurrentVolunteer.CurrentCall.Id);
-
+                    VolunteerObserver();
                     MessageBox.Show("Call completed successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
@@ -141,7 +141,7 @@ namespace PL.Volunteer
                 try
                 {
                     s_bl.Call.CancelCallHandling(CurrentVolunteer.Id, CurrentVolunteer.CurrentCall.Id);
-
+                    VolunteerObserver();
                     MessageBox.Show("Call canceled successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 }

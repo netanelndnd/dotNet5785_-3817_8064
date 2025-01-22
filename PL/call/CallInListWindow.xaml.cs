@@ -59,8 +59,8 @@ namespace PL.call
             // If the call type is 'None', retrieve all calls.
             // Otherwise, filter the calls by the selected call type.
             CallList = (callType == BO.CallType.None) ?
-                s_bl?.Call.GetCallList(null, null, null)! :
-                s_bl?.Call.GetCallList(BO.CallInListFields.CallType, callType, null)!;
+                s_bl?.Call.GetCallList(null, BO.CallStatus.Open, null)! :
+                s_bl?.Call.GetCallList(BO.CallInListFields.CallType, BO.CallStatus.Open, null)!;
         }
 
         // Method to query the list of calls based on the current call type.

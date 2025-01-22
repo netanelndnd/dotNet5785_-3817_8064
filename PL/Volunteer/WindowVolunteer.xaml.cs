@@ -71,13 +71,14 @@ namespace PL.Volunteer
                 {
                     s_bl.Volunteer.AddVolunteer(CurrentVolunteer!);
                     MessageBox.Show("Volunteer added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    this.Close();
                 }
                 else
                 {
                     s_bl.Volunteer.UpdateVolunteer(CurrentVolunteer!.Id, CurrentVolunteer);
                     MessageBox.Show("Volunteer updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                this.Close();
+                
             }
             catch (BO.BlDoesNotExistException ex)
             {
@@ -121,7 +122,7 @@ namespace PL.Volunteer
             var button = sender as Button;
             if (button != null)
             {
-                int volunteerId = CurrentVolunteer.Id;
+                int volunteerId = CurrentVolunteer!.Id;
                 var result = MessageBox.Show("Are you sure you want to delete this volunteer?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result == MessageBoxResult.Yes)
                 {
@@ -129,6 +130,7 @@ namespace PL.Volunteer
                     {
                         s_bl.Volunteer.DeleteVolunteer(volunteerId);
                         MessageBox.Show("Volunteer deleted successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                        this.Close();
                     }
                     catch (BO.BlDoesNotExistException ex)
                     {
