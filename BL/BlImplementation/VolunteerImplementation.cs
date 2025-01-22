@@ -266,7 +266,7 @@ namespace BlImplementation
                         Latitude = coordinates.Latitude,
                         Longitude = coordinates.Longitude,
                         MaxDistance = volunteer.MaxDistance,
-                        IsActive = true,
+                        IsActive = volunteer.IsActive,
                         Role = (BO.VolunteerRole)volunteer.Role,
                         DistanceType = (BO.DistanceType)volunteer.DistanceType,
                         CurrentCall = volunteer.CurrentCall,

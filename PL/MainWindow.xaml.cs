@@ -24,7 +24,7 @@ namespace PL
         }
 
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-
+        private int NumberCalls;
         // Observer method to update the current time
         private void clockObserver()
         {
@@ -188,6 +188,7 @@ namespace PL
             TimeRisk = s_bl.Admin.GetRiskTimeSpan();
             s_bl.Admin.AddClockObserver(clockObserver);
             s_bl.Admin.AddConfigObserver(configObserver);
+            NumberCalls = s_bl.Call.GetCallList(null, null, null).Count();
         }
 
         // Method called when the window is closed

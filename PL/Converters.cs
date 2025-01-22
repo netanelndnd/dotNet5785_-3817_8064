@@ -54,7 +54,7 @@ namespace PL
             throw new NotImplementedException();
         }
     }
-
+ 
     // Converter that converts the value of CurrentCall to the IsEnabled property
     public class CurrentCallEnabledConverter : IValueConverter
     {

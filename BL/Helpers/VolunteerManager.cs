@@ -235,6 +235,7 @@ public static class VolunteerManager
             Longitude = volunteerB.Longitude,
             MaxDistance = volunteerB.MaxDistance,
             DistanceType = (DO.DistanceType)volunteerB.DistanceType,
+            IsActive = volunteerB.IsActive,
         };
         //תיזרק חריגה אם אין כזה ת"ז
         s_dal.Volunteer.Update(volunteerD);

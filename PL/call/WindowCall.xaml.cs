@@ -28,7 +28,7 @@ namespace PL.call
             ButtonText = (id != 0) ? "Update" : "Add";
             
             InitializeComponent();
-            this.DataContext = this;
+            
             // Register event handlers for loading and closing the window
             this.Loaded += Window_Loaded;
             this.Closed += Window_Closed;

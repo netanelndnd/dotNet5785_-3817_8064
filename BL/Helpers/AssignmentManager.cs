@@ -120,7 +120,7 @@ public static class AssignmentManager
             EndTime = a.CompletionTime,
             CompletionType = (BO.CompletionType?)a.CompletionStatus
         });
-
+        
         return callAssignInList;
     }
 
