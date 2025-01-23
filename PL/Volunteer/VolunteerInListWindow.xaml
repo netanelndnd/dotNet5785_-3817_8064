@@ -45,26 +45,18 @@
                       VerticalAlignment="Center" Grid.Column="1" Margin="5"/>
         </Grid>
         
-        <!-- ListView Section -->
-        <ListView Margin="10" Grid.Row="1" ItemsSource="{Binding Path=VolunteerList}" SelectedItem="{Binding SelectedVolunteer}" MouseDoubleClick="lsvVolunteersList_MouseDoubleClick" Background="White" BorderBrush="#2E8B57" BorderThickness="1">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="Auto"/>
-                    <GridViewColumn Header="Full Name" DisplayMemberBinding="{Binding FullName}" Width="Auto"/>
-                    <GridViewColumn Header="Is Active" Width="Auto">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox IsEnabled="False" IsChecked="{Binding Path=IsActive}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Total Calls Handled" DisplayMemberBinding="{Binding TotalCallsHandled}" Width="Auto"/>
-                    <GridViewColumn Header="Total Calls Cancelled" DisplayMemberBinding="{Binding TotalCallsCancelled}" Width="Auto"/>
-                    <GridViewColumn Header="Total Expired Calls" DisplayMemberBinding="{Binding TotalExpiredCalls}" Width="Auto"/>
-                    <GridViewColumn Header="Current Call Type" DisplayMemberBinding="{Binding CurrentCallType}" Width="Auto"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <!-- DataGrid Section -->
+        <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Margin="10" Grid.Row="1" Background="White" BorderBrush="#2E8B57" BorderThickness="1" ItemsSource="{Binding VolunteerList}" SelectedItem="{Binding SelectedVolunteer}" MouseDoubleClick="lsvVolunteersList_MouseDoubleClick">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="Auto"/>
+                <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="Auto"/>
+                <DataGridCheckBoxColumn Header="Is Active" Binding="{Binding IsActive}" Width="Auto" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Total Calls Handled" Binding="{Binding TotalCallsHandled}" Width="Auto"/>
+                <DataGridTextColumn Header="Total Calls Cancelled" Binding="{Binding TotalCallsCancelled}" Width="Auto"/>
+                <DataGridTextColumn Header="Total Expired Calls" Binding="{Binding TotalExpiredCalls}" Width="Auto"/>
+                <DataGridTextColumn Header="Current Call Type" Binding="{Binding CurrentCallType}" Width="Auto"/>
+            </DataGrid.Columns>
+        </DataGrid>
         
         <!-- Footer Section -->
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="10">

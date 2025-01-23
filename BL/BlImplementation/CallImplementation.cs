@@ -94,6 +94,8 @@ namespace BlImplementation
                 };
                 _dal.Assignment.Create(newAssignment);
                 VolunteerManager.Observers.NotifyItemUpdated(newAssignment.VolunteerId);
+                CallManager.Observers.NotifyListUpdated();
+
 
             }
             else
@@ -132,6 +134,8 @@ namespace BlImplementation
                     };
                     _dal.Assignment.Update(newAssignment);
                     VolunteerManager.Observers.NotifyItemUpdated(assignment.VolunteerId);
+                    CallManager.Observers.NotifyListUpdated();
+
 
                 }
                 // If the requester is a manager
@@ -149,6 +153,7 @@ namespace BlImplementation
                     };
                     _dal.Assignment.Update(newAssignment);
                     VolunteerManager.Observers.NotifyItemUpdated(assignment.VolunteerId);
+                    CallManager.Observers.NotifyListUpdated();
 
                 }
             }
@@ -191,6 +196,7 @@ namespace BlImplementation
                         };
                         _dal.Assignment.Update(newAssignment);
                         VolunteerManager.Observers.NotifyItemUpdated(assignment.VolunteerId);
+                        CallManager.Observers.NotifyListUpdated();
                     }
                     else
                     {

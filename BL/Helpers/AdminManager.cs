@@ -60,9 +60,9 @@ internal static class AdminManager //stage 4
         //TO_DO:
         //Add calls here to any logic method that should be called periodically,
         //after each clock update
-        //////////////////////////////////////////////
-        //לא ידעתי מה להוסיף כאן, לא נראה שיש משהו שמתאים.
-        /////////////////////////////////////////////
+
+        AssignmentManager.CheckAndExpireAssignments();
+
         //Calling all the observers of clock update
         ClockUpdatedObservers?.Invoke(); //prepared for stage 5
     }

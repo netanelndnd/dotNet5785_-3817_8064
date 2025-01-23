@@ -1,5 +1,6 @@
 ﻿using PL.call;
 using PL.Volunteer;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,7 +25,6 @@ namespace PL
         }
 
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        private int NumberCalls;
         // Observer method to update the current time
         private void clockObserver()
         {
@@ -91,15 +91,31 @@ namespace PL
             s_bl.Admin.SetRiskTimeSpan(TimeRisk);
         }
 
-
         private void btnListVolunteers_Click(object sender, RoutedEventArgs e)
-        { new VolunteerInListWindow().Show(); }
+        {
+            var existingVolunteerWindow = Application.Current.Windows.OfType<VolunteerInListWindow>().FirstOrDefault();
+            if (existingVolunteerWindow != null)
+            {
+                MessageBox.Show("A volunteer list window is already open.", "Window Already Open", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                new VolunteerInListWindow().Show();
+            }
+        }
 
         private void btnListCalls_Click(object sender, RoutedEventArgs e)
-        { new CallInListWindow().Show(); }
-              
-
-
+        {
+            var existingCallWindow = Application.Current.Windows.OfType<CallInListWindow>().FirstOrDefault();
+            if (existingCallWindow != null)
+            {
+                MessageBox.Show("A call list window is already open.", "Window Already Open", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                new CallInListWindow().Show();
+            }
+        }
 
         // Button click event to reset the database
         private void btnReset_Click(object sender, RoutedEventArgs e)
@@ -157,10 +173,10 @@ namespace PL
                     Mouse.OverrideCursor = Cursors.Wait;
                     try
                     {
-                        // Close all open windows except the main window
+                        // Close all open windows except the main window and the login window
                         foreach (Window window in Application.Current.Windows)
                         {
-                            if (window != this)
+                            if (window != this && !(window is LoginWindow))
                             {
                                 window.Close();
                             }
@@ -180,15 +196,16 @@ namespace PL
                     break;
             }
         }
-        // Method called when the window is loaded
 
+        // Method called when the window is loaded
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             CurrentTime = s_bl.Admin.GetSystemClock();
             TimeRisk = s_bl.Admin.GetRiskTimeSpan();
+            UpdateCallCounts();
             s_bl.Admin.AddClockObserver(clockObserver);
             s_bl.Admin.AddConfigObserver(configObserver);
-            NumberCalls = s_bl.Call.GetCallList(null, null, null).Count();
+            s_bl.Call.AddObserver(UpdateCallCounts);
         }
 
         // Method called when the window is closed
@@ -196,6 +213,110 @@ namespace PL
         {
             s_bl.Admin.RemoveClockObserver(clockObserver);
             s_bl.Admin.RemoveConfigObserver(configObserver);
+            s_bl.Call.RemoveObserver(UpdateCallCounts);
         }
-    }
+
+        private void btnOpenCalls_Click(object sender, RoutedEventArgs e)
+        {
+            // Navigate to the filtered call list screen for Open Calls
+            CallListWindow callListWindow = new CallListWindow("Open");
+            callListWindow.Show();
+        }
+
+        private void btnInProgressCalls_Click(object sender, RoutedEventArgs e)
+        {
+            // Navigate to the filtered call list screen for In Progress Calls
+            CallListWindow callListWindow = new CallListWindow("In Progress");
+            callListWindow.Show();
+        }
+
+        private void btnOpenInRiskCalls_Click(object sender, RoutedEventArgs e)
+        {
+            // Navigate to the filtered call list screen for Open In Risk Calls
+            CallListWindow callListWindow = new CallListWindow("OpenInRisk");
+            callListWindow.Show();
+        }
+
+        private void btnInProgressInRiskCalls_Click(object sender, RoutedEventArgs e)
+        {
+            // Navigate to the filtered call list screen for In Progress In Risk Calls
+            CallListWindow callListWindow = new CallListWindow("InProgressInRisk");
+            callListWindow.Show();
+        }
+
+        private void btnTreatedCalls_Click(object sender, RoutedEventArgs e)
+        {
+            // Navigate to the filtered call list screen for Treated Calls
+            CallListWindow callListWindow = new CallListWindow("Treated");
+            callListWindow.Show();
+        }
+
+        private void btnExpiredCalls_Click(object sender, RoutedEventArgs e)
+        {
+            // Navigate to the filtered call list screen for Expired Calls
+            CallListWindow callListWindow = new CallListWindow("Expired");
+            callListWindow.Show();
+        }
+
+        public int OpenCallsCount
+        {
+            get { return (int)GetValue(OpenCallsCountProperty); }
+            set { SetValue(OpenCallsCountProperty, value); }
+        }
+        public static readonly DependencyProperty OpenCallsCountProperty =
+            DependencyProperty.Register("OpenCallsCount", typeof(int), typeof(MainWindow));
+
+        public int InProgressCallsCount
+        {
+            get { return (int)GetValue(InProgressCallsCountProperty); }
+            set { SetValue(InProgressCallsCountProperty, value); }
+        }
+        public static readonly DependencyProperty InProgressCallsCountProperty =
+            DependencyProperty.Register("InProgressCallsCount", typeof(int), typeof(MainWindow));
+
+        public int OpenInRiskCallsCount
+        {
+            get { return (int)GetValue(OpenInRiskCallsCountProperty); }
+            set { SetValue(OpenInRiskCallsCountProperty, value); }
+        }
+        public static readonly DependencyProperty OpenInRiskCallsCountProperty =
+            DependencyProperty.Register("OpenInRiskCallsCount", typeof(int), typeof(MainWindow));
+
+        public int InProgressInRiskCallsCount
+        {
+            get { return (int)GetValue(InProgressInRiskCallsCountProperty); }
+            set { SetValue(InProgressInRiskCallsCountProperty, value); }
+        }
+        public static readonly DependencyProperty InProgressInRiskCallsCountProperty =
+            DependencyProperty.Register("InProgressInRiskCallsCount", typeof(int), typeof(MainWindow));
+
+        public int TreatedCallsCount
+        {
+            get { return (int)GetValue(TreatedCallsCountProperty); }
+            set { SetValue(TreatedCallsCountProperty, value); }
+        }
+        public static readonly DependencyProperty TreatedCallsCountProperty =
+            DependencyProperty.Register("TreatedCallsCount", typeof(int), typeof(MainWindow));
+
+        public int ExpiredCallsCount
+        {
+            get { return (int)GetValue(ExpiredCallsCountProperty); }
+            set { SetValue(ExpiredCallsCountProperty, value); }
+        }
+        public static readonly DependencyProperty ExpiredCallsCountProperty =
+            DependencyProperty.Register("ExpiredCallsCount", typeof(int), typeof(MainWindow));
+
+            private void UpdateCallCounts()
+            {
+                // Get the call quantities by status
+                int[] quantities = s_bl.Call.GetCallQuantitiesByStatus();
+                OpenCallsCount = quantities[(int)BO.CallStatus.Open];
+                InProgressCallsCount = quantities[(int)BO.CallStatus.InProgress];
+                OpenInRiskCallsCount = quantities[(int)BO.CallStatus.OpenInRisk];
+                InProgressInRiskCallsCount = quantities[(int)BO.CallStatus.InProgressInRisk];
+                TreatedCallsCount = quantities[(int)BO.CallStatus.Treated];
+                ExpiredCallsCount = quantities[(int)BO.CallStatus.Expired];
+            }
+        }
+   
 }

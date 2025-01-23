@@ -48,9 +48,7 @@ namespace PL.call
         // Property to store the type of call. It is initialized to 'None' by default.
         public BO.CallType callType { get; set; } = BO.CallType.None;
 
-        // Property to store the selected call in the list.
-        public BO.CallInList? SelectedCall { get; set; }
-
+       
         // Method to handle the selection of a call type in the ComboBox.
         // This method is triggered when the selection in the ComboBox changes.
         private void CallTyps_CB(object sender, SelectionChangedEventArgs e)
@@ -83,6 +81,18 @@ namespace PL.call
         // Removes the callListObserver from the Call service.
         private void Window_Closed(object sender, EventArgs e)
             => s_bl.Call.RemoveObserver(callListObserver);
+
+
+        // Property to store the selected call in the list.
+        public BO.CallInList? SelectedCall
+        {
+            get { return (BO.CallInList?)GetValue(SelectedCallProperty); }
+            set { SetValue(SelectedCallProperty, value); }
+        }
+
+        // DependencyProperty to enable data binding for the SelectedCall property in WPF.
+        public static readonly DependencyProperty SelectedCallProperty =
+            DependencyProperty.Register("SelectedCall", typeof(BO.CallInList), typeof(CallInListWindow), new PropertyMetadata(null));
 
         // Event handler for double-clicking on a call in the list.
         private void lsvCallsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)

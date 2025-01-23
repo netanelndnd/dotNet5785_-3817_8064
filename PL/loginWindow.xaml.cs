@@ -87,7 +87,6 @@ namespace PL
                     case "Volunteer":
                         var volunteerWindow = new WindowMyVolunteer(userId);
                         volunteerWindow.Show();
-                        this.Close();
                         break;
 
                     case "Manager":
@@ -99,16 +98,22 @@ namespace PL
 
                         if (result == MessageBoxResult.Yes)
                         {
-                            var MainWindow = new MainWindow();
-                            MainWindow.Show();
+                            var existingMainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
+                            if (existingMainWindow != null)
+                            {
+                                MessageBox.Show("A main window is already open.", "Window Already Open", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
+                            else
+                            {
+                                var mainWindow = new MainWindow();
+                                mainWindow.Show();
+                            }
                         }
                         else if (result == MessageBoxResult.No)
                         {
                             var volunteer2Window = new WindowMyVolunteer(userId);
                             volunteer2Window.Show();
                         }
-
-                        this.Close();
                         break;
 
                     default:

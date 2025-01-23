@@ -25,18 +25,6 @@ public static class AssignmentManager
         return assignment?.Id;
     }
 
-
-    /// <summary>
-    /// Get all assignments sorted by entry time
-    /// </summary>
-    /// <returns>A collection of assignments sorted by entry time in ascending order.</returns>
-    public static IEnumerable<DO.Assignment> GetAssignmentsSortedByEntryTime()
-    {
-        var assignments = s_dal.Assignment.ReadAll();
-        // Sorted by ascending order of entry time
-        return assignments.OrderBy(a => a.EntryTime);
-    }
-
     /// <summary>
     /// Count the number of assignments for a given call id
     /// </summary>
@@ -128,21 +116,32 @@ public static class AssignmentManager
     public static void CheckAndExpireAssignments()
     {
         var assignments = s_dal.Assignment.ReadAll();
-        var now = DateTime.Now;
-
+        var now = AdminManager.Now;
+        
         foreach (var assignment in assignments)
         {
-            // אם סטטוס הסיום של ההקצאה הוא NULL והזמן הנוכחי גדול מזמן הסיום המוקצה
-            if (assignment.CompletionStatus == null && assignment.CompletionTime.HasValue && now > assignment.CompletionTime.Value)
+            // קבלת הקריאה המשוייכת להקצאה
+            var call = s_dal.Call.Read(assignment.CallId);
+            if (call == null)
+            {
+                continue;
+            }
+
+            // אם סטטוס הסיום של ההקצאה הוא NULL והזמן הנוכחי גדול מזמן הסיום המקסימלי של הקריאה
+            if (assignment.CompletionStatus == null && now > call.MaxCompletionTime)
             {
                 // יצירת אובייקט חדש עם הערכים המעודכנים
-                var updatedAssignment = assignment with { CompletionStatus = DO.CompletionType.Expired };
+                var updatedAssignment = assignment with
+                {
+                    CompletionStatus = DO.CompletionType.Expired,
+                    CompletionTime = assignment.CompletionTime ?? now // עדכון זמן הסיום אם הוא לא מוגדר
+                };
                 s_dal.Assignment.Update(updatedAssignment);
-                Observers.NotifyItemUpdated(updatedAssignment.Id);
-                Observers.NotifyListUpdated();
+                
             }
+            
         }
-        
+        CallManager.Observers.NotifyListUpdated();
     }
 
 

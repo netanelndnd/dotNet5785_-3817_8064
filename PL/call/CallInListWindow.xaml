@@ -44,22 +44,20 @@
                       SelectionChanged="CallTyps_CB" 
                       VerticalAlignment="Center" Grid.Column="1" Margin="5"/>
         </Grid>
-        
-        <!-- ListView Section -->
-        <ListView Margin="10" Grid.Row="1" ItemsSource="{Binding Path=CallList}" SelectedItem="{Binding SelectedCall}" MouseDoubleClick="lsvCallsList_MouseDoubleClick" Background="White" BorderBrush="#2E8B57" BorderThickness="1">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Call Id" DisplayMemberBinding="{Binding CallId}" Width="Auto"/>
-                    <GridViewColumn Header="Call Type" DisplayMemberBinding="{Binding CallType}" Width="Auto"/>
-                    <GridViewColumn Header="Opening Time" DisplayMemberBinding="{Binding OpeningTime}" Width="Auto"/>
-                    <GridViewColumn Header="Remaining Time" DisplayMemberBinding="{Binding RemainingTime}" Width="Auto"/>
-                    <GridViewColumn Header="Last Volunteer Name" DisplayMemberBinding="{Binding LastVolunteerName}" Width="Auto"/>
-                    <GridViewColumn Header="Completion Duration" DisplayMemberBinding="{Binding CompletionDuration}" Width="Auto"/>
-                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="Auto"/>
-                    <GridViewColumn Header="Total Assignments" DisplayMemberBinding="{Binding TotalAssignments}" Width="Auto"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+
+        <!-- DataGrid Section -->
+        <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Margin="10" Grid.Row="1" Background="White" BorderBrush="#2E8B57" BorderThickness="1" ItemsSource="{Binding CallList}" SelectedItem="{Binding SelectedCall}" MouseDoubleClick="lsvCallsList_MouseDoubleClick">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Call Id" Binding="{Binding CallId}" Width="Auto"/>
+                    <DataGridTextColumn Header="Call Type" Binding="{Binding CallType}" Width="Auto"/>
+                    <DataGridTextColumn Header="Opening Time" Binding="{Binding OpeningTime}" Width="Auto"/>
+                    <DataGridTextColumn Header="Remaining Time" Binding="{Binding RemainingTime}" Width="Auto"/>
+                    <DataGridTextColumn Header="Last Volunteer Name" Binding="{Binding LastVolunteerName}" Width="Auto"/>
+                    <DataGridTextColumn Header="Completion Duration" Binding="{Binding CompletionDuration}" Width="Auto"/>
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="Auto"/>
+                    <DataGridTextColumn Header="Total Assignments" Binding="{Binding TotalAssignments}" Width="Auto"/>
+                </DataGrid.Columns>
+            </DataGrid>
         
         <!-- Footer Section -->
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="10">

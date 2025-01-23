@@ -39,12 +39,12 @@ public enum DistanceType
 // ENUM for the status of the call
 public enum CallStatus
 {
-    Open, //Not currently assigned to any volunteer
-    InProgress, // In progress
-    OpenInRisk, //Open and approaching MaxCompletionTime
-    InProgressInRisk, // In progress at risk
-    Treated,          // The call was treated on time, before the maximum completion time
-    Expired,             // The call was canceled because it was not treated and reached the maximum completion time
+    Open = 0, //Not currently assigned to any volunteer
+    InProgress = 1, // In progress
+    OpenInRisk  = 2, //Open and approaching MaxCompletionTime
+    InProgressInRisk = 3, // In progress at risk
+    Treated = 4,          // The call was treated on time, before the maximum completion time
+    Expired = 5,             // The call was canceled because it was not treated and reached the maximum completion time
 }
 
 // ENUM for the completion status of the assignment

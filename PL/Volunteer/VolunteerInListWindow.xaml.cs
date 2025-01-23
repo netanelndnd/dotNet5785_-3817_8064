@@ -48,9 +48,7 @@ namespace PL.Volunteer
         // Property to store the type of call. It is initialized to 'None' by default.
         public BO.CallType callType { get; set; } = BO.CallType.None;
 
-        // Property to store the selected volunteer in the list.
-        public BO.VolunteerInList? SelectedVolunteer { get; set; }
-
+        
         // Method to handle the selection of a call type in the ComboBox.
         // This method is triggered when the selection in the ComboBox changes.
         private void CallTyps_CB(object sender, SelectionChangedEventArgs e)
@@ -83,6 +81,16 @@ namespace PL.Volunteer
         // Removes the volunteerListObserver from the Volunteer service.
         private void Window_Closed(object sender, EventArgs e)
             => s_bl.Volunteer.RemoveObserver(volunteerListObserver);
+
+        // Property to store the selected volunteer in the list.
+        public BO.VolunteerInList? SelectedVolunteer
+        {
+            get { return (BO.VolunteerInList?)GetValue(SelectedVolunteerProperty); }
+            set { SetValue(SelectedVolunteerProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectedVolunteerProperty =
+            DependencyProperty.Register("SelectedVolunteer", typeof(BO.VolunteerInList), typeof(VolunteerInListWindow), new PropertyMetadata(null));
 
 
         // Event handler for double-clicking on a volunteer in the list.

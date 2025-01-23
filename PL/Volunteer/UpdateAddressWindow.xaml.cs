@@ -31,6 +31,11 @@ namespace PL.Volunteer
         {
             // מציאת TextBox בעץ הוויזואליזציה
             var textBox = (TextBox)((Grid)Content).Children[1];
+            if (string.IsNullOrWhiteSpace(textBox.Text))
+            {
+                MessageBox.Show("Please enter a valid address.", "Invalid Address", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
             NewAddress = textBox.Text;
             DialogResult = true;
         }

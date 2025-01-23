@@ -83,15 +83,24 @@ namespace PL.Volunteer
                 s_bl?.Call.GetOpenCallsForVolunteer(_volunteerId, callType, null)!;
         }
 
+        public static readonly DependencyProperty SelectedCallProperty =
+            DependencyProperty.Register("SelectedCall", typeof(BO.OpenCallInList), typeof(SelectCallWindow), new PropertyMetadata(null));
+
+        public BO.OpenCallInList? SelectedCall
+        {
+            get { return (BO.OpenCallInList?)GetValue(SelectedCallProperty); }
+            set { SetValue(SelectedCallProperty, value); }
+        }
+
 
         // Event handler for double-clicking on a call in the list.
         private void CallsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (CallsDataGrid.SelectedItem is BO.OpenCallInList selectedCall)
+            if (SelectedCall != null)
             {
                 try
                 {
-                    s_bl.Call.AssignCallToVolunteer(_volunteerId, selectedCall.Id);
+                    s_bl.Call.AssignCallToVolunteer(_volunteerId, SelectedCall.Id);
                     MessageBox.Show("Call assigned successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     queryOpenCalls();
                     this.Close(); // Close the SelectCallWindow

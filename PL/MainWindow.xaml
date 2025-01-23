@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
-        Title="MainWindow" Height="591" Width="800"
+        Title="MainWindow" Height="557" Width="984"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         WindowStartupLocation="CenterScreen"
         Background="#F0F0F0"
@@ -40,6 +40,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -47,11 +48,66 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Call Status Quantities -->
+        <Border Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="#2E8B57" BorderThickness="2" CornerRadius="10" Padding="10" Margin="0,0,0,20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Call Status Quantities" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" Grid.ColumnSpan="6" HorizontalAlignment="Center"/>
+                <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center">
+                    <TextBlock Text="Open Calls" HorizontalAlignment="Center"/>
+                    <Button Click="btnOpenCalls_Click" Width="45" Height="32">
+                        <TextBlock Text="{Binding OpenCallsCount}" HorizontalAlignment="Center"/>
+                    </Button>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center">
+                    <TextBlock Text="In Progress Calls" HorizontalAlignment="Center"/>
+                    <Button Click="btnInProgressCalls_Click" Width="45" Height="32">
+                        <TextBlock Text="{Binding InProgressCallsCount}" HorizontalAlignment="Center"/>
+                    </Button>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center">
+                    <TextBlock Text="Open In Risk Calls" HorizontalAlignment="Center"/>
+                    <Button Click="btnOpenInRiskCalls_Click" Width="45" Height="32">
+                        <TextBlock Text="{Binding OpenInRiskCallsCount}" HorizontalAlignment="Center"/>
+                    </Button>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center">
+                    <TextBlock Text="In Progress In Risk Calls" HorizontalAlignment="Center"/>
+                    <Button Click="btnInProgressInRiskCalls_Click" Width="45" Height="32">
+                        <TextBlock Text="{Binding InProgressInRiskCallsCount}" HorizontalAlignment="Center"/>
+                    </Button>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center">
+                    <TextBlock Text="Treated Calls" HorizontalAlignment="Center"/>
+                    <Button Click="btnTreatedCalls_Click" Width="45" Height="32">
+                        <TextBlock Text="{Binding TreatedCallsCount}" HorizontalAlignment="Center"/>
+                    </Button>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="5" HorizontalAlignment="Center">
+                    <TextBlock Text="Expired Calls" HorizontalAlignment="Center"/>
+                    <Button Click="btnExpiredCalls_Click" Width="45" Height="32">
+                        <TextBlock Text="{Binding ExpiredCallsCount}" HorizontalAlignment="Center"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
         <!-- Clock System -->
         <Label Content="{Binding CurrentTime}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,10,0" Height="45" Grid.ColumnSpan="2"/>
 
         <!-- Time Manipulation Buttons -->
-        <Border Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="#2E8B57" BorderThickness="2" CornerRadius="10" Padding="10" Margin="0,60,0,0">
+        <Border Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="#2E8B57" BorderThickness="2" CornerRadius="10" Padding="10" Margin="0,20,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
                 <Button Content="Add One Minute" Click="btnAddOneMinute_Click" Width="120" Height="30"/>
                 <Button Content="Add One Hour" Click="btnAddOneHour_Click" Width="120" Height="30"/>
@@ -62,7 +118,7 @@
         </Border>
 
         <!-- Time Span Configuration -->
-        <Border Grid.Row="2" Grid.ColumnSpan="2" BorderBrush="#2E8B57" BorderThickness="2" CornerRadius="10" Padding="10" Margin="0,120,0,0">
+        <Border Grid.Row="2" Grid.ColumnSpan="2" BorderBrush="#2E8B57" BorderThickness="2" CornerRadius="10" Padding="10" Margin="0,20,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
                 <Label Content="Time Risk:" VerticalAlignment="Center" Width="100"/>
                 <TextBox Text="{Binding TimeRisk}" VerticalAlignment="Center"/>
@@ -71,7 +127,7 @@
         </Border>
 
         <!-- List Buttons -->
-        <Border Grid.Row="2" Grid.Column="0" BorderBrush="#2E8B57" BorderThickness="2" CornerRadius="10" Padding="10" Margin="0,180,10,0">
+        <Border Grid.Row="3" Grid.Column="0" BorderBrush="#2E8B57" BorderThickness="2" CornerRadius="10" Padding="10" Margin="0,20,10,0">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top">
                 <Button Content="List Volunteers" Click="btnListVolunteers_Click" Width="200"/>
                 <Button Content="List Calls" Click="btnListCalls_Click" Width="200"/>
@@ -79,7 +135,7 @@
         </Border>
 
         <!-- Initialization and Reset Buttons -->
-        <Border Grid.Row="2" Grid.Column="1" BorderBrush="#2E8B57" BorderThickness="2" CornerRadius="10" Padding="10" Margin="10,180,0,0">
+        <Border Grid.Row="3" Grid.Column="1" BorderBrush="#2E8B57" BorderThickness="2" CornerRadius="10" Padding="10" Margin="10,20,0,0">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top">
                 <Button Content="Initialize All the System" Click="btnInitialize_Click" Width="200"/>
                 <Button Content="Reset All the System" Click="btnReset_Click" Width="200"/>

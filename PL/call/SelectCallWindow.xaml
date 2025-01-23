@@ -46,7 +46,7 @@
         </Grid>
         
         <!-- DataGrid Section -->
-        <DataGrid x:Name="CallsDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Margin="10" Grid.Row="1" Background="White" BorderBrush="#2E8B57" BorderThickness="1" ItemsSource="{Binding OpenCalls}" MouseDoubleClick="CallsDataGrid_MouseDoubleClick">
+        <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Margin="10" Grid.Row="1" Background="White" BorderBrush="#2E8B57" BorderThickness="1" ItemsSource="{Binding OpenCalls}" SelectedItem="{Binding SelectedCall}" MouseDoubleClick="CallsDataGrid_MouseDoubleClick">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*"/>
                 <DataGridTextColumn Header="Type" Binding="{Binding CallType}" Width="*"/>
