@@ -7,9 +7,6 @@ namespace PL.Volunteer
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
-        // Property to hold the current volunteer
-        public BO.Volunteer? CurrentVolunteer { get; set; }
-
         public WindowMyVolunteer(int id)
         {
             CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(id);
@@ -19,6 +16,17 @@ namespace PL.Volunteer
             this.Loaded += Window_Loaded;
             this.Closed += Window_Closed;
         }
+
+        // CLR wrapper for the Dependency Property
+        public BO.Volunteer? CurrentVolunteer
+        {
+            get { return (BO.Volunteer?)GetValue(CurrentVolunteerProperty); }
+            set { SetValue(CurrentVolunteerProperty, value); }
+        }
+
+        // Define the Dependency Property
+        public static readonly DependencyProperty CurrentVolunteerProperty =
+            DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(WindowMyVolunteer), new PropertyMetadata(null));
 
         // Event handler for window loaded event
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -122,7 +130,6 @@ namespace PL.Volunteer
                 try
                 {
                     s_bl.Call.CompleteCallHandling(CurrentVolunteer.Id, CurrentVolunteer.CurrentCall.Id);
-                    VolunteerObserver();
                     MessageBox.Show("Call completed successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)

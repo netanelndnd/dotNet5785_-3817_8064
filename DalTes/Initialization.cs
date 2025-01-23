@@ -317,7 +317,7 @@ public static class Initialization
                 call.Id,            // מזהה הקריאה
                 volunteer5.Id,       
                 entryTime,          // זמן הכניסה
-                null,               // אין זמן השלמה, כי הקריאה בוטלה
+                call.OpenTime.AddMinutes(15), // זמן השלמה - רבע שעה אחרי הפתיחה
                 completionType      // סוג הביטול
             ));
 

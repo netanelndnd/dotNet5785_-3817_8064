@@ -93,9 +93,8 @@ namespace BlImplementation
                     EntryTime = AdminManager.Now
                 };
                 _dal.Assignment.Create(newAssignment);
-                
-                AssignmentManager.Observers.NotifyItemUpdated(newAssignment.Id);
-                
+                VolunteerManager.Observers.NotifyItemUpdated(newAssignment.VolunteerId);
+
             }
             else
             {
@@ -132,6 +131,8 @@ namespace BlImplementation
                         CompletionTime = AdminManager.Now
                     };
                     _dal.Assignment.Update(newAssignment);
+                    VolunteerManager.Observers.NotifyItemUpdated(assignment.VolunteerId);
+
                 }
                 // If the requester is a manager
                 else if (requester.VolunteerRole == DO.Role.Manager)
@@ -147,6 +148,8 @@ namespace BlImplementation
                         CompletionTime = AdminManager.Now
                     };
                     _dal.Assignment.Update(newAssignment);
+                    VolunteerManager.Observers.NotifyItemUpdated(assignment.VolunteerId);
+
                 }
             }
             else
@@ -187,6 +190,7 @@ namespace BlImplementation
                             CompletionTime = AdminManager.Now
                         };
                         _dal.Assignment.Update(newAssignment);
+                        VolunteerManager.Observers.NotifyItemUpdated(assignment.VolunteerId);
                     }
                     else
                     {
@@ -230,7 +234,7 @@ namespace BlImplementation
             {
                 // Attempt to delete the call in the data layer
                 _dal.Call.Delete(id);
-                
+
                 CallManager.Observers.NotifyListUpdated();
                 
             }
