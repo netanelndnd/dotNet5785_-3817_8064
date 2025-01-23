@@ -148,7 +148,7 @@ namespace PL.Volunteer
                 try
                 {
                     s_bl.Call.CancelCallHandling(CurrentVolunteer.Id, CurrentVolunteer.CurrentCall.Id);
-                    VolunteerObserver();
+                    
                     MessageBox.Show("Call canceled successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 }
@@ -168,7 +168,7 @@ namespace PL.Volunteer
             {
                 SelectCallWindow selectCallWindow = new SelectCallWindow(CurrentVolunteer!.Id);
                 selectCallWindow.ShowDialog();
-
+                
             }
         }
 

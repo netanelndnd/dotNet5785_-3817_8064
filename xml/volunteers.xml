@@ -6,10 +6,10 @@
     <PhoneNumber>0501234567</PhoneNumber>
     <Email>yossi.cohen@gmail.com</Email>
     <Password>yossi.cohen@gmail.com</Password>
-    <CurrentAddress>חרוב 8 חיפה</CurrentAddress>
-    <Latitude>32.81406310000001</Latitude>
-    <Longitude>34.9694654</Longitude>
-    <MaxDistance>66.5559233316913</MaxDistance>
+    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>54.0182952442227</MaxDistance>
     <VolunteerRole>Manager</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -23,7 +23,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>25.237930513350804</MaxDistance>
+    <MaxDistance>30.002344841704097</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -37,7 +37,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>97.53507633740118</MaxDistance>
+    <MaxDistance>35.799187383880174</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -51,7 +51,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>55.47264556038938</MaxDistance>
+    <MaxDistance>95.1336444897222</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -65,7 +65,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>55.73867219569133</MaxDistance>
+    <MaxDistance>94.91817939832913</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -79,7 +79,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>33.382598978479415</MaxDistance>
+    <MaxDistance>96.0470919219744</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -93,7 +93,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>97.60662055949543</MaxDistance>
+    <MaxDistance>48.913390026823066</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -107,7 +107,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>96.13524179642546</MaxDistance>
+    <MaxDistance>5.598626804234852</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -121,7 +121,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>63.5923240298198</MaxDistance>
+    <MaxDistance>13.274519902920456</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -135,7 +135,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>83.47367301057228</MaxDistance>
+    <MaxDistance>77.69129189073661</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -149,7 +149,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>23.694997570268626</MaxDistance>
+    <MaxDistance>10.749277490709542</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -163,7 +163,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>40.19155968756295</MaxDistance>
+    <MaxDistance>72.67093289590424</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -177,7 +177,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>93.62662992445058</MaxDistance>
+    <MaxDistance>99.83595851082622</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -191,7 +191,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>6.370630497739205</MaxDistance>
+    <MaxDistance>74.03601770687274</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -205,7 +205,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>24.36019535910432</MaxDistance>
+    <MaxDistance>15.42043355497561</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -219,7 +219,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>28.01207371422002</MaxDistance>
+    <MaxDistance>22.837951803419998</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
