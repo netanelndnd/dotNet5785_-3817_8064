@@ -127,26 +127,14 @@ namespace PL.call
             if (CurrentCall!.Id != 0)
             {
                 s_bl.Call.AddObserver(CallObserver);
-                LoadAssignments();
             }
         }
 
         // Event handler for when the window is closed
         private void Window_Closed(object sender, EventArgs e)
         {
-            if (CurrentCall!.Id != 0)
+            if (CurrentCall != null && CurrentCall.Id != 0)
                 s_bl.Call.RemoveObserver(CallObserver);
-        }
-
-        // Load assignments for the current call
-
-        private void LoadAssignments()
-        {
-            if (CurrentCall != null)
-            {
-                var assignments = Helpers.AssignmentManager.GetCallAssignmentsByCallId(CurrentCall.Id);
-                AssignmentsListView.ItemsSource = assignments;
-            }
         }
     }
 }

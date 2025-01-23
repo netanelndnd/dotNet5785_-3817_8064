@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PL.call"
         xmlns:pl="clr-namespace:PL"
         mc:Ignorable="d"
-        Title="Call Details" Height="741" Width="987"
+        Title="Call Details" Height="803" Width="987"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         WindowStartupLocation="CenterScreen"
         Background="#F0F0F0">
@@ -135,7 +135,7 @@
 
         <!-- Assignments GroupBox -->
         <GroupBox Header="Assignments" Grid.Row="1" Grid.ColumnSpan="2" Margin="10,10,10,10" Grid.RowSpan="2">
-            <ListView x:Name="AssignmentsListView" IsEnabled="False" Background="White" BorderBrush="#2E8B57" BorderThickness="1" ItemsSource="{Binding TouchesOver}">
+            <ListView Background="Transparent" BorderBrush="Transparent" BorderThickness="1" ItemsSource="{Binding CurrentCall.Assignments}" IsHitTestVisible="False">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Volunteer Name" DisplayMemberBinding="{Binding VolunteerName}" Width="Auto"/>

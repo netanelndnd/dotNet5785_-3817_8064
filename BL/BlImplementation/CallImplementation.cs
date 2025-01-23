@@ -132,13 +132,6 @@ namespace BlImplementation
                         CompletionTime = AdminManager.Now
                     };
                     _dal.Assignment.Update(newAssignment);
-                    VolunteerManager.ConvertVolunteerIdToBO(requesterId);
-                    AssignmentManager.Observers.NotifyListUpdated();
-                    AssignmentManager.Observers.NotifyItemUpdated(newAssignment.Id);
-                    VolunteerManager.Observers.NotifyItemUpdated(requesterId);
-                    VolunteerManager.Observers.NotifyListUpdated();
-                    CallManager.Observers.NotifyItemUpdated(newAssignment.CallId);
-                    CallManager.Observers.NotifyListUpdated();
                 }
                 // If the requester is a manager
                 else if (requester.VolunteerRole == DO.Role.Manager)
@@ -154,13 +147,6 @@ namespace BlImplementation
                         CompletionTime = AdminManager.Now
                     };
                     _dal.Assignment.Update(newAssignment);
-                    VolunteerManager.ConvertVolunteerIdToBO(requesterId);
-                    AssignmentManager.Observers.NotifyListUpdated();
-                    AssignmentManager.Observers.NotifyItemUpdated(newAssignment.Id);
-                    VolunteerManager.Observers.NotifyItemUpdated(requesterId);
-                    VolunteerManager.Observers.NotifyListUpdated(); 
-                    CallManager.Observers.NotifyItemUpdated(newAssignment.CallId);
-                    CallManager.Observers.NotifyListUpdated();
                 }
             }
             else
@@ -201,10 +187,6 @@ namespace BlImplementation
                             CompletionTime = AdminManager.Now
                         };
                         _dal.Assignment.Update(newAssignment);
-                        AssignmentManager.Observers.NotifyItemUpdated(newAssignment.Id);
-                        AssignmentManager.Observers.NotifyListUpdated();
-
-                       
                     }
                     else
                     {

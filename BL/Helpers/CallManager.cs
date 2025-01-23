@@ -129,7 +129,10 @@ internal static class CallManager
             throw new InvalidOperationException($"Call with ID {callId} not found.");
         }
         // Get the assignment details
-        var assignment = s_dal.Assignment.Read(a => a.CallId == callId);
+        var assignment = s_dal.Assignment.ReadAll()
+            .Where(a => a.CallId == callId)
+            .OrderByDescending(a => a.EntryTime)
+            .FirstOrDefault();
         var now = AdminManager.Now;
         var riskRange = s_dal.Config.RiskRange;
 
@@ -156,19 +159,19 @@ internal static class CallManager
         else
         {
             // Check if the call has expired
-            if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value)
+            if (callDetails.MaxCompletionTime.HasValue && assignment.CompletionTime.HasValue && assignment.CompletionTime > callDetails.MaxCompletionTime.Value)
             {
                 return BO.CallStatus.Expired;
-            }
-            // Check if the call is in progress and in risk of expiring
-            if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value - riskRange)
-            {
-                return BO.CallStatus.InProgressInRisk;
             }
             // Check if the call has been treated within the maximum completion time
             if (assignment.CompletionTime.HasValue && callDetails.MaxCompletionTime.HasValue && assignment.CompletionTime.Value <= callDetails.MaxCompletionTime.Value)
             {
                 return BO.CallStatus.Treated;
+            }
+            // Check if the call is in progress and in risk of expiring
+            if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value - riskRange)
+            {
+                return BO.CallStatus.InProgressInRisk;
             }
             // The call is in progress
             return BO.CallStatus.InProgress;
