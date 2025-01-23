@@ -94,8 +94,6 @@ namespace BlImplementation
                 };
                 _dal.Assignment.Create(newAssignment);
                 
-                AssignmentManager.Observers.NotifyItemUpdated(newAssignment.Id);
-                
             }
             else
             {
@@ -221,7 +219,7 @@ namespace BlImplementation
             }
 
             // Check if the call is in an open status and has never been assigned
-            if (CallManager.GetCallStatus(id) != CallStatus.Open || AssignmentManager.GetAssignmentIdByCallId(id) != null)
+            if (AssignmentManager.GetAssignmentIdByCallId(id) != null || (CallManager.GetCallStatus(id) != CallStatus.OpenInRisk && CallManager.GetCallStatus(id) != CallStatus.Open))
             {
                 throw new BlDeletionImpossible("Cannot delete the call. Only open calls that have never been assigned can be deleted.");
             }

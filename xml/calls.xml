@@ -1,34 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Call>
+    <Id>1000</Id>
+    <CallType>MedicalEmergency</CallType>
+    <Address>רחוב ההדר 12, קרית אונו</Address>
+    <Latitude>32.053749046013294</Latitude>
+    <Longitude>34.8618141278376</Longitude>
+    <OpenTime>2025-01-23T06:21:35</OpenTime>
+    <Description>Description 0</Description>
+    <MaxCompletionTime>2025-01-23T09:41:35</MaxCompletionTime>
+  </Call>
+  <Call>
+    <Id>1001</Id>
+    <CallType>MedicalEmergency</CallType>
+    <Address>שדרות הרצל 45, ירושלים</Address>
+    <Latitude>31.783873413383848</Latitude>
+    <Longitude>35.19590856003538</Longitude>
+    <OpenTime>2025-01-23T08:00:35</OpenTime>
+    <Description>Description 1</Description>
+    <MaxCompletionTime>2025-01-23T11:20:35</MaxCompletionTime>
+  </Call>
+  <Call>
     <Id>1002</Id>
-    <CallType>LostPerson</CallType>
+    <CallType>FoodPreparation</CallType>
     <Address>החשמל 3, בת ים</Address>
     <Latitude>32.0071058665407</Latitude>
     <Longitude>34.743271985523506</Longitude>
-    <OpenTime>2025-01-22T23:32:30</OpenTime>
+    <OpenTime>2025-01-23T08:13:35</OpenTime>
     <Description>Description 2</Description>
-    <MaxCompletionTime>2025-01-23T02:52:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:33:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1003</Id>
-    <CallType>FoodTransport</CallType>
+    <CallType>BatteryJumpStart</CallType>
     <Address>הבנים 5, בת ים</Address>
     <Latitude>32.00701116245335</Latitude>
     <Longitude>34.752186728407715</Longitude>
-    <OpenTime>2025-01-22T23:46:30</OpenTime>
+    <OpenTime>2025-01-23T08:08:35</OpenTime>
     <Description>Description 3</Description>
-    <MaxCompletionTime>2025-01-23T03:06:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:28:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1004</Id>
-    <CallType>CarTrouble</CallType>
+    <CallType>LostPerson</CallType>
     <Address>בר אילן 42, בת ים</Address>
     <Latitude>32.01172928404402</Latitude>
     <Longitude>34.74362385383784</Longitude>
-    <OpenTime>2025-01-22T23:04:30</OpenTime>
+    <OpenTime>2025-01-23T07:15:35</OpenTime>
     <Description>Description 4</Description>
-    <MaxCompletionTime>2025-01-23T02:24:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:35:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1005</Id>
@@ -36,319 +56,299 @@
     <Address>ברנר 3, בת ים</Address>
     <Latitude>32.0172133953351</Latitude>
     <Longitude>34.747229546496264</Longitude>
-    <OpenTime>2025-01-22T23:43:30</OpenTime>
+    <OpenTime>2025-01-23T06:47:35</OpenTime>
     <Description>Description 5</Description>
-    <MaxCompletionTime>2025-01-23T03:03:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:07:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1006</Id>
-    <CallType>FlatTire</CallType>
+    <CallType>RoadsideAssistance</CallType>
     <Address>בלפור 80, בת ים</Address>
     <Latitude>32.02013905850679</Latitude>
     <Longitude>34.745333810322535</Longitude>
-    <OpenTime>2025-01-22T22:57:30</OpenTime>
+    <OpenTime>2025-01-23T06:53:35</OpenTime>
     <Description>Description 6</Description>
-    <MaxCompletionTime>2025-01-23T02:17:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:13:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1007</Id>
-    <CallType>FoodTransport</CallType>
+    <CallType>BatteryJumpStart</CallType>
     <Address>פולה בן גוריון 23, באר שבע</Address>
     <Latitude>31.269544643819525</Latitude>
     <Longitude>34.748627700497515</Longitude>
-    <OpenTime>2025-01-23T01:44:30</OpenTime>
+    <OpenTime>2025-01-23T09:11:35</OpenTime>
     <Description>Description 7</Description>
-    <MaxCompletionTime>2025-01-23T05:04:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T12:31:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1008</Id>
-    <CallType>BatteryJumpStart</CallType>
+    <CallType>FuelDelivery</CallType>
     <Address>אבא אחימאיר 43, באר שבע</Address>
     <Latitude>31.26026280850482</Latitude>
     <Longitude>34.77308048033317</Longitude>
-    <OpenTime>2025-01-23T00:11:30</OpenTime>
+    <OpenTime>2025-01-23T06:26:35</OpenTime>
     <Description>Description 8</Description>
-    <MaxCompletionTime>2025-01-23T03:31:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T09:46:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1009</Id>
-    <CallType>FuelDelivery</CallType>
+    <CallType>RoadsideAssistance</CallType>
     <Address>דרך מצדה 81, באר שבע</Address>
     <Latitude>31.258875412278247</Latitude>
     <Longitude>34.784702171018964</Longitude>
-    <OpenTime>2025-01-22T23:08:30</OpenTime>
+    <OpenTime>2025-01-23T09:15:35</OpenTime>
     <Description>Description 9</Description>
-    <MaxCompletionTime>2025-01-23T02:28:30</MaxCompletionTime>
-  </Call>
-  <Call>
-    <Id>1010</Id>
-    <CallType>LostPerson</CallType>
-    <Address>מבצע חירם 1, באר שבע</Address>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <OpenTime>2025-01-23T01:27:30</OpenTime>
-    <Description>Description 10</Description>
-    <MaxCompletionTime>2025-01-23T04:47:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T12:35:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1011</Id>
-    <CallType>ChildLockedInCar</CallType>
+    <CallType>FoodTransport</CallType>
     <Address>יעקב דורי 27, באר שבע</Address>
     <Latitude>31.26599817239094</Latitude>
     <Longitude>34.77990632146705</Longitude>
-    <OpenTime>2025-01-23T00:21:30</OpenTime>
+    <OpenTime>2025-01-23T06:13:35</OpenTime>
     <Description>Description 11</Description>
-    <MaxCompletionTime>2025-01-23T03:41:30</MaxCompletionTime>
-  </Call>
-  <Call>
-    <Id>1012</Id>
-    <CallType>FlatTire</CallType>
-    <Address>מרדכי מקלף 24, באר שבע</Address>
-    <Latitude>31.26810025342388</Latitude>
-    <Longitude>34.78262253224672</Longitude>
-    <OpenTime>2025-01-23T00:38:30</OpenTime>
-    <Description>Description 12</Description>
-    <MaxCompletionTime>2025-01-23T03:58:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T09:33:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1013</Id>
-    <CallType>RoadsideAssistance</CallType>
+    <CallType>BatteryJumpStart</CallType>
     <Address>ח"ן 2, באר שבע</Address>
     <Latitude>31.270759076690847</Latitude>
     <Longitude>34.80778224155118</Longitude>
-    <OpenTime>2025-01-22T22:55:30</OpenTime>
+    <OpenTime>2025-01-23T08:10:35</OpenTime>
     <Description>Description 13</Description>
-    <MaxCompletionTime>2025-01-23T02:15:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:30:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1014</Id>
-    <CallType>BatteryJumpStart</CallType>
+    <CallType>RoadsideAssistance</CallType>
     <Address>חרוב 8, חיפה</Address>
     <Latitude>32.8145186081906</Latitude>
     <Longitude>34.96942136688308</Longitude>
-    <OpenTime>2025-01-23T01:07:30</OpenTime>
+    <OpenTime>2025-01-23T07:28:35</OpenTime>
     <Description>Description 14</Description>
-    <MaxCompletionTime>2025-01-23T04:27:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:48:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1015</Id>
-    <CallType>LostPerson</CallType>
+    <CallType>ChildLockedInCar</CallType>
     <Address>יפה נוף 61, חיפה</Address>
     <Latitude>32.8116315773075</Latitude>
     <Longitude>34.98523717981069</Longitude>
-    <OpenTime>2025-01-22T23:57:30</OpenTime>
+    <OpenTime>2025-01-23T06:07:35</OpenTime>
     <Description>Description 15</Description>
-    <MaxCompletionTime>2025-01-23T03:17:30</MaxCompletionTime>
-  </Call>
-  <Call>
-    <Id>1016</Id>
-    <CallType>FoodTransport</CallType>
-    <Address>שדרות בן גוריון 50, חיפה</Address>
-    <Latitude>32.81798598644384</Latitude>
-    <Longitude>34.98876182539728</Longitude>
-    <OpenTime>2025-01-22T23:33:30</OpenTime>
-    <Description>Description 16</Description>
-    <MaxCompletionTime>2025-01-23T02:53:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T09:27:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1017</Id>
-    <CallType>LostPerson</CallType>
+    <CallType>FuelDelivery</CallType>
     <Address>שמריהו לוין 25, חיפה</Address>
     <Latitude>32.81117266997046</Latitude>
     <Longitude>34.99657405678095</Longitude>
-    <OpenTime>2025-01-22T23:05:30</OpenTime>
+    <OpenTime>2025-01-23T07:54:35</OpenTime>
     <Description>Description 17</Description>
-    <MaxCompletionTime>2025-01-23T02:25:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:14:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1018</Id>
-    <CallType>FuelDelivery</CallType>
+    <CallType>FoodPreparation</CallType>
     <Address>שדרות אליהו גולומב 47, חיפה</Address>
     <Latitude>32.80613804310656</Latitude>
     <Longitude>34.99240903307264</Longitude>
-    <OpenTime>2025-01-23T00:51:30</OpenTime>
+    <OpenTime>2025-01-23T07:09:35</OpenTime>
     <Description>Description 18</Description>
-    <MaxCompletionTime>2025-01-23T04:11:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:29:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1019</Id>
-    <CallType>CarTrouble</CallType>
+    <CallType>RoadsideAssistance</CallType>
     <Address>שלום עליכם 4, חיפה</Address>
     <Latitude>32.78278227095474</Latitude>
     <Longitude>35.01498376162042</Longitude>
-    <OpenTime>2025-01-23T01:03:30</OpenTime>
+    <OpenTime>2025-01-23T06:13:35</OpenTime>
     <Description>Description 19</Description>
-    <MaxCompletionTime>2025-01-23T04:23:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T09:33:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1020</Id>
-    <CallType>BatteryJumpStart</CallType>
+    <CallType>FuelDelivery</CallType>
     <Address>זלמן שניאור 1, חיפה</Address>
     <Latitude>32.77623531406369</Latitude>
     <Longitude>35.008282393139794</Longitude>
-    <OpenTime>2025-01-23T00:30:30</OpenTime>
+    <OpenTime>2025-01-23T06:18:35</OpenTime>
     <Description>Description 20</Description>
-    <MaxCompletionTime>2025-01-23T03:50:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T09:38:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1021</Id>
-    <CallType>BatteryJumpStart</CallType>
+    <CallType>LostPerson</CallType>
     <Address>הפלמ"ח 11, קרית אתא</Address>
     <Latitude>32.81065288451351</Latitude>
     <Longitude>35.12234042641816</Longitude>
-    <OpenTime>2025-01-22T22:55:30</OpenTime>
+    <OpenTime>2025-01-23T08:15:35</OpenTime>
     <Description>Description 21</Description>
-    <MaxCompletionTime>2025-01-23T02:15:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:35:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1022</Id>
-    <CallType>RoadsideAssistance</CallType>
+    <CallType>CarTrouble</CallType>
     <Address>וינגייט 17, קרית אתא</Address>
     <Latitude>32.815870631371325</Latitude>
     <Longitude>35.1139504148565</Longitude>
-    <OpenTime>2025-01-23T01:19:30</OpenTime>
+    <OpenTime>2025-01-23T06:45:35</OpenTime>
     <Description>Description 22</Description>
-    <MaxCompletionTime>2025-01-23T04:39:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:05:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1023</Id>
-    <CallType>FoodTransport</CallType>
+    <CallType>RoadsideAssistance</CallType>
     <Address>נורדאו 72, קרית אתא</Address>
     <Latitude>32.812499553433696</Latitude>
     <Longitude>35.11011456487845</Longitude>
-    <OpenTime>2025-01-22T22:43:30</OpenTime>
+    <OpenTime>2025-01-23T08:25:35</OpenTime>
     <Description>Description 23</Description>
-    <MaxCompletionTime>2025-01-23T02:03:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:45:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1024</Id>
-    <CallType>FoodTransport</CallType>
+    <CallType>MedicalEmergency</CallType>
     <Address>חנקין 20, קרית אתא</Address>
     <Latitude>32.81180658026046</Latitude>
     <Longitude>35.10917157396484</Longitude>
-    <OpenTime>2025-01-23T00:40:30</OpenTime>
+    <OpenTime>2025-01-23T08:15:35</OpenTime>
     <Description>Description 24</Description>
-    <MaxCompletionTime>2025-01-23T04:00:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:35:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1025</Id>
-    <CallType>ChildLockedInCar</CallType>
+    <CallType>FoodPreparation</CallType>
     <Address>חנקין 1, קרית אתא</Address>
     <Latitude>32.81275577804192</Latitude>
     <Longitude>35.10525108926754</Longitude>
-    <OpenTime>2025-01-22T22:46:30</OpenTime>
+    <OpenTime>2025-01-23T08:46:35</OpenTime>
     <Description>Description 25</Description>
-    <MaxCompletionTime>2025-01-23T02:06:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T12:06:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1026</Id>
-    <CallType>FlatTire</CallType>
+    <CallType>FuelDelivery</CallType>
     <Address>שדה בוקר 33, קרית אתא</Address>
     <Latitude>32.81615758691202</Latitude>
     <Longitude>35.112780076486196</Longitude>
-    <OpenTime>2025-01-23T00:29:30</OpenTime>
+    <OpenTime>2025-01-23T07:17:35</OpenTime>
     <Description>Description 26</Description>
-    <MaxCompletionTime>2025-01-23T03:49:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:37:35</MaxCompletionTime>
+  </Call>
+  <Call>
+    <Id>1027</Id>
+    <CallType>FuelDelivery</CallType>
+    <Address>העצמאות 66, קרית אתא</Address>
+    <Latitude>32.807085520556775</Latitude>
+    <Longitude>35.10462231648692</Longitude>
+    <OpenTime>2025-01-23T09:06:35</OpenTime>
+    <Description>Description 27</Description>
+    <MaxCompletionTime>2025-01-23T12:26:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1028</Id>
-    <CallType>FoodPreparation</CallType>
+    <CallType>MedicalEmergency</CallType>
     <Address>זבולון 14, קרית אתא</Address>
     <Latitude>32.80528851344975</Latitude>
     <Longitude>35.101859943618564</Longitude>
-    <OpenTime>2025-01-23T00:59:30</OpenTime>
+    <OpenTime>2025-01-23T08:51:35</OpenTime>
     <Description>Description 28</Description>
-    <MaxCompletionTime>2025-01-23T04:19:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T12:11:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1029</Id>
-    <CallType>FlatTire</CallType>
+    <CallType>LostPerson</CallType>
     <Address>העצמאות 37, קרית אתא</Address>
     <Latitude>32.803728386688256</Latitude>
     <Longitude>35.10342631423813</Longitude>
-    <OpenTime>2025-01-22T23:39:30</OpenTime>
+    <OpenTime>2025-01-23T07:15:35</OpenTime>
     <Description>Description 29</Description>
-    <MaxCompletionTime>2025-01-23T02:59:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:35:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1030</Id>
-    <CallType>CarTrouble</CallType>
+    <CallType>MedicalEmergency</CallType>
     <Address>שדרות כצנלסון 32, קרית אתא</Address>
     <Latitude>32.801608920874536</Latitude>
     <Longitude>35.10634890958312</Longitude>
-    <OpenTime>2025-01-22T23:02:30</OpenTime>
+    <OpenTime>2025-01-23T07:02:35</OpenTime>
     <Description>Description 30</Description>
-    <MaxCompletionTime>2025-01-23T02:22:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:22:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1031</Id>
-    <CallType>FoodPreparation</CallType>
+    <CallType>LostPerson</CallType>
     <Address>דרך רופין 11, ירושלים</Address>
     <Latitude>31.772244046048172</Latitude>
     <Longitude>35.204097845199364</Longitude>
-    <OpenTime>2025-01-22T23:23:30</OpenTime>
+    <OpenTime>2025-01-23T07:16:35</OpenTime>
     <Description>Description 31</Description>
-    <MaxCompletionTime>2025-01-23T02:43:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:36:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1032</Id>
-    <CallType>FlatTire</CallType>
+    <CallType>MedicalEmergency</CallType>
     <Address>שמואל סטפן וויז 21, ירושלים</Address>
     <Latitude>31.775074755486816</Latitude>
     <Longitude>35.20240377805922</Longitude>
-    <OpenTime>2025-01-23T00:17:30</OpenTime>
+    <OpenTime>2025-01-23T08:12:35</OpenTime>
     <Description>Description 32</Description>
-    <MaxCompletionTime>2025-01-23T03:37:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:32:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1033</Id>
-    <CallType>FuelDelivery</CallType>
+    <CallType>BatteryJumpStart</CallType>
     <Address>שדרות המוזיאונים 3, ירושלים</Address>
     <Latitude>31.77869899329079</Latitude>
     <Longitude>35.20038113098719</Longitude>
-    <OpenTime>2025-01-23T01:52:30</OpenTime>
+    <OpenTime>2025-01-23T06:13:35</OpenTime>
     <Description>Description 33</Description>
-    <MaxCompletionTime>2025-01-23T05:12:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T09:33:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1034</Id>
-    <CallType>RoadsideAssistance</CallType>
+    <CallType>FoodTransport</CallType>
     <Address>חיים נחמן ביאליק 20, ירושלים</Address>
     <Latitude>31.778192331660847</Latitude>
     <Longitude>35.18947099850603</Longitude>
-    <OpenTime>2025-01-22T22:56:30</OpenTime>
+    <OpenTime>2025-01-23T07:32:35</OpenTime>
     <Description>Description 34</Description>
-    <MaxCompletionTime>2025-01-23T02:16:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:52:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1035</Id>
-    <CallType>FuelDelivery</CallType>
+    <CallType>FoodTransport</CallType>
     <Address>שדרות הרצל 137, ירושלים</Address>
     <Latitude>31.77690503728285</Latitude>
     <Longitude>35.1864233661719</Longitude>
-    <OpenTime>2025-01-23T01:44:30</OpenTime>
+    <OpenTime>2025-01-23T07:11:35</OpenTime>
     <Description>Description 35</Description>
-    <MaxCompletionTime>2025-01-23T05:04:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:31:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1036</Id>
-    <CallType>BatteryJumpStart</CallType>
+    <CallType>FuelDelivery</CallType>
     <Address>שדרות הרצל 102, ירושלים</Address>
     <Latitude>31.7800584327404</Latitude>
     <Longitude>35.187628477045756</Longitude>
-    <OpenTime>2025-01-23T00:21:30</OpenTime>
+    <OpenTime>2025-01-23T07:12:35</OpenTime>
     <Description>Description 36</Description>
-    <MaxCompletionTime>2025-01-23T03:41:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:32:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1037</Id>
-    <CallType>FoodPreparation</CallType>
+    <CallType>CarTrouble</CallType>
     <Address>מעגל בית המדרש 7, ירושלים</Address>
     <Latitude>31.782083272129658</Latitude>
     <Longitude>35.19075423337481</Longitude>
-    <OpenTime>2025-01-23T01:29:30</OpenTime>
+    <OpenTime>2025-01-23T07:10:35</OpenTime>
     <Description>Description 37</Description>
-    <MaxCompletionTime>2025-01-23T04:49:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:30:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1038</Id>
@@ -356,29 +356,29 @@
     <Address>הפסגה 8, ירושלים</Address>
     <Latitude>31.770631783960987</Latitude>
     <Longitude>35.18204009422545</Longitude>
-    <OpenTime>2025-01-23T01:10:30</OpenTime>
+    <OpenTime>2025-01-23T09:08:35</OpenTime>
     <Description>Description 38</Description>
-    <MaxCompletionTime>2025-01-23T04:30:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T12:28:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1039</Id>
-    <CallType>LostPerson</CallType>
+    <CallType>ChildLockedInCar</CallType>
     <Address>תורה ועבודה 6, ירושלים</Address>
     <Latitude>31.767111237602762</Latitude>
     <Longitude>35.18112523364712</Longitude>
-    <OpenTime>2025-01-23T00:50:30</OpenTime>
+    <OpenTime>2025-01-23T08:12:35</OpenTime>
     <Description>Description 39</Description>
-    <MaxCompletionTime>2025-01-23T04:10:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:32:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1040</Id>
-    <CallType>LostPerson</CallType>
+    <CallType>BatteryJumpStart</CallType>
     <Address>דרך יצחק רבין 13, בית שמש</Address>
     <Latitude>31.74747891568372</Latitude>
     <Longitude>34.99378563017565</Longitude>
-    <OpenTime>2025-01-22T22:44:30</OpenTime>
+    <OpenTime>2025-01-23T09:18:35</OpenTime>
     <Description>Description 40</Description>
-    <MaxCompletionTime>2025-01-23T02:04:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T12:38:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1041</Id>
@@ -386,59 +386,59 @@
     <Address>האומן 2, בית שמש</Address>
     <Latitude>31.754609993381465</Latitude>
     <Longitude>34.99482705774016</Longitude>
-    <OpenTime>2025-01-22T23:13:30</OpenTime>
+    <OpenTime>2025-01-23T07:56:35</OpenTime>
     <Description>Description 41</Description>
-    <MaxCompletionTime>2025-01-23T02:33:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:16:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1042</Id>
-    <CallType>MedicalEmergency</CallType>
+    <CallType>FuelDelivery</CallType>
     <Address>שדרות יגאל אלון 1, בית שמש</Address>
     <Latitude>31.756461050918553</Latitude>
     <Longitude>34.98983391964748</Longitude>
-    <OpenTime>2025-01-23T00:26:30</OpenTime>
+    <OpenTime>2025-01-23T09:13:35</OpenTime>
     <Description>Description 42</Description>
-    <MaxCompletionTime>2025-01-23T03:46:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T12:33:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1043</Id>
-    <CallType>RoadsideAssistance</CallType>
+    <CallType>MedicalEmergency</CallType>
     <Address>רחוב האצ״ל 1, בית שמש</Address>
     <Latitude>31.7513775722062</Latitude>
     <Longitude>34.982859631374865</Longitude>
-    <OpenTime>2025-01-22T23:41:30</OpenTime>
+    <OpenTime>2025-01-23T08:27:35</OpenTime>
     <Description>Description 43</Description>
-    <MaxCompletionTime>2025-01-23T03:01:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:47:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1044</Id>
-    <CallType>RoadsideAssistance</CallType>
+    <CallType>FoodTransport</CallType>
     <Address>יהודה המכבי 3, בית שמש</Address>
     <Latitude>31.749055738229274</Latitude>
     <Longitude>34.9808196442101</Longitude>
-    <OpenTime>2025-01-23T01:31:30</OpenTime>
+    <OpenTime>2025-01-23T07:12:35</OpenTime>
     <Description>Description 44</Description>
-    <MaxCompletionTime>2025-01-23T04:51:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:32:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1045</Id>
-    <CallType>ChildLockedInCar</CallType>
+    <CallType>BatteryJumpStart</CallType>
     <Address>דרך יצחק רבין 19, בית שמש</Address>
     <Latitude>31.74555793800893</Latitude>
     <Longitude>34.99371105686167</Longitude>
-    <OpenTime>2025-01-23T00:16:30</OpenTime>
+    <OpenTime>2025-01-23T07:51:35</OpenTime>
     <Description>Description 45</Description>
-    <MaxCompletionTime>2025-01-23T03:36:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:11:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1046</Id>
-    <CallType>FlatTire</CallType>
+    <CallType>ChildLockedInCar</CallType>
     <Address>בן אליעזר 3, בית שמש</Address>
     <Latitude>31.74094091979134</Latitude>
     <Longitude>34.98401323833724</Longitude>
-    <OpenTime>2025-01-22T23:29:30</OpenTime>
+    <OpenTime>2025-01-23T08:33:35</OpenTime>
     <Description>Description 46</Description>
-    <MaxCompletionTime>2025-01-23T02:49:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:53:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1047</Id>
@@ -446,188 +446,188 @@
     <Address>שדרות רבי יהודה הנשיא 15, בית שמש</Address>
     <Latitude>31.729964852998858</Latitude>
     <Longitude>34.991448806063076</Longitude>
-    <OpenTime>2025-01-23T00:15:30</OpenTime>
+    <OpenTime>2025-01-23T06:18:35</OpenTime>
     <Description>Description 47</Description>
-    <MaxCompletionTime>2025-01-23T03:35:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T09:38:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1048</Id>
-    <CallType>MedicalEmergency</CallType>
+    <CallType>ChildLockedInCar</CallType>
     <Address>שפת אמת 25, בית שמש</Address>
     <Latitude>31.73938560185697</Latitude>
     <Longitude>34.99613311692805</Longitude>
-    <OpenTime>2025-01-23T01:56:30</OpenTime>
+    <OpenTime>2025-01-23T07:57:35</OpenTime>
     <Description>Description 48</Description>
-    <MaxCompletionTime>2025-01-23T05:16:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:17:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1049</Id>
-    <CallType>CarTrouble</CallType>
+    <CallType>FlatTire</CallType>
     <Address>נחל קטלב 2, בית שמש</Address>
     <Latitude>31.716310931732224</Latitude>
     <Longitude>34.998070548696916</Longitude>
-    <OpenTime>2025-01-23T01:14:30</OpenTime>
+    <OpenTime>2025-01-23T07:41:35</OpenTime>
     <Description>Description 49</Description>
-    <MaxCompletionTime>2025-01-23T04:34:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:01:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1050</Id>
-    <CallType>BatteryJumpStart</CallType>
-    <Address>בן אליעזר 3, בית שמש</Address>
-    <Latitude>31.74094091979134</Latitude>
-    <Longitude>34.98401323833724</Longitude>
-    <OpenTime>2025-01-23T00:40:30</OpenTime>
+    <CallType>ChildLockedInCar</CallType>
+    <Address>שדרות הרצל 102, ירושלים</Address>
+    <Latitude>31.7800584327404</Latitude>
+    <Longitude>35.187628477045756</Longitude>
+    <OpenTime>2025-01-23T07:51:35</OpenTime>
     <Description>Description 50</Description>
-    <MaxCompletionTime>2025-01-23T04:00:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:11:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1051</Id>
-    <CallType>BatteryJumpStart</CallType>
-    <Address>שדרות אליהו גולומב 47, חיפה</Address>
-    <Latitude>32.80613804310656</Latitude>
-    <Longitude>34.99240903307264</Longitude>
-    <OpenTime>2025-01-23T00:15:30</OpenTime>
+    <CallType>RoadsideAssistance</CallType>
+    <Address>החשמל 3, בת ים</Address>
+    <Latitude>32.0071058665407</Latitude>
+    <Longitude>34.743271985523506</Longitude>
+    <OpenTime>2025-01-23T08:58:35</OpenTime>
     <Description>Description 51</Description>
-    <MaxCompletionTime>2025-01-23T03:35:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T12:18:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1052</Id>
-    <CallType>LostPerson</CallType>
-    <Address>שמריהו לוין 25, חיפה</Address>
-    <Latitude>32.81117266997046</Latitude>
-    <Longitude>34.99657405678095</Longitude>
-    <OpenTime>2025-01-23T01:06:30</OpenTime>
+    <CallType>MedicalEmergency</CallType>
+    <Address>דרך יצחק רבין 19, בית שמש</Address>
+    <Latitude>31.74555793800893</Latitude>
+    <Longitude>34.99371105686167</Longitude>
+    <OpenTime>2025-01-23T06:20:35</OpenTime>
     <Description>Description 52</Description>
-    <MaxCompletionTime>2025-01-23T04:26:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T09:40:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1053</Id>
-    <CallType>FoodTransport</CallType>
-    <Address>יפה נוף 61, חיפה</Address>
-    <Latitude>32.8116315773075</Latitude>
-    <Longitude>34.98523717981069</Longitude>
-    <OpenTime>2025-01-23T01:52:30</OpenTime>
+    <CallType>CarTrouble</CallType>
+    <Address>נורדאו 72, קרית אתא</Address>
+    <Latitude>32.812499553433696</Latitude>
+    <Longitude>35.11011456487845</Longitude>
+    <OpenTime>2025-01-23T09:19:35</OpenTime>
     <Description>Description 53</Description>
-    <MaxCompletionTime>2025-01-23T05:12:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T12:39:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1054</Id>
-    <CallType>BatteryJumpStart</CallType>
-    <Address>שדרות רבי יהודה הנשיא 15, בית שמש</Address>
-    <Latitude>31.729964852998858</Latitude>
-    <Longitude>34.991448806063076</Longitude>
-    <OpenTime>2025-01-23T01:30:30</OpenTime>
+    <CallType>ChildLockedInCar</CallType>
+    <Address>שדרות יגאל אלון 1, בית שמש</Address>
+    <Latitude>31.756461050918553</Latitude>
+    <Longitude>34.98983391964748</Longitude>
+    <OpenTime>2025-01-23T06:35:35</OpenTime>
     <Description>Description 54</Description>
-    <MaxCompletionTime>2025-01-23T04:50:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T09:55:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1055</Id>
-    <CallType>MedicalEmergency</CallType>
-    <Address>חנקין 1, קרית אתא</Address>
-    <Latitude>32.81275577804192</Latitude>
-    <Longitude>35.10525108926754</Longitude>
-    <OpenTime>2025-01-23T00:06:30</OpenTime>
+    <CallType>ChildLockedInCar</CallType>
+    <Address>מרדכי מקלף 24, באר שבע</Address>
+    <Latitude>31.26810025342388</Latitude>
+    <Longitude>34.78262253224672</Longitude>
+    <OpenTime>2025-01-23T06:29:35</OpenTime>
     <Description>Description 55</Description>
-    <MaxCompletionTime>2025-01-23T03:26:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T09:49:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1056</Id>
-    <CallType>LostPerson</CallType>
-    <Address>ברנר 3, בת ים</Address>
-    <Latitude>32.0172133953351</Latitude>
-    <Longitude>34.747229546496264</Longitude>
-    <OpenTime>2025-01-23T01:45:30</OpenTime>
+    <CallType>FoodTransport</CallType>
+    <Address>בן אליעזר 3, בית שמש</Address>
+    <Latitude>31.74094091979134</Latitude>
+    <Longitude>34.98401323833724</Longitude>
+    <OpenTime>2025-01-23T08:19:35</OpenTime>
     <Description>Description 56</Description>
-    <MaxCompletionTime>2025-01-23T05:05:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:39:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1057</Id>
-    <CallType>FuelDelivery</CallType>
-    <Address>בלפור 80, בת ים</Address>
-    <Latitude>32.02013905850679</Latitude>
-    <Longitude>34.745333810322535</Longitude>
-    <OpenTime>2025-01-23T01:12:30</OpenTime>
+    <CallType>FoodPreparation</CallType>
+    <Address>זלמן שניאור 1, חיפה</Address>
+    <Latitude>32.77623531406369</Latitude>
+    <Longitude>35.008282393139794</Longitude>
+    <OpenTime>2025-01-23T08:32:35</OpenTime>
     <Description>Description 57</Description>
-    <MaxCompletionTime>2025-01-23T04:32:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T11:52:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1058</Id>
-    <CallType>CarTrouble</CallType>
-    <Address>ח"ן 2, באר שבע</Address>
-    <Latitude>31.270759076690847</Latitude>
-    <Longitude>34.80778224155118</Longitude>
-    <OpenTime>2025-01-22T23:59:30</OpenTime>
+    <CallType>FoodTransport</CallType>
+    <Address>דרך יצחק רבין 19, בית שמש</Address>
+    <Latitude>31.74555793800893</Latitude>
+    <Longitude>34.99371105686167</Longitude>
+    <OpenTime>2025-01-23T09:19:35</OpenTime>
     <Description>Description 58</Description>
-    <MaxCompletionTime>2025-01-23T03:19:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T12:39:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1059</Id>
-    <CallType>CarTrouble</CallType>
-    <Address>חנקין 1, קרית אתא</Address>
-    <Latitude>32.81275577804192</Latitude>
-    <Longitude>35.10525108926754</Longitude>
-    <OpenTime>2025-01-23T00:25:30</OpenTime>
+    <CallType>BatteryJumpStart</CallType>
+    <Address>הפסגה 8, ירושלים</Address>
+    <Latitude>31.770631783960987</Latitude>
+    <Longitude>35.18204009422545</Longitude>
+    <OpenTime>2025-01-23T07:17:35</OpenTime>
     <Description>Description 59</Description>
-    <MaxCompletionTime>2025-01-23T03:45:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:37:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1060</Id>
-    <CallType>FoodPreparation</CallType>
-    <Address>יהודה המכבי 3, בית שמש</Address>
-    <Latitude>31.749055738229274</Latitude>
-    <Longitude>34.9808196442101</Longitude>
-    <OpenTime>2025-01-23T00:05:30</OpenTime>
+    <CallType>RoadsideAssistance</CallType>
+    <Address>רחוב האצ״ל 1, בית שמש</Address>
+    <Latitude>31.7513775722062</Latitude>
+    <Longitude>34.982859631374865</Longitude>
+    <OpenTime>2025-01-23T09:07:35</OpenTime>
     <Description>Description 60</Description>
-    <MaxCompletionTime>2025-01-23T03:25:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T12:27:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1061</Id>
-    <CallType>MedicalEmergency</CallType>
-    <Address>וינגייט 17, קרית אתא</Address>
-    <Latitude>32.815870631371325</Latitude>
-    <Longitude>35.1139504148565</Longitude>
-    <OpenTime>2025-01-23T01:48:30</OpenTime>
+    <CallType>FoodTransport</CallType>
+    <Address>מבצע חירם 1, באר שבע</Address>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <OpenTime>2025-01-23T09:03:35</OpenTime>
     <Description>Description 61</Description>
-    <MaxCompletionTime>2025-01-23T05:08:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T12:23:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1062</Id>
+    <CallType>FoodTransport</CallType>
+    <Address>הפלמ"ח 11, קרית אתא</Address>
+    <Latitude>32.81065288451351</Latitude>
+    <Longitude>35.12234042641816</Longitude>
+    <OpenTime>2025-01-23T09:13:35</OpenTime>
+    <Description>Description 62</Description>
+    <MaxCompletionTime>2025-01-23T12:33:35</MaxCompletionTime>
+  </Call>
+  <Call>
+    <Id>1063</Id>
     <CallType>BatteryJumpStart</CallType>
     <Address>שדרות הרצל 102, ירושלים</Address>
     <Latitude>31.7800584327404</Latitude>
     <Longitude>35.187628477045756</Longitude>
-    <OpenTime>2025-01-23T01:13:30</OpenTime>
-    <Description>Description 62</Description>
-    <MaxCompletionTime>2025-01-23T04:33:30</MaxCompletionTime>
-  </Call>
-  <Call>
-    <Id>1063</Id>
-    <CallType>FoodPreparation</CallType>
-    <Address>נחל קטלב 2, בית שמש</Address>
-    <Latitude>31.716310931732224</Latitude>
-    <Longitude>34.998070548696916</Longitude>
-    <OpenTime>2025-01-22T23:09:30</OpenTime>
+    <OpenTime>2025-01-23T07:30:35</OpenTime>
     <Description>Description 63</Description>
-    <MaxCompletionTime>2025-01-23T02:29:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T10:50:35</MaxCompletionTime>
   </Call>
   <Call>
     <Id>1064</Id>
-    <CallType>FoodTransport</CallType>
-    <Address>יעקב דורי 27, באר שבע</Address>
-    <Latitude>31.26599817239094</Latitude>
-    <Longitude>34.77990632146705</Longitude>
-    <OpenTime>2025-01-22T23:21:30</OpenTime>
+    <CallType>FlatTire</CallType>
+    <Address>רחוב ההדר 12, קרית אונו</Address>
+    <Latitude>32.053749046013294</Latitude>
+    <Longitude>34.8618141278376</Longitude>
+    <OpenTime>2025-01-23T06:21:35</OpenTime>
     <Description>Description 64</Description>
-    <MaxCompletionTime>2025-01-23T02:41:30</MaxCompletionTime>
+    <MaxCompletionTime>2025-01-23T09:41:35</MaxCompletionTime>
   </Call>
   <Call>
-    <Id>1027</Id>
-    <CallType>FoodTransport</CallType>
-    <Address>העצמאות 66, קרית אתא</Address>
-    <Latitude>32.8068254</Latitude>
-    <Longitude>35.1045232</Longitude>
-    <OpenTime>2025-01-22T23:03:30</OpenTime>
-    <Description>Description 27</Description>
-    <MaxCompletionTime>2025-01-23T02:23:30</MaxCompletionTime>
+    <Id>1065</Id>
+    <CallType>FoodPreparation</CallType>
+    <Address>ירושלים</Address>
+    <Latitude>31.768319</Latitude>
+    <Longitude>35.21371</Longitude>
+    <OpenTime>2025-01-23T09:28:00</OpenTime>
+    <Description>גגגג</Description>
+    <MaxCompletionTime>2025-01-24T00:00:00</MaxCompletionTime>
   </Call>
 </ArrayOfCall>

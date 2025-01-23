@@ -23,7 +23,7 @@ namespace PL
         public LoginWindow()
         {
             InitializeComponent();
-            //s_bl.Admin.InitializeDatabase(); // חייבים לאתחל את זה כי אם לא זה לא יעבוד
+            s_bl.Admin.InitializeDatabase(); // חייבים לאתחל את זה כי אם לא זה לא יעבוד
         }
 
         //access to the BL

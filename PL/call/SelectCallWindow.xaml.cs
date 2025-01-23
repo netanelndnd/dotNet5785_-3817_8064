@@ -95,7 +95,6 @@ namespace PL.Volunteer
                     MessageBox.Show("Call assigned successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     queryOpenCalls();
                     this.Close(); // Close the SelectCallWindow
-                    WindowMyVolunteer windowMyVolunteer = new WindowMyVolunteer(_volunteerId);
                 }
                 catch (Exception ex)
                 {
