@@ -120,7 +120,7 @@ namespace BlImplementation
                     throw new BO.BlDoesNotExistException($"Volunteer with ID={id} does not exist.");
                 var CallVolunteer = CallManager.GetClosedCallsByVolunteer(id);
                 if (CallVolunteer != null) { CallVolunteer = CallVolunteer.Where(c => c.CompletionStatus == BO.CompletionType.Treated); }
-                if (volunteer.IsActive == false && CallVolunteer == null)
+                if (volunteer.IsActive == false && CallVolunteer.Count() == 0)
                 {
                     _dal.Volunteer.Delete(id);
                     VolunteerManager.Observers.NotifyListUpdated();
