@@ -263,6 +263,7 @@ public static class VolunteerManager
             DistanceType = (DO.DistanceType)volunteerB.DistanceType,
             //פה רק מנהל יכול לשנות
             VolunteerRole = (DO.Role)volunteerB.Role,
+            IsActive  = volunteerB.IsActive,
         };
         //תיזרק חיריגה אם אין כזה ת"ז
         s_dal.Volunteer.Update(volunteerD);

@@ -56,7 +56,8 @@
         </Style>
         <pl:ConvertUpdateToTrueConverter x:Key="UpdateToTrueConverter"/>
         <pl:ConvertUpdateToVisibleConverter x:Key="UpdateToVisibleConverter"/>
-
+        <pl:DeleteButtonEnabledConverter x:Key="DeleteButtonEnabledConverter"/>
+        <pl:StatusToEditableConverter x:Key="StatusToEditableConverter"/>
     </Window.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -92,37 +93,40 @@
                     <Label Content="Call Type:" VerticalAlignment="Center" Width="120"/>
                     <ComboBox ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}" 
                               SelectedValue="{Binding CurrentCall.CallType, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"
-                              SelectedItem="{Binding CurrentCall.CallType}" Width="200"/>
+                              SelectedItem="{Binding CurrentCall.CallType}" Width="200"
+                              IsEnabled="{Binding CurrentCall.Status, Converter={StaticResource StatusToEditableConverter}}"/>
                 </StackPanel>
 
                 <!-- Description -->
                 <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
                     <Label Content="Description:" VerticalAlignment="Center" Width="120"/>
-                    <TextBox Text="{Binding CurrentCall.Description}" Width="200"/>
+                    <TextBox Text="{Binding CurrentCall.Description}" Width="200" IsEnabled="{Binding CurrentCall.Status, Converter={StaticResource StatusToEditableConverter}}"/>
                 </StackPanel>
 
                 <!-- Full Address -->
                 <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
                     <Label Content="Full Address:" VerticalAlignment="Center" Width="120"/>
-                    <TextBox Text="{Binding CurrentCall.FullAddress}" Width="200"/>
+                    <TextBox Text="{Binding CurrentCall.FullAddress}" Width="200" IsEnabled="{Binding CurrentCall.Status, Converter={StaticResource StatusToEditableConverter}}"/>
                 </StackPanel>
 
                 <!-- Opened At -->
                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
                     <Label Content="Opened At:" VerticalAlignment="Center" Width="120"/>
                     <Calendar SelectedDate="{Binding CurrentCall.OpenedAt, UpdateSourceTrigger=PropertyChanged}" 
-                              IsEnabled="{Binding ButtonText, Converter={StaticResource UpdateToVisibleConverter}, ConverterParameter='Update'}" 
+                              IsEnabled="False" 
                               Width="200" Height="200"/>
                     <TextBox Text="{Binding CurrentCall.OpenedAt, StringFormat='{}{0:HH:mm}', UpdateSourceTrigger=PropertyChanged}" 
-                             IsEnabled="{Binding ButtonText, Converter={StaticResource UpdateToVisibleConverter}, ConverterParameter='Update'}" 
+                             IsEnabled="False" 
                              Width="80" Margin="5,0,0,0"/>
                 </StackPanel>
 
                 <!-- Max Completion Time -->
                 <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
                     <Label Content="Max Completion Time:" VerticalAlignment="Center" Width="120"/>
-                    <Calendar SelectedDate="{Binding CurrentCall.MaxCompletionTime, UpdateSourceTrigger=PropertyChanged}" Width="200" Height="200"/>
-                    <TextBox Text="{Binding CurrentCall.MaxCompletionTime, StringFormat='{}{0:HH:mm}', UpdateSourceTrigger=PropertyChanged}" Width="80" Margin="5,0,0,0"/>
+                    <Calendar SelectedDate="{Binding CurrentCall.MaxCompletionTime, UpdateSourceTrigger=PropertyChanged}" Width="200" Height="200"
+                              IsEnabled="{Binding CurrentCall.Status, Converter={StaticResource StatusToEditableConverter}, ConverterParameter='MaxCompletionTime'}"/>
+                    <TextBox Text="{Binding CurrentCall.MaxCompletionTime, StringFormat='{}{0:HH:mm}', UpdateSourceTrigger=PropertyChanged}" Width="80" Margin="5,0,0,0"
+                             IsEnabled="{Binding CurrentCall.Status, Converter={StaticResource StatusToEditableConverter}, ConverterParameter='MaxCompletionTime'}"/>
                 </StackPanel>
 
                 <!-- Status -->
@@ -151,7 +155,7 @@
         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="422,10,0,10">
             <Button Content="{Binding ButtonText}" Click="btnAddUpdate_Click"/>
             <Button Content="Delete" Click="btnDelete_Click" Background="Red" BorderBrush="Red" 
-                    IsEnabled="{Binding ButtonText, Converter={StaticResource UpdateToTrueConverter}, ConverterParameter='Update'}"/>
+                    IsEnabled="{Binding CurrentCall, Converter={StaticResource DeleteButtonEnabledConverter}}"/>
         </StackPanel>
     </Grid>
 </Window>
