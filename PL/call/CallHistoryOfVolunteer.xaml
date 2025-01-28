@@ -39,7 +39,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label Content="Filter by Completion Status:" Foreground="White" VerticalAlignment="Center" Grid.Column="0" Margin="5"/>
+            <Label Content="Filter by CallType :" Foreground="White" VerticalAlignment="Center" Grid.Column="0" Margin="5"/>
             <ComboBox ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}" 
                       SelectedValue="{Binding Path=callType, Mode=TwoWay}" 
                       SelectionChanged="callsHistory_CB" 

@@ -29,7 +29,6 @@ namespace PL
         private void clockObserver()
         {
             CurrentTime = s_bl.Admin.GetSystemClock();
-            UpdateCallCounts();
         }
 
         int CurrentManager = 0;
@@ -38,6 +37,7 @@ namespace PL
         private void configObserver()
         {
             TimeRisk = s_bl.Admin.GetRiskTimeSpan();
+            UpdateCallCounts();
         }
 
         // Dependency property for the current time

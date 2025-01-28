@@ -9,7 +9,7 @@
     <Window.Resources>
         <local:ConvertUpdateToTrueConverter x:Key="ConvertUpdateToTrueConverter"/>
         <local:CurrentCallEnabledConverter x:Key="CurrentCallEnabledConverter"/>
-       
+
         <Style TargetType="Label">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -288,9 +288,8 @@
 
                         <!-- Distance From Volunteer -->
                         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
-                            <Label Content="Distance From Volunteer:" VerticalAlignment="Center" Width="100"/>
-                            <TextBox Text="{Binding CurrentVolunteer.CurrentCall.DistanceFromVolunteer, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" 
-                                     HorizontalAlignment="Stretch" IsReadOnly="True" Background="Transparent"/>
+                            <Label Content="Distance From Volunteer:" VerticalAlignment="Center" Width="198"/>
+                            <TextBox Text="{Binding CurrentVolunteer.CurrentCall.DistanceFromVolunteer, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" Background="Transparent" Width="152"/>
                         </StackPanel>
 
                         <!-- Status -->
