@@ -120,14 +120,21 @@ namespace BlImplementation
                     throw new BO.BlDoesNotExistException($"Volunteer with ID={id} does not exist.");
                 var CallVolunteer = CallManager.GetClosedCallsByVolunteer(id);
                 if (CallVolunteer != null) { CallVolunteer = CallVolunteer.Where(c => c.CompletionStatus == BO.CompletionType.Treated); }
-                if (volunteer.IsActive == false && CallVolunteer.Count() == 0)
+                if (volunteer.IsActive == false && CallVolunteer == null)
                 {
                     _dal.Volunteer.Delete(id);
                     VolunteerManager.Observers.NotifyListUpdated();
                 }
                 else
                 {
-                    throw new BO.BlDeletionImpossible("Cannot delete an active volunteer.");
+                    if (volunteer.IsActive)
+                    {
+                        throw new BO.BlDeletionImpossible("Cannot delete an active volunteer.");
+                    }
+                    else if (handledCalls != null)
+                    {
+                        throw new BO.BlDeletionImpossible("Cannot delete a volunteer who has handled calls in the past.");
+                    }
                 }
             }
             catch (DO.DalDeletionImpossible ex)

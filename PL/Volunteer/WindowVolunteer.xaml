@@ -35,12 +35,40 @@
             <Setter Property="Background" Value="White"/>
         </Style>
         <Style TargetType="Button">
-            <Setter Property="Background" Value="#2E8B57"/>
-            <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Padding" Value="10,5"/>
             <Setter Property="Margin" Value="10"/>
             <Setter Property="BorderBrush" Value="#2E8B57"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style x:Key="DeleteButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Red"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="BorderBrush" Value="Red"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="IsEnabled" Value="False"/>
+            <Style.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}, ConverterParameter=False}" Value="True"/>
+                        <Condition Binding="{Binding CurrentVolunteer.CurrentCall, Converter={StaticResource CurrentCallEnabledConverter}, ConverterParameter=False}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="IsEnabled" Value="True"/>
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="OtherButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Green"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="BorderBrush" Value="Green"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
@@ -122,22 +150,24 @@
                 <!-- Password -->
                 <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
                     <Label Content="Password:" VerticalAlignment="Center" Width="100"/>
-                    <TextBox Text="" HorizontalAlignment="Stretch" IsReadOnly="True" Background="Transparent"/>
+                    <TextBox Text="{Binding CurrentVolunteer.Password, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" 
+                             HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
                 <!-- Current Address -->
                 <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
                     <Label Content="Current Address:" VerticalAlignment="Center" Width="100"/>
                     <TextBox Text="{Binding CurrentVolunteer.CurrentAddress, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" 
-                             HorizontalAlignment="Stretch"
-                             Background="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}, ConverterParameter=Transparent}"/>
+                             HorizontalAlignment="Stretch" />
                 </StackPanel>
 
                 <!-- Role -->
                 <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal">
                     <Label Content="Role:" VerticalAlignment="Center" Width="100"/>
                     <ComboBox ItemsSource="{Binding Source={StaticResource VolunteerRolesCollectionKey}}" 
-                              SelectedValue="{Binding CurrentVolunteer.Role, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Stretch"/>
+                              SelectedValue="{Binding CurrentVolunteer.Role, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" 
+                              HorizontalAlignment="Stretch"
+                              />
                 </StackPanel>
 
                 <!-- Is Active -->
@@ -153,8 +183,7 @@
                     <Label Content="Max Distance:" VerticalAlignment="Center" Width="100"/>
                     <TextBox Text="{Binding CurrentVolunteer.MaxDistance, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" 
                              HorizontalAlignment="Stretch"
-                             IsReadOnly="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}}"
-                             Background="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}, ConverterParameter=Transparent}"/>
+                             />
                 </StackPanel>
 
                 <!-- Distance Type -->
@@ -163,7 +192,7 @@
                     <ComboBox ItemsSource="{Binding Source={StaticResource DistanceTypesCollectionKey}}" 
                               SelectedValue="{Binding CurrentVolunteer.DistanceType, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" 
                               HorizontalAlignment="Stretch"
-                              IsEnabled="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}, ConverterParameter=False}"/>
+                              />
                 </StackPanel>
 
                 <!-- Total Calls Handled -->
@@ -277,9 +306,8 @@
 
         <!-- Add/Update/Delete Buttons -->
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="10">
-            <Button Content="{Binding ButtonText}" Click="btnAddUpdate_Click"/>
-            <Button Content="Delete" Click="btnDelete_Click" Background="Red" BorderBrush="Red"
-                    IsEnabled="{Binding ButtonText, Converter={StaticResource ConvertUpdateToTrueConverter}, ConverterParameter=False}"/>
+            <Button Content="{Binding ButtonText}" Click="btnAddUpdate_Click" Style="{StaticResource OtherButtonStyle}"/>
+            <Button Content="Delete" Click="btnDelete_Click" Style="{StaticResource DeleteButtonStyle}"/>
         </StackPanel>
     </Grid>
 </Window>
