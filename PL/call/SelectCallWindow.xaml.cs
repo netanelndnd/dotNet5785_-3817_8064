@@ -54,8 +54,11 @@ namespace PL.Volunteer
             // Create the special marker parameter for the volunteer's location
             string specialMarkerParams = $"markers=color:red|label:★|{volunteerDetails.Latitude},{volunteerDetails.Longitude}";
 
+            string pathParams = string.Join("&", markers.Select(m =>
+      $"path=color:green|weight:2|{m.Latitude},{m.Longitude}|{volunteerDetails.Latitude},{volunteerDetails.Longitude}"));
+
             // Construct the map URL
-            string mapUrl = $"https://maps.googleapis.com/maps/api/staticmap?center=32.0853,34.7818&zoom=13&size=600x400&maptype=roadmap&{markerParams}&{specialMarkerParams}&key={apiKey}";
+            string mapUrl = $"https://maps.googleapis.com/maps/api/staticmap?center={volunteerDetails.Latitude},{volunteerDetails.Longitude}&zoom=9&size=600x400&maptype=roadmap&{markerParams}&{specialMarkerParams}&{pathParams}&key={apiKey}";
 
             // Check if the URL is valid and set the map image source
             if (Uri.TryCreate(mapUrl, UriKind.Absolute, out Uri uriResult) &&
