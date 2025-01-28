@@ -40,6 +40,8 @@ namespace PL.Volunteer
 
             // Create a list to store the coordinates of the calls
             var markers = new List<(double? Latitude, double? Longitude)>();
+            if (OpenCalls == null)
+                return;
             foreach (var call in OpenCalls)
             {
                 // Get the coordinates of the call's address
