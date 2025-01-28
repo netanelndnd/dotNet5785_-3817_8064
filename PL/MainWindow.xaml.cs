@@ -37,7 +37,6 @@ namespace PL
         private void configObserver()
         {
             TimeRisk = s_bl.Admin.GetRiskTimeSpan();
-            UpdateCallCounts();
         }
 
         // Dependency property for the current time

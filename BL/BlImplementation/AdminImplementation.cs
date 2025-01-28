@@ -63,6 +63,11 @@ namespace BlImplementation
         {
             AdminManager.RiskRange = riskTimeSpan;
 
+            // Notify observers of the configuration update
+            //נועד לעדכן את רשימות הקריאות והמתנדבים על פי הסיכון החדש
+            VolunteerManager.Observers.NotifyListUpdated();
+            CallManager.Observers.NotifyListUpdated();
+
         }
 
         /// <summary>
