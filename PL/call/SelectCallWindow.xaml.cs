@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,13 +25,34 @@ namespace PL.Volunteer
         {
             _volunteerId = volunteerId;
             InitializeComponent();
+            UpdateMapImage(_volunteerId);
+
 
             // Register event handlers for loading and closing the window
             this.Loaded += Window_Loaded;
             this.Closed += Window_Closed;
         }
 
+        private void UpdateMapImage(int _volunteerId)
+        {
+            var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(_volunteerId);
+            string apiKey = "AIzaSyBnuV561P8tA08Y7DQDH0GAu5AhQ86m5xs";
+            string url = $"https://maps.googleapis.com/maps/api/staticmap?center={volunteerDetails.Latitude},{volunteerDetails.Longitude}&zoom=13&size=600x400&maptype=roadmap&markers=color:red%7Clabel:S%7C{volunteerDetails.Latitude},{volunteerDetails.Longitude}&key={apiKey}";
+            if (Uri.TryCreate(url, UriKind.Absolute, out Uri uriResult) &&
+                (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+            {
+                MapImage.Source = new BitmapImage(uriResult);
+            }
+            else
+            {
+                // Handle invalid URI case
+                MessageBox.Show("Invalid address format.");
+            }
+        }
+          
+        
 
+        
         // Property to store and retrieve the list of open calls.
         // This property uses a DependencyProperty to enable data binding in WPF.
         public IEnumerable<BO.OpenCallInList> OpenCalls
@@ -112,6 +134,7 @@ namespace PL.Volunteer
             }
         }
 
+
         private void BtnUpdateAddress_Click(object sender, RoutedEventArgs e)
         {
             // יצירת חלון חדש לקבלת הכתובת החדשה
@@ -135,7 +158,7 @@ namespace PL.Volunteer
                     // שמירת העדכונים
                     s_bl.Volunteer.UpdateVolunteer(_volunteerId, volunteer);
                     MessageBox.Show("Address updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-
+                    UpdateMapImage(_volunteerId);
                     // עדכון רשימת הקריאות
                     queryOpenCalls();
                 }
@@ -145,6 +168,8 @@ namespace PL.Volunteer
                 }
             }
         }
-
     }
+
 }
+
+

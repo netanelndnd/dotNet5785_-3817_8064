@@ -274,9 +274,9 @@ internal static class CallManager
     public static IEnumerable<BO.OpenCallInList>? GetOpenCallsForVolunteer(int volunteerId)
     {
         var Calls = s_dal.Call.ReadAll();
-        
-        var openCalls = Calls.Where(c => (GetCallStatus(c.Id)==BO.CallStatus.OpenInRisk|| GetCallStatus(c.Id) == BO.CallStatus.Open));
         var volunteer = s_dal.Volunteer.Read(volunteerId);
+        var openCalls = Calls.Where(c => (GetCallStatus(c.Id)==BO.CallStatus.OpenInRisk|| GetCallStatus(c.Id) == BO.CallStatus.Open));
+        
         if (openCalls == null || !openCalls.Any())
         {
             return null;

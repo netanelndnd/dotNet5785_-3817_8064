@@ -20,14 +20,15 @@ namespace PL
     /// </summary>
     public partial class LoginWindow : Window
     {
+        //access to the BL
+        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         public LoginWindow()
         {
             InitializeComponent();
             //s_bl.Admin.InitializeDatabase(); // חייבים לאתחל את זה כי אם לא זה לא יעבוד
         }
 
-        //access to the BL
-        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+     
 
         public string UserID
         {

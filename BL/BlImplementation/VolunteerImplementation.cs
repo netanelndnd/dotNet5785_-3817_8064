@@ -131,7 +131,7 @@ namespace BlImplementation
                     {
                         throw new BO.BlDeletionImpossible("Cannot delete an active volunteer.");
                     }
-                    else if (handledCalls != null)
+                    else if (CallVolunteer != null)
                     {
                         throw new BO.BlDeletionImpossible("Cannot delete a volunteer who has handled calls in the past.");
                     }

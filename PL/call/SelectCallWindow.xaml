@@ -31,9 +31,9 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
+
         <!-- Header Section -->
-        <Grid Grid.Row="0" Background="#2E8B57" Margin="10">
+        <Grid Grid.Row="0" Background="#2E8B57" Margin="10,10,400,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -44,23 +44,28 @@
                       SelectionChanged="CallTyps_CB" 
                       VerticalAlignment="Center" Grid.Column="1" Margin="5"/>
         </Grid>
-        
+
         <!-- DataGrid Section -->
-        <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Margin="10" Grid.Row="1" Background="White" BorderBrush="#2E8B57" BorderThickness="1" ItemsSource="{Binding OpenCalls}" SelectedItem="{Binding SelectedCall}" MouseDoubleClick="CallsDataGrid_MouseDoubleClick">
+        <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Margin="10,10,400,10" Grid.Row="1" Background="White" BorderBrush="#2E8B57" BorderThickness="1" ItemsSource="{Binding OpenCalls}" SelectedItem="{Binding SelectedCall}" MouseDoubleClick="CallsDataGrid_MouseDoubleClick">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*"/>
-                <DataGridTextColumn Header="Type" Binding="{Binding CallType}" Width="*"/>
-                <DataGridTextColumn Header="Address" Binding="{Binding FullAddress}" Width="*"/>
-                <DataGridTextColumn Header="Opened At" Binding="{Binding OpenedAt}" Width="*"/>
-                <DataGridTextColumn Header="Max Completion Time" Binding="{Binding MaxCompletionTime}" Width="*"/>
-                <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromVolunteer}" Width="*"/>
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="100"/>
+                <DataGridTextColumn Header="Type" Binding="{Binding CallType}" Width="150"/>
+                <DataGridTextColumn Header="Address" Binding="{Binding FullAddress}" Width="200"/>
+                <DataGridTextColumn Header="Opened At" Binding="{Binding OpenedAt}" Width="150"/>
+                <DataGridTextColumn Header="Max Completion Time" Binding="{Binding MaxCompletionTime}" Width="150"/>
+                <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromVolunteer}" Width="150"/>
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="300"/>
             </DataGrid.Columns>
         </DataGrid>
-        
+
         <!-- Footer Section -->
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="10">
             <Button Content="Update Address" Click="BtnUpdateAddress_Click"/>
         </StackPanel>
+
+        <!-- Image Section -->
+        <Grid Grid.Row="1" Margin="419,10,10,10">
+            <Image x:Name="MapImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill"/>
+        </Grid>
     </Grid>
 </Window>
