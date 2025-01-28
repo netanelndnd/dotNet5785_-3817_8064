@@ -5,10 +5,10 @@
     <FullName>Yossi Cohen</FullName>
     <PhoneNumber>0501234567</PhoneNumber>
     <Email>yossi.cohen@gmail.com</Email>
-    <Password>yossi.cohen@gmail.com</Password>
-    <CurrentAddress>תל אביב</CurrentAddress>
-    <Latitude>32.0852999</Latitude>
-    <Longitude>34.78176759999999</Longitude>
+    <Password>1</Password>
+    <CurrentAddress>ירושלים</CurrentAddress>
+    <Latitude>31.768319</Latitude>
+    <Longitude>35.21371</Longitude>
     <MaxDistance>38.43012867362613</MaxDistance>
     <VolunteerRole>Manager</VolunteerRole>
     <IsActive>true</IsActive>

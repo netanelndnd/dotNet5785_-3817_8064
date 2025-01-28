@@ -440,4 +440,12 @@
     <CompletionTime>2025-01-27T16:55:46</CompletionTime>
     <CompletionStatus>Treated</CompletionStatus>
   </Assignment>
+  <Assignment>
+    <Id>1055</Id>
+    <CallId>1001</CallId>
+    <VolunteerId>212041966</VolunteerId>
+    <EntryTime>2025-01-27T16:55:46</EntryTime>
+    <CompletionTime>2025-01-27T16:55:46</CompletionTime>
+    <CompletionStatus>Treated</CompletionStatus>
+  </Assignment>
 </ArrayOfAssignment>

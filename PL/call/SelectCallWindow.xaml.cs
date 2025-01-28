@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,32 +28,44 @@ namespace PL.Volunteer
             InitializeComponent();
             UpdateMapImage(_volunteerId);
 
-
             // Register event handlers for loading and closing the window
             this.Loaded += Window_Loaded;
             this.Closed += Window_Closed;
         }
-
+        
         private void UpdateMapImage(int _volunteerId)
         {
             var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(_volunteerId);
             string apiKey = "AIzaSyBnuV561P8tA08Y7DQDH0GAu5AhQ86m5xs";
-            string url = $"https://maps.googleapis.com/maps/api/staticmap?center={volunteerDetails.Latitude},{volunteerDetails.Longitude}&zoom=13&size=600x400&maptype=roadmap&markers=color:red%7Clabel:S%7C{volunteerDetails.Latitude},{volunteerDetails.Longitude}&key={apiKey}";
-            if (Uri.TryCreate(url, UriKind.Absolute, out Uri uriResult) &&
-                (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+
+            // Create a list to store the coordinates of the calls
+            var markers = new List<(double? Latitude, double? Longitude)>();
+            foreach (var call in OpenCalls)
+            {
+                // Get the coordinates of the call's address
+                var callCoordinates = Helpers.Tools.GetCoordinates(call.FullAddress);
+                markers.Add((callCoordinates.Latitude, callCoordinates.Longitude));
+            }
+
+            // Create the marker parameters for the map URL
+            string markerParams = string.Join("&", markers.Select(m =>
+                $"markers=color:blue|label:Call|{m.Latitude},{m.Longitude}"));
+
+            // Create the special marker parameter for the volunteer's location
+            string specialMarkerParams = $"markers=color:red|label:★|{volunteerDetails.Latitude},{volunteerDetails.Longitude}";
+
+            // Construct the map URL
+            string mapUrl = $"https://maps.googleapis.com/maps/api/staticmap?center=32.0853,34.7818&zoom=13&size=600x400&maptype=roadmap&{markerParams}&{specialMarkerParams}&key={apiKey}";
+
+            // Check if the URL is valid and set the map image source
+            if (Uri.TryCreate(mapUrl, UriKind.Absolute, out Uri uriResult) &&
+               (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
             {
                 MapImage.Source = new BitmapImage(uriResult);
             }
-            else
-            {
-                // Handle invalid URI case
-                MessageBox.Show("Invalid address format.");
-            }
         }
-          
-        
 
-        
+
         // Property to store and retrieve the list of open calls.
         // This property uses a DependencyProperty to enable data binding in WPF.
         public IEnumerable<BO.OpenCallInList> OpenCalls
@@ -123,8 +136,8 @@ namespace PL.Volunteer
                 try
                 {
                     s_bl.Call.AssignCallToVolunteer(_volunteerId, SelectedCall.Id);
-                    MessageBox.Show("Call assigned successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     queryOpenCalls();
+                    MessageBox.Show("Call assigned successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     this.Close(); // Close the SelectCallWindow
                 }
                 catch (Exception ex)
@@ -157,10 +170,11 @@ namespace PL.Volunteer
 
                     // שמירת העדכונים
                     s_bl.Volunteer.UpdateVolunteer(_volunteerId, volunteer);
-                    MessageBox.Show("Address updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     UpdateMapImage(_volunteerId);
                     // עדכון רשימת הקריאות
                     queryOpenCalls();
+                    MessageBox.Show("Address updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
                 }
                 else
                 {
