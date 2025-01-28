@@ -22,9 +22,11 @@ namespace BlImplementation
         /// Advances the system clock by a specified time unit.
         /// מקדם את שעון המערכת ביחידת זמן מסוימת.
         /// </summary>
+        
         public void AdvanceSystemClock(TimeUnit timeUnit)
         {
-            if(timeUnit == TimeUnit.Minute)
+            AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+            if (timeUnit == TimeUnit.Minute)
             {
                 AdminManager.UpdateClock(AdminManager.Now.AddMinutes(1));
             }
@@ -61,6 +63,7 @@ namespace BlImplementation
         /// </summary>
         public void SetRiskTimeSpan(TimeSpan riskTimeSpan)
         {
+            AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
             AdminManager.RiskRange = riskTimeSpan;
 
             // Notify observers of the configuration update
@@ -76,14 +79,8 @@ namespace BlImplementation
         /// </summary>
         public void ResetDatabase()
         {
-            // Reset the configuration to its initial state and update the clock to the current time (now)
-            AdminManager.Reset();
-            AdminManager.UpdateClock(AdminManager.Now);
-            AdminManager.RiskRange = AdminManager.RiskRange;
-            // Clear data for all entities
-            _dal.Assignment.DeleteAll();
-            _dal.Call.DeleteAll();
-            _dal.Volunteer.DeleteAll();
+            AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+            AdminManager.ResetDB(); //stage 7
         }
 
         /// <summary>
@@ -93,12 +90,11 @@ namespace BlImplementation
         public void InitializeDatabase()
         {
             // Reset the database to its initial state
+
+            AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
             ResetDatabase();
-            AdminManager.Reset();
-            // Initialize the database with initial data
-            DalTest.Initialization.Do();
-            AdminManager.UpdateClock(AdminManager.Now);
-            AdminManager.RiskRange = AdminManager.RiskRange;
+            AdminManager.InitializeDB(); //stage 7
         }
 
         #region Stage 5

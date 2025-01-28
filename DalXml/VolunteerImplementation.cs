@@ -3,6 +3,7 @@ using DalApi;
 using DO;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 /// <summary>
 /// Implementation of the IVolunteer interface for managing volunteers using XML storage.
@@ -18,6 +19,7 @@ public class VolunteerImplementation : IVolunteer
     /// Creates a new volunteer and adds it to the XML file.
     /// </summary>
     /// <param name="item">The volunteer to create.</param>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void Create(Volunteer item)
     {
         XElement ArrayOfVolunteer = XMLTools.LoadListFromXMLElement(_filePath);
@@ -49,6 +51,7 @@ public class VolunteerImplementation : IVolunteer
     /// Deletes a volunteer from the XML file by ID.
     /// </summary>
     /// <param name="id">The ID of the volunteer to delete.</param>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void Delete(int id)
     {
         XElement ArrayOfVolunteer = XMLTools.LoadListFromXMLElement(_filePath);
@@ -65,6 +68,7 @@ public class VolunteerImplementation : IVolunteer
     /// <summary>
     /// Deletes all volunteers from the XML file.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void DeleteAll()
     {
         XElement ArrayOfVolunteer = new XElement("Volunteers");
@@ -76,6 +80,7 @@ public class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="id">The ID of the volunteer to read.</param>
     /// <returns>The volunteer with the specified ID, or null if not found.</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public Volunteer? Read(int id)
     {
         XElement ArrayOfVolunteer = XMLTools.LoadListFromXMLElement(_filePath);
@@ -89,6 +94,7 @@ public class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="filter">The filter to apply.</param>
     /// <returns>The first volunteer that matches the filter, or null if not found.</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public Volunteer? Read(Func<Volunteer, bool> filter)
     {
         XElement ArrayOfVolunteer = XMLTools.LoadListFromXMLElement(_filePath);
@@ -102,6 +108,7 @@ public class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="filter">The filter to apply, or null to read all volunteers.</param>
     /// <returns>An enumerable of volunteers that match the filter.</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public IEnumerable<Volunteer> ReadAll(Func<Volunteer, bool>? filter = null)
     {
         XElement ArrayOfVolunteer = XMLTools.LoadListFromXMLElement(_filePath);
@@ -114,6 +121,7 @@ public class VolunteerImplementation : IVolunteer
     /// Updates an existing volunteer in the XML file.
     /// </summary>
     /// <param name="item">The volunteer to update.</param>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void Update(Volunteer item)
     {
         XElement ArrayOfVolunteer = XMLTools.LoadListFromXMLElement(_filePath);
@@ -142,6 +150,7 @@ public class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="element">The XElement to parse.</param>
     /// <returns>The parsed Volunteer object.</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     private static Volunteer ParseVolunteer(XElement element)
     {
         return new Volunteer(

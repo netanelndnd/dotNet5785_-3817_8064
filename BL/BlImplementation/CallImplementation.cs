@@ -32,6 +32,7 @@ namespace BlImplementation
         /// <exception cref="BlOperationException">Thrown when the call cannot be added due to an internal error.</exception>
         public void AddCall(Call call)
         {
+            AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
             // Validate the maximum completion time is greater than the opening time
             if (call.MaxCompletionTime.HasValue && call.MaxCompletionTime <= call.OpenedAt)
             {
@@ -80,6 +81,8 @@ namespace BlImplementation
         /// <exception cref="BlOperationException">Thrown when the call cannot be assigned due to invalid status or expiration.</exception>
         public void AssignCallToVolunteer(int volunteerId, int callId)
         {
+            AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
+
             var call = _dal.Call.Read(callId);
             var callStatus = CallManager.GetCallStatus(callId);
             
@@ -112,6 +115,7 @@ namespace BlImplementation
         /// <exception cref="BlUnauthorizedAccessException">Thrown when the requester does not have permission to cancel the call handling or the assignment has already been completed.</exception>
         public void CancelCallHandling(int requesterId, int assignmentId)
         {
+            AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
             // Read the requester and assignment details from the data layer
             var requester = _dal.Volunteer.Read(requesterId);
             var assignment = _dal.Assignment.Read(assignmentId);
@@ -173,6 +177,7 @@ namespace BlImplementation
         /// <exception cref="BlDoesNotExistException">Thrown when the assignment or volunteer is not found.</exception>
         public void CompleteCallHandling(int volunteerId, int assignmentId)
         {
+            AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
             try
             {
                 // Read the requester and assignment details from the data layer
@@ -223,6 +228,7 @@ namespace BlImplementation
         /// <exception cref="BlOperationException">Thrown when the call cannot be deleted because it is not open or has been assigned.</exception>
         public void DeleteCall(int id)
         {
+            AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
             // Retrieve the call details from the data layer
             var callEntity = _dal.Call.Read(id);
             if (callEntity == null)
@@ -439,6 +445,8 @@ namespace BlImplementation
         /// <exception cref="BlDoesNotExistException"></exception>
         public void UpdateCall(Call call)
         {
+            AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
+
             // Validate the maximum completion time is greater than the opening time
             if (call.MaxCompletionTime.HasValue && call.MaxCompletionTime <= call.OpenedAt)
             {

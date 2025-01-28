@@ -35,6 +35,8 @@ namespace BlImplementation
         /// <exception cref="BO.BlSystemException">Thrown when an unexpected        
         public void AddVolunteer(BO.Volunteer volunteerB)
         {
+            AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
+
             try
             {
                 // Validate the email format
@@ -114,6 +116,8 @@ namespace BlImplementation
         /// <param name="id">The ID of the volunteer to delete.</param>
         public void DeleteVolunteer(int id)
         {
+            AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
+
             try
             {
                 var volunteer = _dal.Volunteer.Read(id) ??
@@ -242,6 +246,8 @@ namespace BlImplementation
         /// <param name="volunteer">The volunteer object with updated details.</param>
         public void UpdateVolunteer(int id, BO.Volunteer volunteer)
         {
+            AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
+
             try
             {
                 bool isManager = VolunteerManager.IsManager(id);

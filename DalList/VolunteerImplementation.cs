@@ -3,6 +3,7 @@ using DalApi;
 using DO;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 
 internal class VolunteerImplementation : IVolunteer
@@ -12,6 +13,7 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="item">The Volunteer object to create</param>
     /// <exception cref="DalAlreadyExistsException">Thrown when a volunteer with the same ID already exists</exception>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void Create(Volunteer item)
     {
         // For entities with normal id (not auto id)
@@ -25,6 +27,7 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="id">The ID of the volunteer to delete</param>
     /// <exception cref="DalDeletionImpossible">Thrown when the volunteer with the specified ID does not exist</exception>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void Delete(int id)
     {
         var volunteer = Read(id);
@@ -37,9 +40,10 @@ internal class VolunteerImplementation : IVolunteer
     /// <summary>
     /// Deletes all volunteers
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void DeleteAll()
     {
-       DataSource.Volunteers.Clear();
+        DataSource.Volunteers.Clear();
     }
 
     /// <summary>
@@ -47,6 +51,7 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="id">The ID of the volunteer to read</param>
     /// <returns>The volunteer with the specified ID, or null if not found</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public Volunteer? Read(int id)
     {
         return DataSource.Volunteers.FirstOrDefault(item => item.Id == id);
@@ -57,6 +62,7 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="filter">The filter condition to apply</param>
     /// <returns>The volunteer that matches the filter condition, or null if not found</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public Volunteer? Read(Func<Volunteer, bool> filter)
     {
         return DataSource.Volunteers.FirstOrDefault(filter);
@@ -67,6 +73,7 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="filter">Optional filter condition to apply</param>
     /// <returns>A list of all volunteers, optionally filtered</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public IEnumerable<Volunteer> ReadAll(Func<Volunteer, bool>? filter = null)
     {
         return filter != null
@@ -79,6 +86,7 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="item">The updated Volunteer object</param>
     /// <exception cref="DalDoesNotExistException">Thrown when the volunteer with the specified ID does not exist</exception>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void Update(Volunteer item)
     {
         var existingVolunteer = Read(item.Id);
@@ -88,5 +96,4 @@ internal class VolunteerImplementation : IVolunteer
         Delete(existingVolunteer.Id);
         DataSource.Volunteers.Add(item);
     }
-
 }
