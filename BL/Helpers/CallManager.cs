@@ -56,7 +56,7 @@ public static class CallManager
             OpenedAt = callDetails.OpenTime,
             StartedAt = assignment.EntryTime,
             MaxCompletionTime = callDetails.MaxCompletionTime,
-            DistanceFromVolunteer = CalculateDistance(volunteer.Latitude ?? throw new InvalidOperationException("Volunteer latitude is null."),
+            DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude ?? throw new InvalidOperationException("Volunteer latitude is null."),
                                                   volunteer.Longitude ?? throw new InvalidOperationException("Volunteer longitude is null."),
                                                   callDetails.Latitude, callDetails.Longitude),
             Status = GetCallStatus(callId)
@@ -65,24 +65,6 @@ public static class CallManager
         return callInProgress;
     }
 
-    // פונקציה לחישוב המרחק בין שתי נקודות על פי קו רוחב וקו אורך
-    public static double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
-    {
-
-        // קבועים עבור חישוב המרחק
-        double R = 6371; // רדיוס כדור הארץ בקילומטרים
-        double dLat = DegreesToRadians(lat2 - lat1); // שינוי בקו הרוחב
-        double dLon = DegreesToRadians(lon2 - lon1); // שינוי בקו האורך
-
-        // חישוב המרחק באמצעות נוסחת Haversine
-        double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-                   Math.Cos(DegreesToRadians(lat1)) * Math.Cos(DegreesToRadians(lat2)) *
-                   Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
-        double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-        double distance = R * c; // המרחק בקילומטרים
-
-        return distance;
-    }
 
     // פונקציה להמיר מעלות לרדיאנים
     private static double DegreesToRadians(double degrees)
@@ -326,7 +308,7 @@ public static class CallManager
     {
         var Calls = s_dal.Call.ReadAll();
         var volunteer = s_dal.Volunteer.Read(volunteerId);
-        var openCalls = Calls.Where(c => (GetCallStatus(c.Id)==BO.CallStatus.OpenInRisk|| GetCallStatus(c.Id) == BO.CallStatus.Open)&&(volunteer.MaxDistance>= CalculateDistance((double)volunteer.Latitude
+        var openCalls = Calls.Where(c => (GetCallStatus(c.Id)==BO.CallStatus.OpenInRisk|| GetCallStatus(c.Id) == BO.CallStatus.Open)&&(volunteer.MaxDistance>= Tools.CalculateDistance((double)volunteer.Latitude
             , (double)volunteer.Longitude
             , c.Latitude, c.Longitude)));
         
@@ -344,7 +326,7 @@ public static class CallManager
             FullAddress = call.Address,
             OpenedAt = call.OpenTime,
             MaxCompletionTime =call.MaxCompletionTime,
-            DistanceFromVolunteer = CalculateDistance((double)volunteer.Latitude
+            DistanceFromVolunteer = Tools.CalculateDistance((double)volunteer.Latitude
             , (double)volunteer.Longitude
             , call.Latitude, call.Longitude),
         });
