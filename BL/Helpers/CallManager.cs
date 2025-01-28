@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using BlImplementation;
 namespace Helpers;
 
-internal static class CallManager
+public static class CallManager
 {
     private static IDal s_dal = Factory.Get; //stage 4
 
