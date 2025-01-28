@@ -29,6 +29,7 @@ namespace PL
         private void clockObserver()
         {
             CurrentTime = s_bl.Admin.GetSystemClock();
+            UpdateCallCounts();
         }
 
         int CurrentManager = 0;

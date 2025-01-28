@@ -62,6 +62,7 @@ namespace BlImplementation
         public void SetRiskTimeSpan(TimeSpan riskTimeSpan)
         {
             AdminManager.RiskRange = riskTimeSpan;
+
         }
 
         /// <summary>
