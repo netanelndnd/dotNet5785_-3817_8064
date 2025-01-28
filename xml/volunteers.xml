@@ -6,9 +6,9 @@
     <PhoneNumber>0501234567</PhoneNumber>
     <Email>yossi.cohen@gmail.com</Email>
     <Password>yossi.cohen@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
+    <CurrentAddress>ירושלים</CurrentAddress>
+    <Latitude>31.768319</Latitude>
+    <Longitude>35.21371</Longitude>
     <MaxDistance>4.360861793026949</MaxDistance>
     <VolunteerRole>Manager</VolunteerRole>
     <IsActive>true</IsActive>

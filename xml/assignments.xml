@@ -369,14 +369,6 @@
     <CompletionStatus xsi:nil="true" />
   </Assignment>
   <Assignment>
-    <Id>1046</Id>
-    <CallId>1056</CallId>
-    <VolunteerId>212041966</VolunteerId>
-    <EntryTime>2025-01-28T11:59:38</EntryTime>
-    <CompletionTime xsi:nil="true" />
-    <CompletionStatus xsi:nil="true" />
-  </Assignment>
-  <Assignment>
     <Id>1047</Id>
     <CallId>1057</CallId>
     <VolunteerId>110115870</VolunteerId>
@@ -437,6 +429,22 @@
     <CallId>1064</CallId>
     <VolunteerId>147250120</VolunteerId>
     <EntryTime>2025-01-28T10:45:38</EntryTime>
+    <CompletionTime xsi:nil="true" />
+    <CompletionStatus xsi:nil="true" />
+  </Assignment>
+  <Assignment>
+    <Id>1046</Id>
+    <CallId>1056</CallId>
+    <VolunteerId>212041966</VolunteerId>
+    <EntryTime>2025-01-28T11:59:38</EntryTime>
+    <CompletionTime>2025-01-28T11:57:38</CompletionTime>
+    <CompletionStatus>Treated</CompletionStatus>
+  </Assignment>
+  <Assignment>
+    <Id>1055</Id>
+    <CallId>1013</CallId>
+    <VolunteerId>212041966</VolunteerId>
+    <EntryTime>2025-01-28T11:57:38</EntryTime>
     <CompletionTime xsi:nil="true" />
     <CompletionStatus xsi:nil="true" />
   </Assignment>
