@@ -275,7 +275,9 @@ public static class CallManager
     {
         var Calls = s_dal.Call.ReadAll();
         var volunteer = s_dal.Volunteer.Read(volunteerId);
-        var openCalls = Calls.Where(c => (GetCallStatus(c.Id)==BO.CallStatus.OpenInRisk|| GetCallStatus(c.Id) == BO.CallStatus.Open));
+        var openCalls = Calls.Where(c => (GetCallStatus(c.Id)==BO.CallStatus.OpenInRisk|| GetCallStatus(c.Id) == BO.CallStatus.Open)&&(volunteer.MaxDistance>= CalculateDistance((double)volunteer.Latitude
+            , (double)volunteer.Longitude
+            , c.Latitude, c.Longitude)));
         
         if (openCalls == null || !openCalls.Any())
         {

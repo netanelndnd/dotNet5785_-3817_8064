@@ -1,5 +1,6 @@
 ﻿using PL.call;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace PL.Volunteer
 {
@@ -11,12 +12,43 @@ namespace PL.Volunteer
         {
             CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(id);
             InitializeComponent();
-
+            UpdateMapImage(id);
             // Register event handlers for loading and closing the window
             this.Loaded += Window_Loaded;
             this.Closed += Window_Closed;
         }
+        private void UpdateMapImage(int _volunteerId)
+        {
+            var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(_volunteerId);
+            string apiKey = "AIzaSyBnuV561P8tA08Y7DQDH0GAu5AhQ86m5xs";
+            if (volunteerDetails.CurrentCall == null)
+            {
+                VolunteerImageMap.Source = null;
+                return;
+            }
+            // Create a list to store the coordinates of the calls
+            var call = Helpers.Tools.GetCoordinates(volunteerDetails.CurrentCall!.FullAddress);
 
+            // Create the marker parameters for the map URL
+            // Create the marker parameters for the call (blue marker)
+            string markerParams = $"markers=color:blue|label:Call|{call.Latitude},{call.Longitude}";
+
+            // Create the special marker parameter for the volunteer's location (red marker)
+            string specialMarkerParams = $"markers=color:red|label:★|{volunteerDetails.Latitude},{volunteerDetails.Longitude}";
+
+            // Create the path parameter for the line between the call and the volunteer (green path)
+            string pathParams = $"path=color:green|weight:2|{call.Latitude},{call.Longitude}|{volunteerDetails.Latitude},{volunteerDetails.Longitude}";
+
+            // Construct the map URL with all the parameters
+            string mapUrl = $"https://maps.googleapis.com/maps/api/staticmap?center={volunteerDetails.Latitude},{volunteerDetails.Longitude}&zoom=9&size=600x400&maptype=roadmap&{markerParams}&{specialMarkerParams}&{pathParams}&key={apiKey}";
+
+            // Check if the URL is valid and set the map image source
+            if (Uri.TryCreate(mapUrl, UriKind.Absolute, out Uri uriResult) &&
+               (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+            {
+                VolunteerImageMap.Source = new BitmapImage(uriResult);
+            }
+        }
         // CLR wrapper for the Dependency Property
         public BO.Volunteer? CurrentVolunteer
         {
@@ -49,6 +81,7 @@ namespace PL.Volunteer
                 try
                 {
                     s_bl.Volunteer.UpdateVolunteer(CurrentVolunteer!.Id, CurrentVolunteer);
+                    UpdateMapImage(CurrentVolunteer!.Id);
                     MessageBox.Show("Volunteer updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (BO.BlDoesNotExistException ex)
@@ -131,6 +164,7 @@ namespace PL.Volunteer
                 {
                     s_bl.Call.CompleteCallHandling(CurrentVolunteer.Id, CurrentVolunteer.CurrentCall.Id);
                     MessageBox.Show("Call completed successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    UpdateMapImage(CurrentVolunteer!.Id);
                 }
                 catch (Exception ex)
                 {
@@ -148,7 +182,8 @@ namespace PL.Volunteer
                 try
                 {
                     s_bl.Call.CancelCallHandling(CurrentVolunteer.Id, CurrentVolunteer.CurrentCall.Id);
-                    
+                    UpdateMapImage(CurrentVolunteer!.Id);
+
                     MessageBox.Show("Call canceled successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 }
@@ -168,7 +203,7 @@ namespace PL.Volunteer
             {
                 SelectCallWindow selectCallWindow = new SelectCallWindow(CurrentVolunteer!.Id);
                 selectCallWindow.ShowDialog();
-                
+                UpdateMapImage(CurrentVolunteer!.Id);
             }
         }
 
