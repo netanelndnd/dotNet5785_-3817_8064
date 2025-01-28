@@ -81,8 +81,15 @@ public static class AssignmentManager
         {
             return null;
         }
+
+        // check if the call is expired or treated
+        var callStatus = CallManager.GetCallStatus(callId);
+        if (callStatus != BO.CallStatus.Expired && callStatus != BO.CallStatus.Treated)
+        {
+            return null;
+        }
         // Return the time difference between the completion time and entry time
-        return (call.OpenTime - assignment.CompletionTime)*-1;
+        return (call.OpenTime - assignment.CompletionTime) * -1;
     }
 
     /// <summary>

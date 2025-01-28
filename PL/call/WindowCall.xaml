@@ -58,6 +58,7 @@
         <pl:ConvertUpdateToVisibleConverter x:Key="UpdateToVisibleConverter"/>
         <pl:DeleteButtonEnabledConverter x:Key="DeleteButtonEnabledConverter"/>
         <pl:StatusToEditableConverter x:Key="StatusToEditableConverter"/>
+        <pl:ActiveAssignmentExistsConverter x:Key="ActiveAssignmentExistsConverter"/>
     </Window.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -156,6 +157,8 @@
             <Button Content="{Binding ButtonText}" Click="btnAddUpdate_Click"/>
             <Button Content="Delete" Click="btnDelete_Click" Background="Red" BorderBrush="Red" 
                     IsEnabled="{Binding CurrentCall, Converter={StaticResource DeleteButtonEnabledConverter}}"/>
+            <Button Content="Cancel Assignment" Click="btnCancelAssignment_Click" Background="Orange" BorderBrush="Orange"
+                    IsEnabled="{Binding CurrentCall, Converter={StaticResource ActiveAssignmentExistsConverter}}"/>
         </StackPanel>
     </Grid>
 </Window>

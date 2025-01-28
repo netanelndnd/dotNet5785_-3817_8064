@@ -106,7 +106,7 @@ namespace PL
                             }
                             else
                             {
-                                var mainWindow = new MainWindow();
+                                var mainWindow = new MainWindow(userId);
                                 mainWindow.Show();
                             }
                         }

@@ -64,7 +64,12 @@
 
         <!-- Image Section -->
         <Grid Grid.Row="1" Grid.Column="1" Margin="10">
-            <Image x:Name="MapImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="{Binding SelectedCall.Description}" Margin="5" FontSize="14" FontWeight="Bold" Foreground="#2E8B57"/>
+            <Image x:Name="MapImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Grid.Row="1"/>
         </Grid>
 
         <!-- Footer Section -->

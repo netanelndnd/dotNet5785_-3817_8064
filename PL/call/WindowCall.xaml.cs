@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using DalApi;
 
 namespace PL.call
 {
@@ -21,12 +22,13 @@ namespace PL.call
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
-        public WindowCall(int id = 0)
+        public WindowCall(int id = 0, int userId = 0)
         {
             // Assign the CurrentCall property based on the id parameter
             CurrentCall = (id != 0) ? s_bl.Call.GetCallDetails(id) : new BO.Call();
             ButtonText = (id != 0) ? "Update" : "Add";
-            
+            CurrentManager = userId;
+
             InitializeComponent();
             
             // Register event handlers for loading and closing the window
@@ -34,6 +36,8 @@ namespace PL.call
             this.Closed += Window_Closed;
             
         }
+
+        int CurrentManager = 0;
 
         // CLR wrapper for the Dependency Property
         public BO.Call? CurrentCall
@@ -112,6 +116,42 @@ namespace PL.call
                 }
             }
         }
+
+        private void btnCancelAssignment_Click(object sender, RoutedEventArgs e)
+        {
+            if (CurrentCall?.Status == BO.CallStatus.InProgress || CurrentCall?.Status == BO.CallStatus.InProgressInRisk)
+            {
+                var result = MessageBox.Show("Are you sure you want to cancel the current assignment?", "Confirm Cancel", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        var assignmentId = Helpers.AssignmentManager.GetAssignmentIdByCallId(CurrentCall.Id);
+                        if (assignmentId.HasValue)
+                        {
+                            s_bl.Call.CancelCallHandling(CurrentManager, assignmentId.Value);
+                            MessageBox.Show("Assignment cancelled successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                            CallObserver(); // Refresh the call details
+                        }
+                        else
+                        {
+                            MessageBox.Show("No active assignment found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("An error occurred while cancelling the assignment: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Assignment can only be cancelled if it is currently in progress.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+
+
 
         // Observer method to refresh the call details
         private void CallObserver()

@@ -19,17 +19,19 @@ namespace PL
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(int userId = 0)
         {
+            CurrentManager = userId;
             InitializeComponent();
         }
-
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         // Observer method to update the current time
         private void clockObserver()
         {
             CurrentTime = s_bl.Admin.GetSystemClock();
         }
+
+        int CurrentManager = 0;
 
         // Observer method to update the risk time span
         private void configObserver()
@@ -113,7 +115,7 @@ namespace PL
             }
             else
             {
-                new CallInListWindow().Show();
+                new CallInListWindow(CurrentManager).Show();
             }
         }
 
