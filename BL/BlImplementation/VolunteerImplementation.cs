@@ -260,18 +260,15 @@ namespace BlImplementation
                 bool isIdValid = VolunteerManager.IsValidID(volunteer.Id);
                 bool isPhoneNumberValid = VolunteerManager.IsValidPhoneNumber(volunteer.PhoneNumber);
 
-                var coordinates = Tools.GetCoordinates(volunteer.CurrentAddress);
 
-                bool isLocationValid = coordinates.IsInIsrael;
 
                 // Collect invalid details
                 List<string> invalidDetails = new();
                 if (!isEmailValid) invalidDetails.Add("Email");
                 if (!isIdValid) invalidDetails.Add("ID");
                 if (!isPhoneNumberValid) invalidDetails.Add("Phone Number");
-                if (!isLocationValid) invalidDetails.Add("Location");
 
-                if (isEmailValid && isPhoneNumberValid && isLocationValid && isIdValid)
+                if (isEmailValid && isPhoneNumberValid &&  isIdValid)
                 {
                     BO.Volunteer volunteerB = new()
                     {
@@ -281,8 +278,6 @@ namespace BlImplementation
                         PhoneNumber = volunteer.PhoneNumber,
                         CurrentAddress = volunteer.CurrentAddress,
                         FullName = volunteer.FullName,
-                        Latitude = coordinates.Latitude,
-                        Longitude = coordinates.Longitude,
                         MaxDistance = volunteer.MaxDistance,
                         IsActive = volunteer.IsActive,
                         Role = (BO.VolunteerRole)volunteer.Role,

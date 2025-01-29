@@ -47,7 +47,7 @@ namespace PL.Volunteer
             }
 
             // קבלת קואורדינטות של הקריאה
-            var call = Helpers.Tools.GetCoordinates(SelectedCall.FullAddress);
+            var call = s_bl.Call.GetCallDetails(SelectedCall.Id);
 
             // חישוב גבולות, מרכז המפה, והבדלים גיאוגרפיים
             double minLatitude = Math.Min(volunteerDetails.Latitude.Value, call.Latitude);

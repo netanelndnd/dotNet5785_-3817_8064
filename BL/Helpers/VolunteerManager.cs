@@ -263,6 +263,7 @@ public static class VolunteerManager
         }
         Observers.NotifyListUpdated();
         Observers.NotifyItemUpdated(volunteerD.Id);
+        _ = UpdateCoordinatesForVolunteerAddressAsync(volunteerD);
     }
 
     /// <summary>
@@ -294,6 +295,7 @@ public static class VolunteerManager
         }
         Observers.NotifyListUpdated();
         Observers.NotifyItemUpdated(volunteerD.Id);
+        _ = UpdateCoordinatesForVolunteerAddressAsync(volunteerD);
     }
 
     /// <summary>
