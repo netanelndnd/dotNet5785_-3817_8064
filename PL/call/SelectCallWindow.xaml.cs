@@ -185,26 +185,15 @@ namespace PL.Volunteer
                 // קבלת פרטי המתנדב הנוכחיים
                 var volunteer = s_bl.Volunteer.GetVolunteerDetails(_volunteerId);
 
-                // עדכון הכתובת והקואורדינטות של המתנדב
-                var coordinates = Helpers.Tools.GetCoordinates(newAddress);
-                if (coordinates.IsInIsrael)
-                {
-                    volunteer.CurrentAddress = newAddress;
-                    volunteer.Latitude = coordinates.Latitude;
-                    volunteer.Longitude = coordinates.Longitude;
+                // עדכון הכתובת של המתנדב
+                volunteer.CurrentAddress = newAddress;
 
-                    // שמירת העדכונים
-                    s_bl.Volunteer.UpdateVolunteer(_volunteerId, volunteer);
-                    UpdateMapImage(_volunteerId);
-                    // עדכון רשימת הקריאות
-                    queryOpenCalls();
-                    MessageBox.Show("Address updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                }
-                else
-                {
-                    MessageBox.Show("Invalid address. Please enter a valid address in Israel.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                // שמירת העדכונים
+                s_bl.Volunteer.UpdateVolunteer(_volunteerId, volunteer);
+                UpdateMapImage(_volunteerId);
+                // עדכון רשימת הקריאות
+                queryOpenCalls();
+                MessageBox.Show("Address updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

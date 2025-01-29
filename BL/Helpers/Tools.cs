@@ -61,7 +61,7 @@ public static class Tools
 
 
     //פונרקציה שנועדה להיות בשביל הטסטים
-    public static (double Latitude, double Longitude, bool IsInIsrael) GetCoordinate(string address)
+    public static (double Latitude, double Longitude, bool IsInIsrael) GetCoordinates(string address)
     {
         try
         {

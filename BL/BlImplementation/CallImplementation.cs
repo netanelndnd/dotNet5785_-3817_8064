@@ -33,28 +33,16 @@ namespace BlImplementation
         public void AddCall(Call call)
         {
             AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
-            // Validate the maximum completion time is greater than the opening time
+                                                      // Validate the maximum completion time is greater than the opening time
             if (call.MaxCompletionTime.HasValue && call.MaxCompletionTime <= call.OpenedAt)
             {
                 throw new BlInvalidDateOrderException("Maximum completion time must be greater than the opening time.");
             }
 
-            // Validate the address and update latitude and longitude
+            // Validate the address
             if (string.IsNullOrWhiteSpace(call.FullAddress))
             {
                 throw new BlInvalidAddressException("Address cannot be null or empty.");
-            }
-
-            // Get the coordinates of the address
-            var coordinates = Tools.GetCoordinates(call.FullAddress);
-
-            // Check if the location is within Israel
-            bool isLocationValid = coordinates.IsInIsrael;
-
-            // Update latitude and longitude based on the address
-            if (!isLocationValid)
-            {
-                throw new BlInvalidAddressException("Invalid address. Address is outside of Israel or does not exist.");
             }
 
             // Convert BO.Call to DO.Call
@@ -72,7 +60,11 @@ namespace BlImplementation
                 // Handle any exceptions that may occur during the creation process
                 throw new BlOperationException("Failed to add the call.", ex);
             }
+
+            // Compute the coordinates asynchronously without waiting for the results
+            _ = CallManager.UpdateCoordinatesForCallAsync(doCall);
         }
+
 
         /// <summary>
         /// Assigns a call to a volunteer for handling.
@@ -477,22 +469,13 @@ namespace BlImplementation
                 throw new BlInvalidAddressException("Address cannot be null or empty.");
             }
 
-            var coordinates = Tools.GetCoordinates(call.FullAddress);
-
-            // Check if the location is within Israel
-            bool isLocationValid = coordinates.IsInIsrael;
-
-            if (!isLocationValid)
-            {
-                throw new BlInvalidAddressException("Invalid address. Unable to retrieve coordinates or address is outside of Israel or does not exist.");
-            }
-
             // Convert BO.Call to DO.Call
             var doCall = CallManager.ConvertBOCallToDOCall(call);
+
             try
             {
                 // Attempt to update the call in the data layer
-                lock (AdminManager.BlMutex)//stage 7
+                lock (AdminManager.BlMutex) //stage 7
                     _dal.Call.Update(doCall);
                 CallManager.Observers.NotifyItemUpdated(doCall.Id);
                 CallManager.Observers.NotifyListUpdated();
@@ -502,6 +485,9 @@ namespace BlImplementation
                 // Rethrow the exception with a more appropriate message for the presentation layer
                 throw new BlDoesNotExistException($"Call with ID {call.Id} not found.", ex);
             }
+
+            // Compute the coordinates asynchronously without waiting for the results
+            _ = CallManager.UpdateCoordinatesForCallAsync(doCall);
         }
     }
 }

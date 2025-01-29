@@ -271,16 +271,13 @@ public static class CallManager
             throw new ArgumentNullException(nameof(boCall), "The BO.Call object cannot be null.");
         }
 
-        // Get the coordinates of the address
-        var coordinates = Tools.GetCoordinates(boCall.FullAddress);
-
         return new DO.Call
         {
             Id = boCall.Id,
             CallType = (DO.CallType)boCall.CallType,
             Address = boCall.FullAddress,
-            Latitude = coordinates.Latitude,
-            Longitude = coordinates.Longitude,
+            Latitude = boCall.Latitude,
+            Longitude = boCall.Longitude,
             OpenTime = boCall.OpenedAt,
             Description = boCall.Description,
             MaxCompletionTime = boCall.MaxCompletionTime
@@ -352,4 +349,23 @@ public static class CallManager
             });
         }
     }
+
+    public static async Task UpdateCoordinatesForCallAsync(DO.Call doCall)
+    {
+        if (!string.IsNullOrWhiteSpace(doCall.Address))
+        {
+            var coordinates = await Tools.GetCoordinatesAsync(doCall.Address);
+            if (coordinates.IsInIsrael)
+            {
+                doCall = doCall with { Latitude = coordinates.Latitude, Longitude = coordinates.Longitude };
+                lock (AdminManager.BlMutex)
+                    s_dal.Call.Update(doCall);
+                CallManager.Observers.NotifyListUpdated();
+                CallManager.Observers.NotifyItemUpdated(doCall.Id);
+            }
+        }
+    }
+
+
+
 }
