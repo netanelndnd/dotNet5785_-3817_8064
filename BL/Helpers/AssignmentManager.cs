@@ -16,7 +16,9 @@ public static class AssignmentManager
     /// <returns>The identifier of the assignment or null if not found.</returns>
     public static int? GetAssignmentIdByCallId(int callId)
     {
-        var assignments = s_dal.Assignment.ReadAll();
+        List<DO.Assignment> assignments;
+        lock (AdminManager.BlMutex)//stage 7
+            assignments = s_dal.Assignment.ReadAll().ToList();
         // Return the last assignment created for the call
         var assignment = assignments
             .Where(a => a.CallId == callId)
@@ -32,7 +34,9 @@ public static class AssignmentManager
     /// <returns>The number of assignments for the given call id.</returns>
     public static int CountAssignmentsByCallId(int callId)
     {
-        var assignments = s_dal.Assignment.ReadAll();
+        List<DO.Assignment> assignments;
+        lock (AdminManager.BlMutex)//stage 7
+            assignments = s_dal.Assignment.ReadAll().ToList();
         return assignments.Count(a => a.CallId == callId);
     }
 
@@ -43,7 +47,9 @@ public static class AssignmentManager
     /// <returns>The name of the volunteer or null if not found.</returns>
     public static string? GetVolunteerNameByCallId(int callId)
     {
-        var assignments = s_dal.Assignment.ReadAll();
+        List<DO.Assignment> assignments;
+        lock (AdminManager.BlMutex)//stage 7
+            assignments = s_dal.Assignment.ReadAll().ToList();
         // Return the last assignment created for the call
         var assignment = assignments
             .Where(a => a.CallId == callId)
@@ -53,7 +59,9 @@ public static class AssignmentManager
         {
             return null;
         }
-        var volunteer = s_dal.Volunteer.Read(assignment.VolunteerId);
+        DO.Volunteer? volunteer;
+        lock (AdminManager.BlMutex)//stage 7
+            volunteer = s_dal.Volunteer.Read(assignment.VolunteerId);
         return volunteer?.FullName;
     }
 
@@ -64,7 +72,9 @@ public static class AssignmentManager
     /// <returns>The time difference as TimeSpan if the call was treated, otherwise null.</returns>
     public static TimeSpan? GetTimeDifferenceForLastAssignment(int callId)
     {
-        var assignments = s_dal.Assignment.ReadAll();
+        List<DO.Assignment> assignments;
+        lock (AdminManager.BlMutex)//stage 7
+            assignments = s_dal.Assignment.ReadAll().ToList();
         // Get the last assignment created for the call
         var assignment = assignments
             .Where(a => a.CallId == callId)
@@ -76,7 +86,9 @@ public static class AssignmentManager
             return null;
         }
         // Get the call associated with the assignment
-        var call = s_dal.Call.Read(callId);
+        DO.Call? call;
+        lock (AdminManager.BlMutex)//stage 7
+            call = s_dal.Call.Read(callId);
         if (call == null)
         {
             return null;
@@ -99,36 +111,44 @@ public static class AssignmentManager
     /// <returns>A list of call assignments or null if none found.</returns>
     public static IEnumerable<BO.CallAssignInList>? GetCallAssignmentsByCallId(int callId)
     {
-        var assignments = s_dal.Assignment.ReadAll()
-            .Where(a => a.CallId == callId);
-
-        if (!assignments.Any())
+        List<DO.Assignment> assignments;
+        lock (AdminManager.BlMutex)//stage 7
         {
-            return null;
+            assignments = s_dal.Assignment.ReadAll()
+            .Where(a => a.CallId == callId).ToList();
+
+            if (!assignments.Any())
+            {
+                return null;
+            }
+
+            var callAssignInList = assignments.Select(a => new BO.CallAssignInList
+            {
+                VolunteerId = a.VolunteerId,
+                VolunteerName = s_dal.Volunteer.Read(a.VolunteerId)?.FullName,
+                StartTime = a.EntryTime,
+                EndTime = a.CompletionTime,
+                CompletionType = (BO.CompletionType?)a.CompletionStatus
+            });
+
+            return callAssignInList;
         }
-
-        var callAssignInList = assignments.Select(a => new BO.CallAssignInList
-        {
-            VolunteerId = a.VolunteerId,
-            VolunteerName = s_dal.Volunteer.Read(a.VolunteerId)?.FullName,
-            StartTime = a.EntryTime,
-            EndTime = a.CompletionTime,
-            CompletionType = (BO.CompletionType?)a.CompletionStatus
-        });
-        
-        return callAssignInList;
     }
 
     // פונקציה לבדיקת הקצאות שפג תוקפן
     public static void CheckAndExpireAssignments()
     {
-        var assignments = s_dal.Assignment.ReadAll();
+        List<DO.Assignment> assignments;
+        lock (AdminManager.BlMutex)//stage 7
+            assignments = s_dal.Assignment.ReadAll().ToList();
         var now = AdminManager.Now;
         
         foreach (var assignment in assignments)
         {
             // קבלת הקריאה המשוייכת להקצאה
-            var call = s_dal.Call.Read(assignment.CallId);
+            DO.Call? call;
+            lock (AdminManager.BlMutex)//stage 7
+                call = s_dal.Call.Read(assignment.CallId);
             if (call == null)
             {
                 continue;
@@ -143,7 +163,8 @@ public static class AssignmentManager
                     CompletionStatus = DO.CompletionType.Expired,
                     CompletionTime = assignment.CompletionTime ?? now // עדכון זמן הסיום אם הוא לא מוגדר
                 };
-                s_dal.Assignment.Update(updatedAssignment);
+                lock (AdminManager.BlMutex)//stage 7
+                    s_dal.Assignment.Update(updatedAssignment);
                 
             }
             

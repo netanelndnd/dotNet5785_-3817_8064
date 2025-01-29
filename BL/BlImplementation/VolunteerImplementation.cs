@@ -87,8 +87,8 @@ namespace BlImplementation
                         VolunteerRole = (DO.Role)volunteerB.Role,
                         DistanceType = (DO.DistanceType)volunteerB.DistanceType,
                     };
-
-                    _dal.Volunteer.Create(volunteerD);
+                    lock (AdminManager.BlMutex)//stage 7
+                        _dal.Volunteer.Create(volunteerD);
                     VolunteerManager.Observers.NotifyListUpdated();
                 }
                 else
@@ -120,13 +120,16 @@ namespace BlImplementation
 
             try
             {
-                var volunteer = _dal.Volunteer.Read(id) ??
+                DO.Volunteer? volunteer;
+                lock (AdminManager.BlMutex)//stage 7
+                    volunteer = _dal.Volunteer.Read(id) ??
                     throw new BO.BlDoesNotExistException($"Volunteer with ID={id} does not exist.");
                 var CallVolunteer = CallManager.GetClosedCallsByVolunteer(id);
                 if (CallVolunteer != null) { CallVolunteer = CallVolunteer.Where(c => c.CompletionStatus == BO.CompletionType.Treated); }
                 if (volunteer.IsActive == false && CallVolunteer == null)
                 {
-                    _dal.Volunteer.Delete(id);
+                    lock (AdminManager.BlMutex)//stage 7
+                        _dal.Volunteer.Delete(id);
                     VolunteerManager.Observers.NotifyListUpdated();
                 }
                 else
@@ -156,7 +159,9 @@ namespace BlImplementation
         {
             try
             {
-                var volunteer = _dal.Volunteer.Read(id) ??
+                DO.Volunteer? volunteer;
+                lock (AdminManager.BlMutex)//stage 7
+                    volunteer = _dal.Volunteer.Read(id) ??
                     throw new BO.BlDoesNotExistException($"Volunteer with ID={id} does not exist.");
 
                 return VolunteerManager.ConvertVolunteerIdToBO(id);
@@ -177,11 +182,12 @@ namespace BlImplementation
         {
             try
             {
-                var volunteers = _dal.Volunteer.ReadAll();
-
+                List<DO.Volunteer> volunteers;
+                lock (AdminManager.BlMutex)//stage 7
+                    volunteers = _dal.Volunteer.ReadAll().ToList();
                 if (isActive.HasValue)
                 {
-                    volunteers = volunteers.Where(v => v.IsActive == isActive.Value);
+                    volunteers = volunteers.Where(v => v.IsActive == isActive.Value).ToList();
                 }
 
                 IEnumerable<BO.VolunteerInList> volunteerList = volunteers.Select(v => VolunteerManager.ConvertVolunteerIdToVolunteerInList(v.Id));
@@ -223,7 +229,9 @@ namespace BlImplementation
         {
             try
             {
-                var volunteer = _dal.Volunteer.Read(v => v.Email == username) ??
+                DO.Volunteer? volunteer;
+                lock (AdminManager.BlMutex)//stage 7
+                    volunteer = _dal.Volunteer.Read(v => v.Email == username) ??
                     throw new BO.BlLoginException("Invalid username.");
 
                 if (volunteer.Password != password)

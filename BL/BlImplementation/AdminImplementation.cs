@@ -9,6 +9,15 @@ namespace BlImplementation
     {
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
+        public void StartSimulator(int interval)  //stage 7
+        {
+            AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+            AdminManager.Start(interval); //stage 7
+        }
+
+        public void StopSimulator()
+    => AdminManager.Stop(); //stage 7
+
         /// <summary>
         /// Gets the current system clock time.
         /// מקבל את הזמן הנוכחי של שעון המערכת.
@@ -22,7 +31,7 @@ namespace BlImplementation
         /// Advances the system clock by a specified time unit.
         /// מקדם את שעון המערכת ביחידת זמן מסוימת.
         /// </summary>
-        
+
         public void AdvanceSystemClock(TimeUnit timeUnit)
         {
             AdminManager.ThrowOnSimulatorIsRunning();  //stage 7

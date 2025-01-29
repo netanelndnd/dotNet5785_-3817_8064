@@ -437,7 +437,7 @@
     <CallId>1002</CallId>
     <VolunteerId>212041966</VolunteerId>
     <EntryTime>2025-01-29T00:05:55</EntryTime>
-    <CompletionTime xsi:nil="true" />
-    <CompletionStatus xsi:nil="true" />
+    <CompletionTime>2025-01-29T00:05:55</CompletionTime>
+    <CompletionStatus>Treated</CompletionStatus>
   </Assignment>
 </ArrayOfAssignment>
