@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PL.Volunteer
 {
@@ -64,13 +65,22 @@ namespace PL.Volunteer
         // Method to query the list of volunteers based on the current call type.
         // If the call type is 'None', it retrieves all volunteers.
         // Otherwise, it filters the volunteers by the selected call type.
+    
         private void queryVolunteerList()
             => VolunteerList = (callType == BO.CallType.None) ?
                s_bl?.Volunteer.GetCallTypsOfVolunteers(BO.CallType.None)! : s_bl?.Volunteer.GetCallTypsOfVolunteers(callType)!;
 
         // Observer method to update the volunteer list when changes occur.
-        private void volunteerListObserver()
-            => queryVolunteerList();
+        private volatile DispatcherOperation? _observerOperation = null; //stage 7
+
+        private void volunteerListObserver()//stage 7
+        {
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    queryVolunteerList();
+                });
+        }
 
         // Event handler for when the window is loaded.
         // Adds the volunteerListObserver as an observer to the Volunteer service.
