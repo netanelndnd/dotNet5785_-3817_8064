@@ -204,10 +204,10 @@ namespace PL
         {
             CurrentTime = s_bl.Admin.GetSystemClock();
             TimeRisk = s_bl.Admin.GetRiskTimeSpan();
-            UpdateCallCounts();
+            UpdateCallCountsObserver();
             s_bl.Admin.AddClockObserver(clockObserver);
             s_bl.Admin.AddConfigObserver(configObserver);
-            s_bl.Call.AddObserver(UpdateCallCounts);
+            s_bl.Call.AddObserver(UpdateCallCountsObserver);
         }
 
         // Method called when the window is closed
@@ -215,7 +215,7 @@ namespace PL
         {
             s_bl.Admin.RemoveClockObserver(clockObserver);
             s_bl.Admin.RemoveConfigObserver(configObserver);
-            s_bl.Call.RemoveObserver(UpdateCallCounts);
+            s_bl.Call.RemoveObserver(UpdateCallCountsObserver);
         }
 
         private void btnOpenCalls_Click(object sender, RoutedEventArgs e)
@@ -308,7 +308,7 @@ namespace PL
         public static readonly DependencyProperty ExpiredCallsCountProperty =
             DependencyProperty.Register("ExpiredCallsCount", typeof(int), typeof(MainWindow));
 
-            private void UpdateCallCounts()
+            private void UpdateCallCountsObserver()
             {
                 // Get the call quantities by status
                 int[] quantities = s_bl.Call.GetCallQuantitiesByStatus();
