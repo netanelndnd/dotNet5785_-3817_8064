@@ -2,12 +2,11 @@
 
 namespace Helpers;
 
-public static class AssignmentManager 
+public static class AssignmentManager
 {
     private static IDal s_dal = Factory.Get; //stage 4
 
     internal static ObserverManager Observers = new(); //stage 5
-
 
     /// <summary>
     /// Get the assignment id by call id
@@ -16,15 +15,16 @@ public static class AssignmentManager
     /// <returns>The identifier of the assignment or null if not found.</returns>
     public static int? GetAssignmentIdByCallId(int callId)
     {
-        List<DO.Assignment> assignments;
-        lock (AdminManager.BlMutex)//stage 7
-            assignments = s_dal.Assignment.ReadAll().ToList();
-        // Return the last assignment created for the call
-        var assignment = assignments
-            .Where(a => a.CallId == callId)
-            .OrderByDescending(a => a.EntryTime)
-            .FirstOrDefault();
-        return assignment?.Id;
+        lock (AdminManager.BlMutex) //stage 7
+        {
+            var assignments = s_dal.Assignment.ReadAll();
+            // Return the last assignment created for the call
+            var assignment = assignments
+                .Where(a => a.CallId == callId)
+                .OrderByDescending(a => a.EntryTime)
+                .FirstOrDefault();
+            return assignment?.Id;
+        }
     }
 
     /// <summary>
@@ -34,10 +34,11 @@ public static class AssignmentManager
     /// <returns>The number of assignments for the given call id.</returns>
     public static int CountAssignmentsByCallId(int callId)
     {
-        List<DO.Assignment> assignments;
-        lock (AdminManager.BlMutex)//stage 7
-            assignments = s_dal.Assignment.ReadAll().ToList();
-        return assignments.Count(a => a.CallId == callId);
+        lock (AdminManager.BlMutex) //stage 7
+        {
+            var assignments = s_dal.Assignment.ReadAll();
+            return assignments.Count(a => a.CallId == callId);
+        }
     }
 
     /// <summary>
@@ -47,22 +48,21 @@ public static class AssignmentManager
     /// <returns>The name of the volunteer or null if not found.</returns>
     public static string? GetVolunteerNameByCallId(int callId)
     {
-        List<DO.Assignment> assignments;
-        lock (AdminManager.BlMutex)//stage 7
-            assignments = s_dal.Assignment.ReadAll().ToList();
-        // Return the last assignment created for the call
-        var assignment = assignments
-            .Where(a => a.CallId == callId)
-            .OrderByDescending(a => a.EntryTime)
-            .FirstOrDefault();
-        if (assignment == null)
+        lock (AdminManager.BlMutex) //stage 7
         {
-            return null;
+            var assignments = s_dal.Assignment.ReadAll();
+            // Return the last assignment created for the call
+            var assignment = assignments
+                .Where(a => a.CallId == callId)
+                .OrderByDescending(a => a.EntryTime)
+                .FirstOrDefault();
+            if (assignment == null)
+            {
+                return null;
+            }
+            var volunteer = s_dal.Volunteer.Read(assignment.VolunteerId);
+            return volunteer?.FullName;
         }
-        DO.Volunteer? volunteer;
-        lock (AdminManager.BlMutex)//stage 7
-            volunteer = s_dal.Volunteer.Read(assignment.VolunteerId);
-        return volunteer?.FullName;
     }
 
     /// <summary>
@@ -72,36 +72,35 @@ public static class AssignmentManager
     /// <returns>The time difference as TimeSpan if the call was treated, otherwise null.</returns>
     public static TimeSpan? GetTimeDifferenceForLastAssignment(int callId)
     {
-        List<DO.Assignment> assignments;
-        lock (AdminManager.BlMutex)//stage 7
-            assignments = s_dal.Assignment.ReadAll().ToList();
-        // Get the last assignment created for the call
-        var assignment = assignments
-            .Where(a => a.CallId == callId)
-            .OrderByDescending(a => a.EntryTime)
-            .FirstOrDefault();
-        // Return null if the assignment is null or the call was not treated
-        if (assignment == null || assignment.CompletionTime == null)
+        lock (AdminManager.BlMutex) //stage 7
         {
-            return null;
-        }
-        // Get the call associated with the assignment
-        DO.Call? call;
-        lock (AdminManager.BlMutex)//stage 7
-            call = s_dal.Call.Read(callId);
-        if (call == null)
-        {
-            return null;
-        }
+            var assignments = s_dal.Assignment.ReadAll();
+            // Get the last assignment created for the call
+            var assignment = assignments
+                .Where(a => a.CallId == callId)
+                .OrderByDescending(a => a.EntryTime)
+                .FirstOrDefault();
+            // Return null if the assignment is null or the call was not treated
+            if (assignment == null || assignment.CompletionTime == null)
+            {
+                return null;
+            }
+            // Get the call associated with the assignment
+            var call = s_dal.Call.Read(callId);
+            if (call == null)
+            {
+                return null;
+            }
 
-        // check if the call is expired or treated
-        var callStatus = CallManager.GetCallStatus(callId);
-        if (callStatus != BO.CallStatus.Expired && callStatus != BO.CallStatus.Treated)
-        {
-            return null;
+            // check if the call is expired or treated
+            var callStatus = CallManager.GetCallStatus(callId);
+            if (callStatus != BO.CallStatus.Expired && callStatus != BO.CallStatus.Treated)
+            {
+                return null;
+            }
+            // Return the time difference between the completion time and entry time
+            return (call.OpenTime - assignment.CompletionTime) * -1;
         }
-        // Return the time difference between the completion time and entry time
-        return (call.OpenTime - assignment.CompletionTime) * -1;
     }
 
     /// <summary>
@@ -111,11 +110,10 @@ public static class AssignmentManager
     /// <returns>A list of call assignments or null if none found.</returns>
     public static IEnumerable<BO.CallAssignInList>? GetCallAssignmentsByCallId(int callId)
     {
-        List<DO.Assignment> assignments;
-        lock (AdminManager.BlMutex)//stage 7
+        lock (AdminManager.BlMutex) //stage 7
         {
-            assignments = s_dal.Assignment.ReadAll()
-            .Where(a => a.CallId == callId).ToList();
+            var assignments = s_dal.Assignment.ReadAll()
+                .Where(a => a.CallId == callId);
 
             if (!assignments.Any())
             {
@@ -138,39 +136,33 @@ public static class AssignmentManager
     // פונקציה לבדיקת הקצאות שפג תוקפן
     public static void CheckAndExpireAssignments()
     {
-        List<DO.Assignment> assignments;
-        lock (AdminManager.BlMutex)//stage 7
-            assignments = s_dal.Assignment.ReadAll().ToList();
-        var now = AdminManager.Now;
-        
-        foreach (var assignment in assignments)
+        lock (AdminManager.BlMutex) //stage 7
         {
-            // קבלת הקריאה המשוייכת להקצאה
-            DO.Call? call;
-            lock (AdminManager.BlMutex)//stage 7
-                call = s_dal.Call.Read(assignment.CallId);
-            if (call == null)
-            {
-                continue;
-            }
+            var assignments = s_dal.Assignment.ReadAll().ToList();
+            var now = AdminManager.Now;
 
-            // אם סטטוס הסיום של ההקצאה הוא NULL והזמן הנוכחי גדול מזמן הסיום המקסימלי של הקריאה
-            if (assignment.CompletionStatus == null && now > call.MaxCompletionTime)
+            foreach (var assignment in assignments)
             {
-                // יצירת אובייקט חדש עם הערכים המעודכנים
-                var updatedAssignment = assignment with
+                // קבלת הקריאה המשוייכת להקצאה
+                var call = s_dal.Call.Read(assignment.CallId);
+                if (call == null)
                 {
-                    CompletionStatus = DO.CompletionType.Expired,
-                    CompletionTime = assignment.CompletionTime ?? now // עדכון זמן הסיום אם הוא לא מוגדר
-                };
-                lock (AdminManager.BlMutex)//stage 7
+                    continue;
+                }
+
+                // אם סטטוס הסיום של ההקצאה הוא NULL והזמן הנוכחי גדול מזמן הסיום המקסימלי של הקריאה
+                if (assignment.CompletionStatus == null && now > call.MaxCompletionTime)
+                {
+                    // יצירת אובייקט חדש עם הערכים המעודכנים
+                    var updatedAssignment = assignment with
+                    {
+                        CompletionStatus = DO.CompletionType.Expired,
+                        CompletionTime = assignment.CompletionTime ?? now // עדכון זמן הסיום אם הוא לא מוגדר
+                    };
                     s_dal.Assignment.Update(updatedAssignment);
-                
+                }
             }
-            
         }
         CallManager.Observers.NotifyListUpdated();
     }
-
-
 }

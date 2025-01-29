@@ -11,14 +11,15 @@ public static class CallManager
 
     public static int GetCallTypeById(int callId)
     {
-        DO.Call? callDetails;
-        lock (AdminManager.BlMutex)//stage 7
-            callDetails = s_dal.Call.Read(a => a.Id == callId);
-        if (callDetails == null)
+        lock (AdminManager.BlMutex) //stage 7
         {
-            throw new InvalidOperationException($"Call with ID {callId} not found.");
+            var callDetails = s_dal.Call.Read(a => a.Id == callId);
+            if (callDetails == null)
+            {
+                throw new InvalidOperationException($"Call with ID {callId} not found.");
+            }
+            return (int)callDetails.CallType;
         }
-        return (int)callDetails.CallType;
     }
 
     /// <summary>
@@ -29,48 +30,45 @@ public static class CallManager
     /// <returns>A CallInProgress object containing details of the call and its progress.</returns>
     public static BO.CallInProgress ConvertCallIdToCallInProgress(int callId, int volunteerId)
     {
-        DO.Call? callDetails;
-        lock (AdminManager.BlMutex)//stage 7
-            callDetails = s_dal.Call.Read(a => a.Id == callId);
-        if (callDetails == null)
+        BO.CallInProgress callInProgress;
+        lock (AdminManager.BlMutex) //stage 7
         {
-            throw new InvalidOperationException($"Call with ID {callId} not found.");
-        }
-        DO.Assignment? assignment;
-        lock (AdminManager.BlMutex)//stage 7
-            assignment = s_dal.Assignment.Read(a => a.VolunteerId == volunteerId && a.CompletionStatus == null && a.CallId == callId);
-        if (assignment == null)
-        {
-            throw new InvalidOperationException($"Assignment for volunteer ID {volunteerId} and call ID {callId} not found.");
-        }
-        DO.Volunteer? volunteer;
-        lock (AdminManager.BlMutex)//stage 7
-            volunteer = s_dal.Volunteer.Read(volunteerId);
-        if (volunteer == null)
-        {
-            throw new InvalidOperationException($"Volunteer with ID {volunteerId} not found.");
-        }
+            var callDetails = s_dal.Call.Read(a => a.Id == callId);
+            if (callDetails == null)
+            {
+                throw new InvalidOperationException($"Call with ID {callId} not found.");
+            }
 
+            var assignment = s_dal.Assignment.Read(a => a.VolunteerId == volunteerId && a.CompletionStatus == null && a.CallId == callId);
+            if (assignment == null)
+            {
+                throw new InvalidOperationException($"Assignment for volunteer ID {volunteerId} and call ID {callId} not found.");
+            }
 
-        var callInProgress = new BO.CallInProgress
-        {
-            Id = assignment.Id,
-            CallId = callDetails.Id,
-            CallType = (BO.CallType)callDetails.CallType,
-            Description = callDetails.Description,
-            FullAddress = callDetails.Address,
-            OpenedAt = callDetails.OpenTime,
-            StartedAt = assignment.EntryTime,
-            MaxCompletionTime = callDetails.MaxCompletionTime,
-            DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude ?? throw new InvalidOperationException("Volunteer latitude is null."),
-                                                  volunteer.Longitude ?? throw new InvalidOperationException("Volunteer longitude is null."),
-                                                  callDetails.Latitude, callDetails.Longitude),
-            Status = GetCallStatus(callId)
-        };
+            var volunteer = s_dal.Volunteer.Read(volunteerId);
+            if (volunteer == null)
+            {
+                throw new InvalidOperationException($"Volunteer with ID {volunteerId} not found.");
+            }
 
+            callInProgress = new BO.CallInProgress
+            {
+                Id = assignment.Id,
+                CallId = callDetails.Id,
+                CallType = (BO.CallType)callDetails.CallType,
+                Description = callDetails.Description,
+                FullAddress = callDetails.Address,
+                OpenedAt = callDetails.OpenTime,
+                StartedAt = assignment.EntryTime,
+                MaxCompletionTime = callDetails.MaxCompletionTime,
+                DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude ?? throw new InvalidOperationException("Volunteer latitude is null."),
+                                                      volunteer.Longitude ?? throw new InvalidOperationException("Volunteer longitude is null."),
+                                                      callDetails.Latitude, callDetails.Longitude),
+                Status = GetCallStatus(callId)
+            };
+        }
         return callInProgress;
     }
-
 
     // פונקציה להמיר מעלות לרדיאנים
     private static double DegreesToRadians(double degrees)
@@ -85,23 +83,23 @@ public static class CallManager
     /// 
     public static IEnumerable<BO.CallInList> GetAllCalls()
     {
-        List<DO.Call>? callEntities;
-        lock (AdminManager.BlMutex)//stage 7
-            callEntities = s_dal.Call.ReadAll().ToList();
-        return callEntities.Select(call => new BO.CallInList
+        lock (AdminManager.BlMutex) //stage 7
         {
-            AssignmentId = AssignmentManager.GetAssignmentIdByCallId(call.Id),
-            CallId = call.Id,
-            CallType = (BO.CallType)call.CallType,
-            OpeningTime = call.OpenTime,
-            RemainingTime = GetRemainingTimeIfOpenOrInRisk(call.Id),
-            LastVolunteerName = AssignmentManager.GetVolunteerNameByCallId(call.Id),
-            CompletionDuration = AssignmentManager.GetTimeDifferenceForLastAssignment(call.Id),
-            Status = GetCallStatus(call.Id),
-            TotalAssignments = AssignmentManager.CountAssignmentsByCallId(call.Id)
-        });
+            var callEntities = s_dal.Call.ReadAll();
+            return callEntities.Select(call => new BO.CallInList
+            {
+                AssignmentId = AssignmentManager.GetAssignmentIdByCallId(call.Id),
+                CallId = call.Id,
+                CallType = (BO.CallType)call.CallType,
+                OpeningTime = call.OpenTime,
+                RemainingTime = GetRemainingTimeIfOpenOrInRisk(call.Id),
+                LastVolunteerName = AssignmentManager.GetVolunteerNameByCallId(call.Id),
+                CompletionDuration = AssignmentManager.GetTimeDifferenceForLastAssignment(call.Id),
+                Status = GetCallStatus(call.Id),
+                TotalAssignments = AssignmentManager.CountAssignmentsByCallId(call.Id)
+            });
+        }
     }
-
 
     /// <summary>
     /// Checks if the status of a specific call is either Open or OpenInRisk and returns the remaining time.
@@ -111,21 +109,22 @@ public static class CallManager
     /// <exception cref="InvalidOperationException">Thrown when the call with the specified ID is not found.</exception>
     public static TimeSpan? GetRemainingTimeIfOpenOrInRisk(int callId)
     {
-        DO.Call? callDetails;
-        lock (AdminManager.BlMutex)//stage 7
-            callDetails = s_dal.Call.Read(a => a.Id == callId);
-        if (callDetails == null)
+        lock (AdminManager.BlMutex) //stage 7
         {
-            throw new InvalidOperationException($"Call with ID {callId} not found.");
-        }
+            var callDetails = s_dal.Call.Read(a => a.Id == callId);
+            if (callDetails == null)
+            {
+                throw new InvalidOperationException($"Call with ID {callId} not found.");
+            }
 
-        var callStatus = GetCallStatus(callId);
-        if (callStatus == BO.CallStatus.Open || callStatus == BO.CallStatus.OpenInRisk || callStatus == BO.CallStatus.InProgressInRisk || callStatus == BO.CallStatus.InProgress)
-        {
-            return callDetails.MaxCompletionTime.HasValue ? callDetails.MaxCompletionTime.Value - AdminManager.Now : (TimeSpan?)null;
-        }
+            var callStatus = GetCallStatus(callId);
+            if (callStatus == BO.CallStatus.Open || callStatus == BO.CallStatus.OpenInRisk || callStatus == BO.CallStatus.InProgressInRisk || callStatus == BO.CallStatus.InProgress)
+            {
+                return callDetails.MaxCompletionTime.HasValue ? callDetails.MaxCompletionTime.Value - AdminManager.Now : (TimeSpan?)null;
+            }
 
-        return (TimeSpan?)null;
+            return (TimeSpan?)null;
+        }
     }
 
     /// <summary>
@@ -137,71 +136,26 @@ public static class CallManager
     /// <exception cref="InvalidOperationException">Thrown when the call with the specified ID is not found.</exception>
     public static BO.CallStatus GetCallStatus(int callId)
     {
-        // Get the call details
-        DO.Call? callDetails;
-        lock (AdminManager.BlMutex)//stage 7
-            callDetails = s_dal.Call.Read(a => a.Id == callId);
-        // Check if the call exists
-        if (callDetails == null)
+        lock (AdminManager.BlMutex) //stage 7
         {
-            throw new InvalidOperationException($"Call with ID {callId} not found.");
-        }
-        // Get the assignment details
-        List<DO.Assignment> assignments;
-        lock (AdminManager.BlMutex)//stage 7
-            assignments = s_dal.Assignment.ReadAll()
-            .Where(a => a.CallId == callId)
-            .OrderByDescending(a => a.EntryTime).ToList();
-
-        var now = AdminManager.Now;
-        TimeSpan riskRange;
-        lock (AdminManager.BlMutex)//stage 7
-            riskRange = s_dal.Config.RiskRange;
-
-        // Check if there are no assignments
-        var latestAssignment = assignments.FirstOrDefault();
-        if (latestAssignment == null)
-        {
-            // Check if the call has expired
-            if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value)
+            // Get the call details
+            var callDetails = s_dal.Call.Read(a => a.Id == callId);
+            // Check if the call exists
+            if (callDetails == null)
             {
-                return BO.CallStatus.Expired;
+                throw new InvalidOperationException($"Call with ID {callId} not found.");
             }
-            // Check if the call is open and in risk of expiring
-            if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value - riskRange)
-            {
-                return BO.CallStatus.OpenInRisk;
-            }
-            // The call is open and not in risk
-            return BO.CallStatus.Open;
-        }
+            // Get the assignment details
+            var assignments = s_dal.Assignment.ReadAll()
+                .Where(a => a.CallId == callId)
+                .OrderByDescending(a => a.EntryTime);
 
-        // Check if the latest assignment has a completion status of Expired or Treated
-        if (latestAssignment.CompletionStatus == DO.CompletionType.Expired)
-        {
-            return BO.CallStatus.Expired;
-        }
-        if (latestAssignment.CompletionStatus == DO.CompletionType.Treated)
-        {
-            return BO.CallStatus.Treated;
-        }
+            var now = AdminManager.Now;
+            var riskRange = s_dal.Config.RiskRange;
 
-        // Check if the latest assignment has a completion status of ManagerCancellation or SelfCancellation
-        if (latestAssignment.CompletionStatus == DO.CompletionType.ManagerCancellation || latestAssignment.CompletionStatus == DO.CompletionType.SelfCancellation)
-        {
-            // Check if there are other assignments that are still open or in progress
-            var otherAssignments = assignments.Skip(1).FirstOrDefault(a => a.CompletionStatus == null);
-            if (otherAssignments != null)
-            {
-                // Check if the call is in progress and in risk of expiring
-                if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value - riskRange)
-                {
-                    return BO.CallStatus.InProgressInRisk;
-                }
-                // The call is in progress
-                return BO.CallStatus.InProgress;
-            }
-            else
+            // Check if there are no assignments
+            var latestAssignment = assignments.FirstOrDefault();
+            if (latestAssignment == null)
             {
                 // Check if the call has expired
                 if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value)
@@ -216,15 +170,57 @@ public static class CallManager
                 // The call is open and not in risk
                 return BO.CallStatus.Open;
             }
-        }
 
-        // Check if the call is in progress and in risk of expiring
-        if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value - riskRange)
-        {
-            return BO.CallStatus.InProgressInRisk;
+            // Check if the latest assignment has a completion status of Expired or Treated
+            if (latestAssignment.CompletionStatus == DO.CompletionType.Expired)
+            {
+                return BO.CallStatus.Expired;
+            }
+            if (latestAssignment.CompletionStatus == DO.CompletionType.Treated)
+            {
+                return BO.CallStatus.Treated;
+            }
+
+            // Check if the latest assignment has a completion status of ManagerCancellation or SelfCancellation
+            if (latestAssignment.CompletionStatus == DO.CompletionType.ManagerCancellation || latestAssignment.CompletionStatus == DO.CompletionType.SelfCancellation)
+            {
+                // Check if there are other assignments that are still open or in progress
+                var otherAssignments = assignments.Skip(1).FirstOrDefault(a => a.CompletionStatus == null);
+                if (otherAssignments != null)
+                {
+                    // Check if the call is in progress and in risk of expiring
+                    if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value - riskRange)
+                    {
+                        return BO.CallStatus.InProgressInRisk;
+                    }
+                    // The call is in progress
+                    return BO.CallStatus.InProgress;
+                }
+                else
+                {
+                    // Check if the call has expired
+                    if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value)
+                    {
+                        return BO.CallStatus.Expired;
+                    }
+                    // Check if the call is open and in risk of expiring
+                    if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value - riskRange)
+                    {
+                        return BO.CallStatus.OpenInRisk;
+                    }
+                    // The call is open and not in risk
+                    return BO.CallStatus.Open;
+                }
+            }
+
+            // Check if the call is in progress and in risk of expiring
+            if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value - riskRange)
+            {
+                return BO.CallStatus.InProgressInRisk;
+            }
+            // The call is in progress
+            return BO.CallStatus.InProgress;
         }
-        // The call is in progress
-        return BO.CallStatus.InProgress;
     }
 
     /// <summary>
@@ -235,29 +231,32 @@ public static class CallManager
     /// <exception cref="InvalidOperationException">Thrown when the call with the specified ID is not found.</exception>
     public static BO.Call ConvertDOCallToBOCall(int callId)
     {
-        DO.Call? callDetails;
-        lock (AdminManager.BlMutex)//stage 7
-            callDetails = s_dal.Call.Read(a => a.Id == callId);
-        if (callDetails == null)
+        BO.Call boCall;
+        lock (AdminManager.BlMutex) //stage 7
         {
-            throw new InvalidOperationException($"Call with ID {callId} not found.");
+            var callDetails = s_dal.Call.Read(a => a.Id == callId);
+            if (callDetails == null)
+            {
+                throw new InvalidOperationException($"Call with ID {callId} not found.");
+            }
+
+            var assignments = AssignmentManager.GetCallAssignmentsByCallId(callId);
+
+            boCall = new BO.Call
+            {
+                Id = callDetails.Id,
+                CallType = (BO.CallType)callDetails.CallType,
+                Description = callDetails.Description,
+                FullAddress = callDetails.Address,
+                Latitude = callDetails.Latitude,
+                Longitude = callDetails.Longitude,
+                OpenedAt = callDetails.OpenTime,
+                MaxCompletionTime = callDetails.MaxCompletionTime,
+                Status = GetCallStatus(callId),
+                Assignments = assignments != null && assignments.Any() ? assignments : null
+            };
         }
-
-        var assignments = AssignmentManager.GetCallAssignmentsByCallId(callId);
-
-        return new BO.Call
-        {
-            Id = callDetails.Id,
-            CallType = (BO.CallType)callDetails.CallType,
-            Description = callDetails.Description,
-            FullAddress = callDetails.Address,
-            Latitude = callDetails.Latitude,
-            Longitude = callDetails.Longitude,
-            OpenedAt = callDetails.OpenTime,
-            MaxCompletionTime = callDetails.MaxCompletionTime,
-            Status = GetCallStatus(callId),
-            Assignments = assignments != null && assignments.Any() ? assignments : null
-        };
+        return boCall;
     }
 
     /// <summary>
@@ -274,7 +273,6 @@ public static class CallManager
 
         // Get the coordinates of the address
         var coordinates = Tools.GetCoordinates(boCall.FullAddress);
-
 
         return new DO.Call
         {
@@ -296,19 +294,18 @@ public static class CallManager
     /// <returns>A list of ClosedCallInList objects containing details of closed calls handled by the volunteer.</returns>
     public static IEnumerable<BO.ClosedCallInList>? GetClosedCallsByVolunteer(int volunteerId)
     {
-        // Get all closed calls assigned to the specific volunteer
-        List<DO.Call> closedCalls;
-        lock (AdminManager.BlMutex)//stage 7
+        lock (AdminManager.BlMutex) //stage 7
         {
-            closedCalls = s_dal.Call.ReadAll()
-            .Where(c => c.MaxCompletionTime != null && s_dal.Assignment.Read(a => a.CallId == c.Id && a.VolunteerId == volunteerId) != null).ToList();
-            if (closedCalls == null || !closedCalls.Any())
+            // Get all closed calls assigned to the specific volunteer
+            var closedCallsEntities = s_dal.Call.ReadAll()
+                .Where(c => c.MaxCompletionTime != null && s_dal.Assignment.Read(a => a.CallId == c.Id && a.VolunteerId == volunteerId) != null);
+            if (closedCallsEntities == null || !closedCallsEntities.Any())
             {
                 return null;
             }
 
             // Return a list of closed calls handled by the volunteer
-            return closedCalls.Select(call => new BO.ClosedCallInList
+            return closedCallsEntities.Select(call => new BO.ClosedCallInList
             {
                 Id = call.Id,
                 CallType = (BO.CallType)call.CallType,
@@ -328,34 +325,31 @@ public static class CallManager
     /// <returns>A list of OpenCallInList objects containing details of open calls available for the volunteer.</returns>
     public static IEnumerable<BO.OpenCallInList>? GetOpenCallsForVolunteer(int volunteerId)
     {
-        List<DO.Call> Calls;
-        lock (AdminManager.BlMutex)//stage 7
-            Calls = s_dal.Call.ReadAll().ToList();
-        DO.Volunteer? volunteer;
-        lock (AdminManager.BlMutex)//stage 7
-            volunteer = s_dal.Volunteer.Read(volunteerId);
-        var openCalls = Calls.Where(c => (GetCallStatus(c.Id) == BO.CallStatus.OpenInRisk || GetCallStatus(c.Id) == BO.CallStatus.Open) && (volunteer.MaxDistance >= Tools.CalculateDistance((double)volunteer.Latitude
-            , (double)volunteer.Longitude
-            , c.Latitude, c.Longitude)));
-
-        if (openCalls == null || !openCalls.Any())
+        lock (AdminManager.BlMutex) //stage 7
         {
-            return null;
+            var Calls = s_dal.Call.ReadAll();
+            var volunteer = s_dal.Volunteer.Read(volunteerId);
+            var openCallsEntities = Calls.Where(c => (GetCallStatus(c.Id) == BO.CallStatus.OpenInRisk || GetCallStatus(c.Id) == BO.CallStatus.Open) && (volunteer.MaxDistance >= Tools.CalculateDistance((double)volunteer.Latitude
+                , (double)volunteer.Longitude
+                , c.Latitude, c.Longitude)));
+
+            if (openCallsEntities == null || !openCallsEntities.Any())
+            {
+                return null;
+            }
+
+            return openCallsEntities.Select(call => new BO.OpenCallInList
+            {
+                Id = call.Id,
+                CallType = (BO.CallType)call.CallType,
+                Description = call.Description,
+                FullAddress = call.Address,
+                OpenedAt = call.OpenTime,
+                MaxCompletionTime = call.MaxCompletionTime,
+                DistanceFromVolunteer = Tools.CalculateDistance((double)volunteer.Latitude
+                , (double)volunteer.Longitude
+                , call.Latitude, call.Longitude),
+            });
         }
-
-        return openCalls.Select(call => new BO.OpenCallInList
-        {
-
-            Id = call.Id,
-            CallType = (BO.CallType)call.CallType,
-            Description = call.Description,
-            FullAddress = call.Address,
-            OpenedAt = call.OpenTime,
-            MaxCompletionTime = call.MaxCompletionTime,
-            DistanceFromVolunteer = Tools.CalculateDistance((double)volunteer.Latitude
-            , (double)volunteer.Longitude
-            , call.Latitude, call.Longitude),
-        });
-
     }
 }

@@ -32,7 +32,7 @@ namespace BlImplementation
         /// Thrown when validation of the volunteer details fails. The exception message includes a list of invalid details: Email, ID, Phone Number, Location.
         /// </exception>
         /// <exception cref="BO.BlAlreadyExistsException">Thrown when a volunteer with the same ID already exists.</exception>
-        /// <exception cref="BO.BlSystemException">Thrown when an unexpected        
+        /// <exception cref="BO.BlSystemException"></exception>    
         public void AddVolunteer(BO.Volunteer volunteerB)
         {
             AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
@@ -57,20 +57,15 @@ namespace BlImplementation
                 // Validate the address
                 if (string.IsNullOrWhiteSpace(volunteerB.CurrentAddress))
                     throw new BO.BlValidationException("Current address cannot be null or empty.");
-                var coordinates = Tools.GetCoordinates(volunteerB.CurrentAddress);
-
-                // Check if the location is within Israel
-                bool isLocationValid = coordinates.IsInIsrael;
 
                 // Collect invalid details
                 List<string> invalidDetails = new();
                 if (!isEmailValid) invalidDetails.Add("Email");
                 if (!isIdValid) invalidDetails.Add("ID");
                 if (!isPhoneNumberValid) invalidDetails.Add("Phone Number");
-                if (!isLocationValid) invalidDetails.Add("Location");
 
                 // If all validations pass
-                if (isEmailValid && isPhoneNumberValid && isLocationValid && isIdValid)
+                if (isEmailValid && isPhoneNumberValid && isIdValid)
                 {
                     DO.Volunteer volunteerD = new()
                     {
@@ -80,8 +75,6 @@ namespace BlImplementation
                         PhoneNumber = volunteerB.PhoneNumber,
                         CurrentAddress = volunteerB.CurrentAddress,
                         FullName = volunteerB.FullName,
-                        Latitude = coordinates.Latitude,
-                        Longitude = coordinates.Longitude,
                         MaxDistance = volunteerB.MaxDistance,
                         IsActive = true,
                         VolunteerRole = (DO.Role)volunteerB.Role,
@@ -89,8 +82,11 @@ namespace BlImplementation
                     };
                     lock (AdminManager.BlMutex)//stage 7
                         _dal.Volunteer.Create(volunteerD);
-                    VolunteerManager.Observers.NotifyListUpdated();
-                }
+        VolunteerManager.Observers.NotifyListUpdated();
+
+                    // Compute the coordinates asynchronously without waiting for the results
+                    _ = VolunteerManager.UpdateCoordinatesForVolunteerAddressAsync(volunteerD);
+    }
                 else
                 {
                     throw new BO.BlValidationException($"Validation failed for the following details: {string.Join(", ", invalidDetails)}");

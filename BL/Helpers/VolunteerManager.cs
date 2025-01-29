@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using BlImplementation;
 namespace Helpers;
 
-public static class VolunteerManager  
+public static class VolunteerManager
 {
     private static IDal s_dal = Factory.Get; //stage 4
 
@@ -16,12 +16,13 @@ public static class VolunteerManager
     /// <returns>The number of completed assignments</returns>
     public static int GetCompletedAssignmentsCount(int volunteerId)
     {
-        List<DO.Assignment> assignments;
-        lock (AdminManager.BlMutex)//stage 7
-            assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId).ToList();
-        return assignments.Count(a => a.CompletionStatus.ToString() == "Treated");
+        lock (AdminManager.BlMutex) //stage 7
+        {
+            var assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId);
+            return assignments.Count(a => a.CompletionStatus.ToString() == "Treated");
+        }
     }
-    
+
     /// <summary>
     /// Get the number of calls that a volunteer has canceled
     /// </summary>
@@ -29,10 +30,11 @@ public static class VolunteerManager
     /// <returns>The number of canceled calls</returns>
     public static int GetTotalCallsCancelled(int volunteerId)
     {
-        List<DO.Assignment> assignments;
-        lock (AdminManager.BlMutex)//stage 7
-            assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId).ToList();
-        return assignments.Count(a => a.CompletionStatus.ToString() == "SelfCancellation");
+        lock (AdminManager.BlMutex) //stage 7
+        {
+            var assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId);
+            return assignments.Count(a => a.CompletionStatus.ToString() == "SelfCancellation");
+        }
     }
 
     /// <summary>
@@ -42,10 +44,11 @@ public static class VolunteerManager
     /// <returns>The number of expired assignments</returns>
     public static int GetExpiredAssignmentsCount(int volunteerId)
     {
-        List<DO.Assignment> assignments;
-        lock (AdminManager.BlMutex)//stage 7
-            assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId).ToList();
-        return assignments.Count(a => a.CompletionStatus.ToString() == "Expired");
+        lock (AdminManager.BlMutex) //stage 7
+        {
+            var assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId);
+            return assignments.Count(a => a.CompletionStatus.ToString() == "Expired");
+        }
     }
 
     /// <summary>
@@ -55,10 +58,11 @@ public static class VolunteerManager
     /// <returns>The ID of the pending assignment, or null if none exists</returns>
     public static int? GetPendingAssignmentId(int volunteerId)
     {
-        DO.Assignment? assignment;
-        lock (AdminManager.BlMutex)//stage 7
-            assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.VolunteerId == volunteerId && a.CompletionStatus == null);
-        return assignment?.Id;
+        lock (AdminManager.BlMutex) //stage 7
+        {
+            var assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.VolunteerId == volunteerId && a.CompletionStatus == null);
+            return assignment?.Id;
+        }
     }
 
     /// <summary>
@@ -68,10 +72,11 @@ public static class VolunteerManager
     /// <returns>The call ID of the pending assignment, or null if none exists</returns>
     public static int? GetPendingAssignmentCallId(int volunteerId)
     {
-        DO.Assignment? assignment;
-        lock (AdminManager.BlMutex)//stage 7
-            assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.VolunteerId == volunteerId && a.CompletionStatus == null);
-        return assignment != null ? assignment.CallId : (int?)null;
+        lock (AdminManager.BlMutex) //stage 7
+        {
+            var assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.VolunteerId == volunteerId && a.CompletionStatus == null);
+            return assignment != null ? assignment.CallId : (int?)null;
+        }
     }
 
     /// <summary>
@@ -127,32 +132,31 @@ public static class VolunteerManager
     /// <returns>A BO.Volunteer object</returns>
     public static BO.Volunteer ConvertVolunteerIdToBO(int volunteerId)
     {
-        DO.Volunteer? volunteer;
-        lock (AdminManager.BlMutex)//stage 7
-            volunteer = s_dal.Volunteer.Read(volunteerId);
-        return new BO.Volunteer
+        lock (AdminManager.BlMutex) //stage 7
         {
-            Id = volunteerId,
-            FullName = volunteer.FullName,
-            PhoneNumber = volunteer.PhoneNumber,
-            Email = volunteer.Email,
-            Password = volunteer.Password,
-            CurrentAddress = volunteer.CurrentAddress,
-            Latitude = volunteer.Latitude,
-            Longitude = volunteer.Longitude,
-            Role = (BO.VolunteerRole)volunteer.VolunteerRole,
-            IsActive = volunteer.IsActive,
-            MaxDistance = volunteer.MaxDistance,
-            DistanceType = (BO.DistanceType)volunteer.DistanceType,
-            TotalCallsHandled = GetCompletedAssignmentsCount(volunteerId),
-            TotalCallsCancelled = GetTotalCallsCancelled(volunteerId),
-            TotalExpiredCalls = GetExpiredAssignmentsCount(volunteerId),
-            CurrentCall = GetPendingAssignmentCallId(volunteerId) != null ?
-                          CallManager.ConvertCallIdToCallInProgress((int)GetPendingAssignmentCallId(volunteerId), volunteerId) :
-                          null
-        };
-        
-
+            var volunteer = s_dal.Volunteer.Read(volunteerId);
+            return new BO.Volunteer
+            {
+                Id = volunteerId,
+                FullName = volunteer.FullName,
+                PhoneNumber = volunteer.PhoneNumber,
+                Email = volunteer.Email,
+                Password = volunteer.Password,
+                CurrentAddress = volunteer.CurrentAddress,
+                Latitude = volunteer.Latitude,
+                Longitude = volunteer.Longitude,
+                Role = (BO.VolunteerRole)volunteer.VolunteerRole,
+                IsActive = volunteer.IsActive,
+                MaxDistance = volunteer.MaxDistance,
+                DistanceType = (BO.DistanceType)volunteer.DistanceType,
+                TotalCallsHandled = GetCompletedAssignmentsCount(volunteerId),
+                TotalCallsCancelled = GetTotalCallsCancelled(volunteerId),
+                TotalExpiredCalls = GetExpiredAssignmentsCount(volunteerId),
+                CurrentCall = GetPendingAssignmentCallId(volunteerId) != null ?
+                              CallManager.ConvertCallIdToCallInProgress((int)GetPendingAssignmentCallId(volunteerId), volunteerId) :
+                              null
+            };
+        }
     }
 
     /// <summary>
@@ -162,10 +166,11 @@ public static class VolunteerManager
     /// <returns>True if the volunteer is a manager, otherwise false</returns>
     public static bool IsManager(int volunteerId)
     {
-        DO.Volunteer? volunteer;
-        lock (AdminManager.BlMutex)//stage 7
-            volunteer = s_dal.Volunteer.Read(volunteerId);
-        return volunteer.VolunteerRole == 0;
+        lock (AdminManager.BlMutex) //stage 7
+        {
+            var volunteer = s_dal.Volunteer.Read(volunteerId);
+            return volunteer.VolunteerRole == 0;
+        }
     }
 
     /// <summary>
@@ -251,10 +256,11 @@ public static class VolunteerManager
             DistanceType = (DO.DistanceType)volunteerB.DistanceType,
             IsActive = volunteerB.IsActive,
         };
-        //תיזרק חריגה אם אין כזה ת"ז
-
-        lock (AdminManager.BlMutex)//stage 7
+        lock (AdminManager.BlMutex) //stage 7
+        {
+            //תיזרק חריגה אם אין כזה ת"ז
             s_dal.Volunteer.Update(volunteerD);
+        }
         Observers.NotifyListUpdated();
         Observers.NotifyItemUpdated(volunteerD.Id);
     }
@@ -279,11 +285,13 @@ public static class VolunteerManager
             DistanceType = (DO.DistanceType)volunteerB.DistanceType,
             //פה רק מנהל יכול לשנות
             VolunteerRole = (DO.Role)volunteerB.Role,
-            IsActive  = volunteerB.IsActive,
+            IsActive = volunteerB.IsActive,
         };
-        //תיזרק חיריגה אם אין כזה ת"ז
-        lock (AdminManager.BlMutex)//stage 7
+        lock (AdminManager.BlMutex) //stage 7
+        {
+            //תיזרק חיריגה אם אין כזה ת"ז
             s_dal.Volunteer.Update(volunteerD);
+        }
         Observers.NotifyListUpdated();
         Observers.NotifyItemUpdated(volunteerD.Id);
     }
@@ -295,20 +303,21 @@ public static class VolunteerManager
     /// <returns>A BO.VolunteerInList object</returns>
     public static BO.VolunteerInList ConvertVolunteerIdToVolunteerInList(int volunteerId)
     {
-        DO.Volunteer? volunteer;
-        lock (AdminManager.BlMutex)//stage 7
-            volunteer = s_dal.Volunteer.Read(volunteerId);
-        return new BO.VolunteerInList
+        lock (AdminManager.BlMutex) //stage 7
         {
-            Id = volunteerId,
-            FullName = volunteer.FullName,
-            IsActive = volunteer.IsActive,
-            TotalCallsHandled = GetCompletedAssignmentsCount(volunteerId),
-            TotalCallsCancelled = GetTotalCallsCancelled(volunteerId),
-            TotalExpiredCalls = GetExpiredAssignmentsCount(volunteerId),
-            CurrentCallId = GetPendingAssignmentCallId(volunteerId),
-            CurrentCallType = GetPendingAssignmentCallType(volunteerId) ?? BO.CallType.None
-        };
+            var volunteer = s_dal.Volunteer.Read(volunteerId);
+            return new BO.VolunteerInList
+            {
+                Id = volunteerId,
+                FullName = volunteer.FullName,
+                IsActive = volunteer.IsActive,
+                TotalCallsHandled = GetCompletedAssignmentsCount(volunteerId),
+                TotalCallsCancelled = GetTotalCallsCancelled(volunteerId),
+                TotalExpiredCalls = GetExpiredAssignmentsCount(volunteerId),
+                CurrentCallId = GetPendingAssignmentCallId(volunteerId),
+                CurrentCallType = GetPendingAssignmentCallType(volunteerId) ?? BO.CallType.None
+            };
+        }
     }
 
     /// <summary>
@@ -317,111 +326,130 @@ public static class VolunteerManager
     /// <returns>A list of VolunteerInList</returns>
     public static IEnumerable<BO.VolunteerInList> GetAllVolunteers()
     {
-        List<DO.Volunteer> volunteers;
-        lock (AdminManager.BlMutex)//stage 7
-            volunteers = s_dal.Volunteer.ReadAll().ToList();
-        return volunteers.Select(v => new BO.VolunteerInList
+        lock (AdminManager.BlMutex) //stage 7
         {
-            Id = v.Id,
-            FullName = v.FullName,
-            IsActive = v.IsActive,
-            TotalCallsHandled = GetCompletedAssignmentsCount(v.Id),
-            TotalCallsCancelled = GetTotalCallsCancelled(v.Id),
-            TotalExpiredCalls = GetExpiredAssignmentsCount(v.Id),
-            CurrentCallId = GetPendingAssignmentCallId(v.Id),
-            CurrentCallType = GetPendingAssignmentCallType(v.Id) ?? BO.CallType.None
-        }).ToList();
+            var volunteers = s_dal.Volunteer.ReadAll();
+            return volunteers.Select(v => new BO.VolunteerInList
+            {
+                Id = v.Id,
+                FullName = v.FullName,
+                IsActive = v.IsActive,
+                TotalCallsHandled = GetCompletedAssignmentsCount(v.Id),
+                TotalCallsCancelled = GetTotalCallsCancelled(v.Id),
+                TotalExpiredCalls = GetExpiredAssignmentsCount(v.Id),
+                CurrentCallId = GetPendingAssignmentCallId(v.Id),
+                CurrentCallType = GetPendingAssignmentCallType(v.Id) ?? BO.CallType.None
+            }).ToList();
+        }
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////
-    
-    private static readonly Random s_rand = new();
-    private static int s_simulatorCounter = 0;
 
-    internal static void SimulateRegisterVolunteerAssignment() //stage 7
+
+
+    static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+    /// <summary>
+    /// Simulates volunteer activity over the system's lifetime.
+    /// </summary>
+    internal static void VolunteerActivitySimulation()
     {
-        Thread.CurrentThread.Name = $"Simulator{++s_simulatorCounter}";
 
-        LinkedList<int> volunteersToUpdate = new(); //stage 7
-        List<DO.Volunteer> dovolunteerList;
 
-        lock (AdminManager.BlMutex) //stage 7
-            dovolunteerList = s_dal.Volunteer.ReadAll(st => st.IsActive == true).ToList();
-
-        foreach (var doVolunteer in dovolunteerList)
+        Task.Run(() =>
         {
-            int studentId = 0;
-            lock (AdminManager.BlMutex) //stage 7
+            while (true)
             {
-                int? pendingAssignmentId = GetPendingAssignmentId(doVolunteer.Id);
-                if (pendingAssignmentId == null)
+                lock (AdminManager.BlMutex) //stage 7
                 {
-                    if (s_rand.NextDouble() <= 0.2) // 20% probability
+                    var activeVolunteers = s_dal.Volunteer.ReadAll().Where(v => v.IsActive).ToList();
+                    foreach (var volunteer in activeVolunteers)
                     {
-                        var openCalls =CallManager.GetOpenCallsForVolunteer(doVolunteer.Id).ToList();
-
-                        if (openCalls.Any())
+                        int? pendingAssignmentId = GetPendingAssignmentId(volunteer.Id);
+                        if (pendingAssignmentId == null)
                         {
-                            var selectedCall = openCalls[s_rand.Next(openCalls.Count)];
-                            AssignCallToVolunteer(volunteer.Id, selectedCall.Id);
-                            Observers.NotifyItemUpdated(volunteer.Id);
+                            // No current assignment, randomly select a new call to handle
+                            if (new Random().NextDouble() < 0.2) // 20% chance
+                            {
+                                var openCalls = CallManager.GetOpenCallsForVolunteer(volunteer.Id).ToList();
+                                if (openCalls.Any())
+                                {
+                                    var selectedCall = openCalls[new Random().Next(openCalls.Count)];
+                                    s_bl.Call.AssignCallToVolunteer(volunteer.Id, selectedCall.Id);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // There is a current assignment
+                            var assignment = s_dal.Assignment.Read(pendingAssignmentId.Value);
+                            var call = s_bl.Call.GetCallDetails(assignment.CallId);
+                            var timeElapsed = DateTime.Now - assignment.EntryTime;
+                            var requiredTime = CalculateRequiredTime(volunteer, call); // Implement this method based on your logic
+
+                            if (timeElapsed >= requiredTime)
+                            {
+                                s_bl.Call.CompleteCallHandling(volunteer.Id, assignment.Id);
+                            }
+                            else if (new Random().NextDouble() < 0.1) // 10% chance
+                            {
+                                s_bl.Call.CancelCallHandling(volunteer.Id, assignment.Id);
+                            }
                         }
                     }
                 }
-                else
-                {
-                    var assignment = s_dal.Assignment.Read(pendingAssignmentId.Value);
-                    var call = s_dal.Call.Read(assignment.CallId);
-                    var distance = CalculateDistance(volunteer.Latitude, volunteer.Longitude, call.Latitude, call.Longitude);
-                    var elapsedTime = DateTime.Now - assignment.StartTime;
-
-                    if (elapsedTime.TotalMinutes >= distance / 10 + s_rand.Next(5, 15)) // Example logic for "enough time"
-                    {
-                        s_dal.Call.CompleteCallHandling(volunteer.Id, assignment.Id);
-                        Observers.NotifyItemUpdated(volunteer.Id);
-                    }
-                    else if (s_rand.NextDouble() <= 0.1) // 10% probability
-                    {
-                        s_dal.Call.CancelCallHandling(volunteer.Id, assignment.Id);
-                        Observers.NotifyItemUpdated(volunteer.Id);
-                    }
-                }
-
-                BO.CallAssignInList volunteerAssig = GetPendingAssignmentId(doVolunteer.Id);
-
-                //the above method, includes network requests to compute the distances
-                //between courses address and current student address
-                //these network requests are done synchronically
-                var coursesNotRegistered = CourseManager.GetUnRegisteredCoursesForStudent(doVolunteer.Id, studentYear);
-
-                int cntNotRegCourses = coursesNotRegistered.Count();
-                if (cntNotRegCourses != 0)
-                {
-                    int courseId = coursesNotRegistered.Skip(s_rand.Next(0, cntNotRegCourses)).First()!.Id;
-                    LinkManager.LinkStudentToCourse(doStudent.Id, courseId);
-                    studentId = doStudent.Id;
-                }
-
-                //simulate setting grade of course for selected student
-                var coursesRegistered =
-                    s_dal.Course.ReadAll(course => LinkManager.IsStudentLinkedToCourse(doStudent.Id, course.Id) && course.InYear == (DO.Year)studentYear);
-                int cntRegCourses = coursesRegistered.Count();
-                if (cntRegCourses != 0)
-                {
-                    int courseId = coursesRegistered.Skip(s_rand.Next(0, cntRegCourses)).First()!.Id;
-                    LinkManager.UpdateCourseGradeForStudent(doStudent.Id, courseId, Math.Round(s_rand.NextDouble() * 100, 2));
-                    studentId = doStudent.Id;
-                }
-
-                if (studentId != 0)
-                    studentsToUpdate.AddLast(doStudent.Id);
-            } //lock
-        }
-
-        foreach (int id in studentsToUpdate)
-            Observers.NotifyItemUpdated(id);
+                Observers.NotifyListUpdated();
+                Task.Delay(1000).Wait(); // Wait for 1 second
+            }
+        });
     }
 
+    /// <summary>
+    /// Calculates the required time for a volunteer to handle a call.
+    /// </summary>
+    /// <param name="volunteer">The volunteer handling the call</param>
+    /// <param name="call">The call being handled</param>
+    /// <returns>The required time to handle the call</returns>
+    private static TimeSpan CalculateRequiredTime(DO.Volunteer volunteer, BO.Call call)
+    {
+        // Implement your logic to calculate the required time based on distance and other factors
+        // For example, you can use the distance between the volunteer and the call location
+        // and add a random time factor to simulate real-world scenarios
+        double distance = Tools.CalculateDistance(volunteer.Latitude, volunteer.Longitude, call.Latitude, call.Longitude);
+        return TimeSpan.FromMinutes(distance / 10 + new Random().Next(5, 15)); // Example calculation
+    }
+
+    public static async Task UpdateCoordinatesForVolunteerAddressAsync(DO.Volunteer volunteerD)
+    {
+        if (volunteerD.CurrentAddress is not null)
+        {
+            var coordinates = await Tools.GetCoordinatesAsync(volunteerD.CurrentAddress);
+            var updatedVolunteer = volunteerD with
+            {
+                Latitude = coordinates.Latitude,
+                Longitude = coordinates.Longitude
+            };
+            lock (AdminManager.BlMutex)
+                s_dal.Volunteer.Update(updatedVolunteer);
+            VolunteerManager.Observers.NotifyListUpdated();
+            VolunteerManager.Observers.NotifyItemUpdated(updatedVolunteer.Id);
+        }
+    }
+
+
+    /// <summary>
+    /// Calculates the distance between two geographical points.
+    /// </summary>
+    /// <param name="lat1">Latitude of the first point</param>
+    /// <param name="lon1">Longitude of the first point</param>
+    /// <param name="lat2">Latitude of the second point</param>
+    /// <param name="lon2">Longitude of the second point</param>
+    /// <returns>The distance between the two points</returns>
+    private static double CalculateDistance(double? lat1, double? lon1, double? lat2, double? lon2)
+    {
+        // Implement your logic to calculate the distance between two geographical points
+        // For example, you can use the Haversine formula or any other distance calculation method
+        // This is a placeholder implementation
+        return Math.Sqrt(Math.Pow(lat2.Value - lat1.Value, 2) + Math.Pow(lon2.Value - lon1.Value, 2));
+    }
 }
 
 

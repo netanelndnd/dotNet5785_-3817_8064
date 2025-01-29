@@ -58,48 +58,23 @@ public static class Tools
         return value.ToString();
     }
 
-    /// <summary>
-    /// Checks if the given latitude and longitude coordinates are within the geographical boundaries of Israel.
-    /// </summary>
-    /// <param name="latitude">The latitude coordinate to check.</param>
-    /// <param name="longitude">The longitude coordinate to check.</param>
-    /// <returns>True if the coordinates are within Israel, otherwise false.</returns>
-    //public static bool IsLocationInIsrael(double? latitude, double? longitude)
-    //{
-    //    // Latitude and longitude range of Israel
-    //    const double minLatitude = 29.0;   // South - Eilat
-    //    const double maxLatitude = 33.3;   // North - Golan Heights
-    //    const double minLongitude = 34.3;  // West - Mediterranean Sea
-    //    const double maxLongitude = 35.9;  // East - Dead Sea and Jordan area
-
-    //    // Check if the coordinates are within the range
-    //    return latitude >= minLatitude && latitude <= maxLatitude &&
-    //           longitude >= minLongitude && longitude <= maxLongitude;
-    //}
 
 
-
+    //פונרקציה שנועדה להיות בשביל הטסטים
     public static (double Latitude, double Longitude, bool IsInIsrael) GetCoordinates(string address)
     {
-        string apiKey = "AIzaSyBnuV561P8tA08Y7DQDH0GAu5AhQ86m5xs";
-
         try
         {
+            string apiKey = "AIzaSyBnuV561P8tA08Y7DQDH0GAu5AhQ86m5xs";
+
             if (string.IsNullOrWhiteSpace(address))
             {
                 throw new ArgumentException("התרחש ניסיון לקבל את נקודות הציון אבל הכתובת אינה תקינה או ריקה.");
             }
-        }
-        catch (ArgumentException ex)
-        {
-            throw new BO.BlSystemException("Error processing address: " + ex.Message, ex);
-        }
 
-        string encodedAddress = Uri.EscapeDataString(address);
-        string url = $"https://maps.googleapis.com/maps/api/geocode/json?address={encodedAddress}&key={apiKey}";
+            string encodedAddress = Uri.EscapeDataString(address);
+            string url = $"https://maps.googleapis.com/maps/api/geocode/json?address={encodedAddress}&key={apiKey}";
 
-        try
-        {
             using (var httpClient = new HttpClient())
             {
                 var response = httpClient.GetAsync(url).Result;
@@ -122,12 +97,71 @@ public static class Tools
                 double latitude = location.GetProperty("lat").GetDouble();
                 double longitude = location.GetProperty("lng").GetDouble();
 
-                // בדיקת אם המיקום נמצא בישראל על פי התשובה מגוגל
                 bool isInIsrael = IsLocationInIsrael(jsonDocument);
 
                 return (latitude, longitude, isInIsrael);
             }
         }
+        catch (HttpRequestException ex)
+        {
+            throw new Exception("Error in network request: " + ex.Message, ex);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Error processing address: " + ex.Message, ex);
+        }
+    }
+
+
+    /// <summary>
+    /// Gets the coordinates of an address using the Google Maps Geocoding API.
+    /// </summary>
+    /// <param name="address"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="Exception"></exception>
+    public static async Task<(double Latitude, double Longitude, bool IsInIsrael)> GetCoordinatesAsync(string address)
+    {
+        try
+        {
+            string apiKey = "AIzaSyBnuV561P8tA08Y7DQDH0GAu5AhQ86m5xs";
+
+            if (string.IsNullOrWhiteSpace(address))
+            {
+                throw new ArgumentException("התרחש ניסיון לקבל את נקודות הציון אבל הכתובת אינה תקינה או ריקה.");
+            }
+
+            string encodedAddress = Uri.EscapeDataString(address);
+            string url = $"https://maps.googleapis.com/maps/api/geocode/json?address={encodedAddress}&key={apiKey}";
+
+            using (var httpClient = new HttpClient())
+            {
+                var response = await httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                JsonDocument jsonDocument = JsonDocument.Parse(jsonResponse);
+
+                var status = jsonDocument.RootElement.GetProperty("status").GetString();
+                if (status != "OK")
+                {
+                    throw new Exception($"שגיאה בבקשת Geocoding: {status}");
+                }
+
+                var location = jsonDocument.RootElement
+                    .GetProperty("results")[0]
+                    .GetProperty("geometry")
+                    .GetProperty("location");
+
+                double latitude = location.GetProperty("lat").GetDouble();
+                double longitude = location.GetProperty("lng").GetDouble();
+
+                bool isInIsrael = IsLocationInIsrael(jsonDocument);
+
+                return (latitude, longitude, isInIsrael);
+            }
+        }
+
         catch (HttpRequestException ex)
         {
             throw new Exception("Error in network request: " + ex.Message, ex);
@@ -164,17 +198,21 @@ public static class Tools
     }
 
     // פונקציה לחישוב המרחק בין שתי נקודות על פי קו רוחב וקו אורך
-    public static double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
+    public static double CalculateDistance(double? lat1, double? lon1, double? lat2, double? lon2)
     {
+        if (lat1 == null || lon1 == null || lat2 == null || lon2 == null)
+        {
+            throw new ArgumentNullException("Coordinates cannot be null");
+        }
 
         // קבועים עבור חישוב המרחק
         double R = 6371; // רדיוס כדור הארץ בקילומטרים
-        double dLat = DegreesToRadians(lat2 - lat1); // שינוי בקו הרוחב
-        double dLon = DegreesToRadians(lon2 - lon1); // שינוי בקו האורך
+        double dLat = DegreesToRadians((double)(lat2 - lat1)); // שינוי בקו הרוחב
+        double dLon = DegreesToRadians((double)(lon2 - lon1)); // שינוי בקו האורך
 
         // חישוב המרחק באמצעות נוסחת Haversine
         double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-                   Math.Cos(DegreesToRadians(lat1)) * Math.Cos(DegreesToRadians(lat2)) *
+                   Math.Cos(DegreesToRadians((double)lat1)) * Math.Cos(DegreesToRadians((double)lat2)) *
                    Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
         double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
         double distance = R * c; // המרחק בקילומטרים
