@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PL.Volunteer
 {
@@ -110,9 +111,18 @@ namespace PL.Volunteer
             => OpenCalls = (callType == BO.CallType.None) ?
             s_bl.Call.GetOpenCallsForVolunteer(_volunteerId, null, null)! : s_bl?.Call.GetOpenCallsForVolunteer(_volunteerId, callType, null)!;
 
+        private volatile DispatcherOperation? _observerOperation = null; //stage 7
+
+
         // Observer method to update the open calls list when changes occur.
-        private void openCallsObserver()
-            => queryOpenCalls();
+        private void openCallsObserver() //stage 7
+        {
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    queryOpenCalls();
+                });
+        }
 
         // Event handler for when the window is loaded.
         // Adds the openCallsObserver as an observer to the Call service.

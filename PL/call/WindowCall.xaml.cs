@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using DalApi;
 
 namespace PL.call
@@ -151,14 +152,18 @@ namespace PL.call
         }
 
 
-
+        private volatile DispatcherOperation? _observerOperation = null; //stage 7
 
         // Observer method to refresh the call details
-        private void CallObserver()
+        private void CallObserver() //stage 7
         {
-            int id = CurrentCall!.Id;
-            CurrentCall = null;
-            CurrentCall = s_bl.Call.GetCallDetails(id);
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    int id = CurrentCall!.Id;
+                    CurrentCall = null;
+                    CurrentCall = s_bl.Call.GetCallDetails(id);
+                });
         }
 
         // Event handler for when the window is loaded

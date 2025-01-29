@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PL
 {
@@ -24,22 +25,31 @@ namespace PL
             CurrentManager = userId;
             InitializeComponent();
         }
+
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        // Observer method to update the current time
+
+        private volatile DispatcherOperation? _observerOperation = null;
+
         private void clockObserver()
         {
-            CurrentTime = s_bl.Admin.GetSystemClock();
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    CurrentTime = s_bl.Admin.GetSystemClock();
+                });
         }
 
         int CurrentManager = 0;
 
-        // Observer method to update the risk time span
         private void configObserver()
         {
-            TimeRisk = s_bl.Admin.GetRiskTimeSpan();
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    TimeRisk = s_bl.Admin.GetRiskTimeSpan();
+                });
         }
 
-        // Dependency property for the current time
         public DateTime CurrentTime
         {
             get { return (DateTime)GetValue(CurrentTimeProperty); }
@@ -48,7 +58,6 @@ namespace PL
         public static readonly DependencyProperty CurrentTimeProperty =
             DependencyProperty.Register("CurrentTime", typeof(DateTime), typeof(MainWindow));
 
-        // Dependency property for the risk time span
         public TimeSpan TimeRisk
         {
             get { return (TimeSpan)GetValue(TimeRiskProperty); }
@@ -57,37 +66,47 @@ namespace PL
         public static readonly DependencyProperty TimeRiskProperty =
             DependencyProperty.Register("TimeRisk", typeof(TimeSpan), typeof(MainWindow));
 
-        // Button click event to add one minute to the system clock
+        public int Interval
+        {
+            get { return (int)GetValue(IntervalProperty); }
+            set { SetValue(IntervalProperty, value); }
+        }
+        public static readonly DependencyProperty IntervalProperty =
+            DependencyProperty.Register("Interval", typeof(int), typeof(MainWindow));
+
+        public bool IsSimulatorRunning
+        {
+            get { return (bool)GetValue(IsSimulatorRunningProperty); }
+            set { SetValue(IsSimulatorRunningProperty, value); }
+        }
+        public static readonly DependencyProperty IsSimulatorRunningProperty =
+            DependencyProperty.Register("IsSimulatorRunning", typeof(bool), typeof(MainWindow));
+
         private void btnAddOneMinute_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Minute);
         }
 
-        // Button click event to add one hour to the system clock
         private void btnAddOneHour_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Hour);
         }
 
-        // Button click event to add one day to the system clock
         private void btnAddOneDay_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Day);
         }
 
-        // Button click event to add one month to the system clock
         private void btnAddOneMonth_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Month);
         }
 
-        // Button click event to add one year to the system clock
         private void btnAddOneYear_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Year);
         }
 
-        // Button click event to update the risk time span
         private void btnUpdateTimeSpan_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.SetRiskTimeSpan(TimeRisk);
@@ -119,23 +138,18 @@ namespace PL
             }
         }
 
-        // Button click event to reset the database
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
-            // Show a confirmation message box to the user
             MessageBoxResult mbResult = MessageBox.Show("Do you Sure that you want to continue?", "Reset",
                 MessageBoxButton.YesNoCancel, MessageBoxImage.Question,
                 MessageBoxResult.Cancel);
 
-            // Handle the user's response
             switch (mbResult)
             {
                 case MessageBoxResult.Yes:
-                    // Change the mouse cursor to a wait cursor
                     Mouse.OverrideCursor = Cursors.Wait;
                     try
                     {
-                        // Close all open windows except the main window
                         foreach (Window window in Application.Current.Windows)
                         {
                             if (window != this)
@@ -144,38 +158,30 @@ namespace PL
                             }
                         }
 
-                        // Reset the database
                         s_bl.Admin.ResetDatabase();
                     }
                     finally
                     {
-                        // Restore the mouse cursor to its default state
                         Mouse.OverrideCursor = null;
                     }
                     break;
                 case MessageBoxResult.No:
-                    // Do nothing if the user selects "No"
                     break;
             }
         }
 
-        // Button click event to initialize the database
         private void btnInitialize_Click(object sender, RoutedEventArgs e)
         {
-            // Show a confirmation message box to the user
             MessageBoxResult mbResult = MessageBox.Show("Do you Sure that you want to continue?", "Initialize",
                 MessageBoxButton.YesNoCancel, MessageBoxImage.Question,
                 MessageBoxResult.Cancel);
 
-            // Handle the user's response
             switch (mbResult)
             {
                 case MessageBoxResult.Yes:
-                    // Change the mouse cursor to a wait cursor
                     Mouse.OverrideCursor = Cursors.Wait;
                     try
                     {
-                        // Close all open windows except the main window and the login window
                         foreach (Window window in Application.Current.Windows)
                         {
                             if (window != this && !(window is LoginWindow))
@@ -184,22 +190,18 @@ namespace PL
                             }
                         }
 
-                        // Initialize the database
                         s_bl.Admin.InitializeDatabase();
                     }
                     finally
                     {
-                        // Restore the mouse cursor to its default state
                         Mouse.OverrideCursor = null;
                     }
                     break;
                 case MessageBoxResult.No:
-                    // Do nothing if the user selects "No"
                     break;
             }
         }
 
-        // Method called when the window is loaded
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             CurrentTime = s_bl.Admin.GetSystemClock();
@@ -210,52 +212,49 @@ namespace PL
             s_bl.Call.AddObserver(UpdateCallCountsObserver);
         }
 
-        // Method called when the window is closed
         private void Window_Closed(object sender, EventArgs e)
         {
             s_bl.Admin.RemoveClockObserver(clockObserver);
             s_bl.Admin.RemoveConfigObserver(configObserver);
             s_bl.Call.RemoveObserver(UpdateCallCountsObserver);
+            if (IsSimulatorRunning)
+            {
+                s_bl.Admin.StopSimulator();
+            }
         }
 
         private void btnOpenCalls_Click(object sender, RoutedEventArgs e)
         {
-            // Navigate to the filtered call list screen for Open Calls
             CallListWindow callListWindow = new CallListWindow("Open");
             callListWindow.Show();
         }
 
         private void btnInProgressCalls_Click(object sender, RoutedEventArgs e)
         {
-            // Navigate to the filtered call list screen for In Progress Calls
             CallListWindow callListWindow = new CallListWindow("In Progress");
             callListWindow.Show();
         }
 
         private void btnOpenInRiskCalls_Click(object sender, RoutedEventArgs e)
         {
-            // Navigate to the filtered call list screen for Open In Risk Calls
             CallListWindow callListWindow = new CallListWindow("OpenInRisk");
             callListWindow.Show();
         }
 
         private void btnInProgressInRiskCalls_Click(object sender, RoutedEventArgs e)
         {
-            // Navigate to the filtered call list screen for In Progress In Risk Calls
             CallListWindow callListWindow = new CallListWindow("InProgressInRisk");
             callListWindow.Show();
         }
 
         private void btnTreatedCalls_Click(object sender, RoutedEventArgs e)
         {
-            // Navigate to the filtered call list screen for Treated Calls
             CallListWindow callListWindow = new CallListWindow("Treated");
             callListWindow.Show();
         }
 
         private void btnExpiredCalls_Click(object sender, RoutedEventArgs e)
         {
-            // Navigate to the filtered call list screen for Expired Calls
             CallListWindow callListWindow = new CallListWindow("Expired");
             callListWindow.Show();
         }
@@ -308,17 +307,34 @@ namespace PL
         public static readonly DependencyProperty ExpiredCallsCountProperty =
             DependencyProperty.Register("ExpiredCallsCount", typeof(int), typeof(MainWindow));
 
-            private void UpdateCallCountsObserver()
+        private void UpdateCallCountsObserver()
+        {
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    int[] quantities = s_bl.Call.GetCallQuantitiesByStatus();
+                    OpenCallsCount = quantities[(int)BO.CallStatus.Open];
+                    InProgressCallsCount = quantities[(int)BO.CallStatus.InProgress];
+                    OpenInRiskCallsCount = quantities[(int)BO.CallStatus.OpenInRisk];
+                    InProgressInRiskCallsCount = quantities[(int)BO.CallStatus.InProgressInRisk];
+                    TreatedCallsCount = quantities[(int)BO.CallStatus.Treated];
+                    ExpiredCallsCount = quantities[(int)BO.CallStatus.Expired];
+                });
+        }
+
+        private void btnToggleSimulator_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsSimulatorRunning)
             {
-                // Get the call quantities by status
-                int[] quantities = s_bl.Call.GetCallQuantitiesByStatus();
-                OpenCallsCount = quantities[(int)BO.CallStatus.Open];
-                InProgressCallsCount = quantities[(int)BO.CallStatus.InProgress];
-                OpenInRiskCallsCount = quantities[(int)BO.CallStatus.OpenInRisk];
-                InProgressInRiskCallsCount = quantities[(int)BO.CallStatus.InProgressInRisk];
-                TreatedCallsCount = quantities[(int)BO.CallStatus.Treated];
-                ExpiredCallsCount = quantities[(int)BO.CallStatus.Expired];
+                s_bl.Admin.StopSimulator();
+                IsSimulatorRunning = false;
+            }
+            else
+            {
+                s_bl.Admin.StartSimulator(Interval);
+                IsSimulatorRunning = true;
             }
         }
+    }
    
 }

@@ -3,65 +3,279 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PL.call"
+        xmlns:local="clr-namespace:PL"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
         Title="Call List" Height="640" Width="800"
-        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+
     <Window.Resources>
-        <Style TargetType="Label">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="#2E8B57"/>
+        <Style x:Key="FontAwesome" TargetType="TextBlock">
+            <Setter Property="FontFamily" 
+                    Value="pack://application:,,,/FontAwesome.WPF;component/#FontAwesome"/>
         </Style>
-        <Style TargetType="Button">
+        
+        <!-- ממירים -->
+        <local:CallTypeToIconConverter x:Key="CallTypeToIconConverter"/>
+        <local:StatusToColorConverter x:Key="StatusToColorConverter"/>
+        <local:RemainingProgressConverter x:Key="RemainingProgressConverter"/>
+
+        <!-- סגנונות -->
+        <Style x:Key="CenterAlignStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="DataGridRowStyle" TargetType="DataGridRow">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#F0FFF0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- סגנון כפתור -->
+        <Style x:Key="ModernButton" TargetType="Button">
             <Setter Property="Background" Value="#2E8B57"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="10,5"/>
-            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="12 6"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3CB371"/>
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect BlurRadius="8" Opacity="0.2" ShadowDepth="2"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
-        <Style TargetType="ComboBox">
+
+        <!-- סגנון ComboBox -->
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Width" Value="200"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="Padding" Value="6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton"
+                                        Grid.Column="2"
+                                        Focusable="False"
+                                        IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                        ClickMode="Press">
+                                <ToggleButton.Template>
+                                    <ControlTemplate>
+                                        <Border Background="Transparent"
+                                                Padding="0"
+                                                SnapsToDevicePixels="True">
+                                            <Path x:Name="Arrow"
+                                                  Fill="#666"
+                                                  HorizontalAlignment="Right"
+                                                  VerticalAlignment="Center"
+                                                  Margin="0,0,5,0"
+                                                  Data="M0,0 L4,4 8,0 Z"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                            <ContentPresenter Name="ContentSite"
+                                            Content="{TemplateBinding SelectedItem}"
+                                            Margin="3,3,23,3"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Left"/>
+                            <Popup Name="Popup"
+                                 Placement="Bottom"
+                                 IsOpen="{TemplateBinding IsDropDownOpen}"
+                                 AllowsTransparency="True"
+                                 Focusable="False"
+                                 PopupAnimation="Slide">
+                                <Border BorderThickness="1"
+                                      BorderBrush="#E0E0E0"
+                                      Background="White">
+                                    <ScrollViewer SnapsToDevicePixels="True">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- סגנונות DataGrid -->
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F8F8F8"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#2E8B57"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="10 5"/>
         </Style>
     </Window.Resources>
-    <Grid Background="#F0F0F0">
+
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
-        <!-- Header Section -->
-        <Grid Grid.Row="0" Background="#2E8B57" Margin="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Label Content="Filter by Call Type:" Foreground="White" VerticalAlignment="Center" Grid.Column="0" Margin="5"/>
-            <ComboBox ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}" 
-                      SelectedValue="{Binding Path=callType, Mode=TwoWay}" 
-                      SelectionChanged="CallTyps_CB" 
-                      VerticalAlignment="Center" Grid.Column="1" Margin="5"/>
-        </Grid>
 
-        <!-- DataGrid Section -->
-        <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Margin="10" Grid.Row="1" Background="White" BorderBrush="#2E8B57" BorderThickness="1" ItemsSource="{Binding CallList}" SelectedItem="{Binding SelectedCall}" MouseDoubleClick="lsvCallsList_MouseDoubleClick">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Call Id" Binding="{Binding CallId}" Width="Auto"/>
-                    <DataGridTextColumn Header="Call Type" Binding="{Binding CallType}" Width="Auto"/>
-                    <DataGridTextColumn Header="Opening Time" Binding="{Binding OpeningTime}" Width="Auto"/>
-                    <DataGridTextColumn Header="Remaining Time" Binding="{Binding RemainingTime}" Width="Auto"/>
-                    <DataGridTextColumn Header="Last Volunteer Name" Binding="{Binding LastVolunteerName}" Width="Auto"/>
-                    <DataGridTextColumn Header="Completion Duration" Binding="{Binding CompletionDuration}" Width="Auto"/>
-                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="Auto"/>
-                    <DataGridTextColumn Header="Total Assignments" Binding="{Binding TotalAssignments}" Width="Auto"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        
-        <!-- Footer Section -->
-        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Add Call" Click="btnAdd_Click"/>
-        </StackPanel>
+        <!-- Filter Section -->
+        <Border Grid.Row="0" Background="White" Margin="10" CornerRadius="4" Padding="15">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="🔍 Filter by Call Type:" Margin="0 0 10 0"/>
+                <ComboBox ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}" 
+                        SelectedValue="{Binding Path=callType, Mode=TwoWay}" 
+                        SelectionChanged="CallTyps_CB"
+                        Style="{StaticResource ModernComboBox}"/>
+            </StackPanel>
+        </Border>
+        <!-- DataGrid -->
+        <DataGrid Grid.Row="1" 
+                AutoGenerateColumns="False" 
+                ItemsSource="{Binding CallList}" 
+                SelectedItem="{Binding SelectedCall}"
+                MouseDoubleClick="lsvCallsList_MouseDoubleClick"
+                RowStyle="{StaticResource DataGridRowStyle}">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Call ID" 
+                                  Binding="{Binding CallId}" 
+                                  MinWidth="80"
+                                  ElementStyle="{StaticResource CenterAlignStyle}"/>
+
+                <!-- תיקון עמודת Type: החלת הסגנון FontAwesome -->
+                <DataGridTemplateColumn Header="Type" MinWidth="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <!-- החלה ישירה של הסגנון -->
+                                <TextBlock Style="{StaticResource FontAwesome}" 
+                                         Text="{Binding CallType, Converter={StaticResource CallTypeToIconConverter}}"
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,5,0"
+                                         FontSize="16"/>
+                                <TextBlock Text="{Binding CallType}"
+                                         VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+
+                <DataGridTextColumn Header="Opened" 
+                                  Binding="{Binding OpeningTime, StringFormat={}{0:dd/MM HH:mm}}" 
+                                  MinWidth="120"/>
+
+                <DataGridTemplateColumn Header="Remaining" MinWidth="140">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <ProgressBar Value="{Binding ., Converter={StaticResource RemainingProgressConverter}}" 
+                                           Width="60" 
+                                           Height="10" 
+                                           Margin="0,0,5,0"
+                                           Foreground="#2E8B57"/>
+                                <TextBlock Text="{Binding RemainingTime}"
+                                         VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Volunteer" MinWidth="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="24" 
+                                       Height="24" 
+                                       Fill="{Binding VolunteerColor}"
+                                       Margin="0,0,5,0"/>
+                                <TextBlock Text="{Binding LastVolunteerName}"
+                                         VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Status" MinWidth="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border Background="{Binding Status, Converter={StaticResource StatusToColorConverter}}"
+                                  CornerRadius="3"
+                                  Padding="5,2">
+                                <TextBlock Text="{Binding Status}"
+                                         HorizontalAlignment="Center"
+                                         Foreground="White"
+                                         FontWeight="DemiBold"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Assignments" MinWidth="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border Background="#E0E0E0"
+                                  CornerRadius="9"
+                                  Width="24"
+                                  Height="24">
+                                <TextBlock Text="{Binding TotalAssignments}"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center"
+                                         FontWeight="Bold"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Footer -->
+        <Border Grid.Row="2" Background="#F8F8F8" Padding="10">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="➕ Add New Call" Click="btnAdd_Click" Width="150" Style="{StaticResource ModernButton}"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

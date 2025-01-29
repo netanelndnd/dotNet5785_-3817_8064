@@ -164,5 +164,6 @@ public static class AssignmentManager
             }
         }
         CallManager.Observers.NotifyListUpdated();
+        VolunteerManager.Observers.NotifyListUpdated();
     }
 }

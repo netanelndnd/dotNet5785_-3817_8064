@@ -5,141 +5,267 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
-        Title="MainWindow" Height="557" Width="984"
+        Title="Call Management System" Height="642" Width="1200"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         WindowStartupLocation="CenterScreen"
-        Background="#F0F0F0"
+        Background="#F5F5F5"
         Loaded="Window_Loaded" Closed="Window_Closed">
+
     <Window.Resources>
+        <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <local:SimulatorButtonTextConverter x:Key="SimulatorButtonTextConverter"/>
+
+        <Style x:Key="SectionHeader" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
+            <Setter Property="Foreground" Value="#444"/>
+            <Setter Property="Margin" Value="0 0 0 10"/>
+        </Style>
+
+        <Style TargetType="Border" x:Key="ModernCard">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style TargetType="Button">
             <Setter Property="Background" Value="#2E8B57"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="10,5"/>
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="BorderBrush" Value="#2E8B57"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12 6"/>
+            <Setter Property="Margin" Value="8"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6"
+                                Opacity="1">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3CB371"/>
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect BlurRadius="12" Opacity="0.3" ShadowDepth="3"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="#B0B0B0"/>
+                                <Setter Property="Foreground" Value="#808080"/>
+                                <Setter Property="Opacity" Value="0.7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
+
         <Style TargetType="TextBox">
             <Setter Property="Width" Value="200"/>
             <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Background" Value="White"/>
         </Style>
-        <Style TargetType="Label">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="#333333"/>
-            <Setter Property="Margin" Value="5"/>
-        </Style>
     </Window.Resources>
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="10"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Call Status Quantities -->
-        <Border Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="#2E8B57" BorderThickness="2" CornerRadius="10" Padding="10" Margin="0,0,0,20">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Label Content="Call Status Quantities" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" Grid.ColumnSpan="6" HorizontalAlignment="Center"/>
-                <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center">
-                    <TextBlock Text="Open Calls" HorizontalAlignment="Center"/>
-                    <Button Click="btnOpenCalls_Click" Width="45" Height="32">
-                        <TextBlock Text="{Binding OpenCallsCount}" HorizontalAlignment="Center"/>
-                    </Button>
-                </StackPanel>
-                <StackPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center">
-                    <TextBlock Text="In Progress Calls" HorizontalAlignment="Center"/>
-                    <Button Click="btnInProgressCalls_Click" Width="45" Height="32">
-                        <TextBlock Text="{Binding InProgressCallsCount}" HorizontalAlignment="Center"/>
-                    </Button>
-                </StackPanel>
-                <StackPanel Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center">
-                    <TextBlock Text="Open In Risk Calls" HorizontalAlignment="Center"/>
-                    <Button Click="btnOpenInRiskCalls_Click" Width="45" Height="32">
-                        <TextBlock Text="{Binding OpenInRiskCallsCount}" HorizontalAlignment="Center"/>
-                    </Button>
-                </StackPanel>
-                <StackPanel Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center">
-                    <TextBlock Text="In Progress In Risk Calls" HorizontalAlignment="Center"/>
-                    <Button Click="btnInProgressInRiskCalls_Click" Width="45" Height="32">
-                        <TextBlock Text="{Binding InProgressInRiskCallsCount}" HorizontalAlignment="Center"/>
-                    </Button>
-                </StackPanel>
-                <StackPanel Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center">
-                    <TextBlock Text="Treated Calls" HorizontalAlignment="Center"/>
-                    <Button Click="btnTreatedCalls_Click" Width="45" Height="32">
-                        <TextBlock Text="{Binding TreatedCallsCount}" HorizontalAlignment="Center"/>
-                    </Button>
-                </StackPanel>
-                <StackPanel Grid.Row="1" Grid.Column="5" HorizontalAlignment="Center">
-                    <TextBlock Text="Expired Calls" HorizontalAlignment="Center"/>
-                    <Button Click="btnExpiredCalls_Click" Width="45" Height="32">
-                        <TextBlock Text="{Binding ExpiredCallsCount}" HorizontalAlignment="Center"/>
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </Border>
+        <!-- צד ניווט משודרג -->
+        <Border Grid.Column="0" Background="#F8F9FA" Padding="15" CornerRadius="8">
+            <StackPanel>
+                <Border Padding="0 0 0 10" BorderBrush="#E0E0E0" BorderThickness="0 0 0 1">
+                    <TextBlock Text="System Control" 
+                             FontSize="20" 
+                             FontWeight="SemiBold" 
+                             Foreground="#2E8B57"/>
+                </Border>
 
-        <!-- Clock System -->
-        <Label Content="{Binding CurrentTime}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,10,0" Height="45" Grid.ColumnSpan="2"/>
+                <StackPanel Margin="0 15 0 0">
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="System Operations"/>
+                    <Border Style="{StaticResource ModernCard}">
+                        <StackPanel>
+                            <Button Content="Initialize System" Click="btnInitialize_Click"
+                                    IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                            <Button Content="Reset System" Click="btnReset_Click" Margin="0 10 0 0"
+                                    IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
 
-        <!-- Time Manipulation Buttons -->
-        <Border Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="#2E8B57" BorderThickness="2" CornerRadius="10" Padding="10" Margin="0,20,0,0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-                <Button Content="Add One Minute" Click="btnAddOneMinute_Click" Width="120" Height="30"/>
-                <Button Content="Add One Hour" Click="btnAddOneHour_Click" Width="120" Height="30"/>
-                <Button Content="Add One Day" Click="btnAddOneDay_Click" Width="120" Height="30"/>
-                <Button Content="Add One Month" Click="btnAddOneMonth_Click" Width="120" Height="30"/>
-                <Button Content="Add One Year" Click="btnAddOneYear_Click" Width="120" Height="30"/>
+                <StackPanel Margin="0 20 0 0">
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Data Views"/>
+                    <Border Style="{StaticResource ModernCard}">
+                        <StackPanel>
+                            <Button Content="📋 List Volunteers" Click="btnListVolunteers_Click"
+                                    FontFamily="Segoe UI Symbol"/>
+                            <Button Content="📊 List Calls" Click="btnListCalls_Click" Margin="0 10 0 0"
+                                    FontFamily="Segoe UI Symbol"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <Border Style="{StaticResource ModernCard}" Margin="0 20 0 0">
+                    <StackPanel>
+                        <TextBlock Text="System Status" Style="{StaticResource SectionHeader}"/>
+                        <TextBlock Text="{Binding CurrentTime}" Foreground="#606060"/>
+                        <ProgressBar Value="{Binding SimulationProgress}" 
+                                   Height="8" 
+                                   Margin="0 10 0 5"
+                                   Foreground="#2E8B57"
+                                   IsIndeterminate="{Binding IsSimulatorRunning}"/>
+                        <TextBlock Text="{Binding SystemVersion}"
+                                 FontSize="12"
+                                 Foreground="#808080"/>
+                    </StackPanel>
+                </Border>
             </StackPanel>
         </Border>
 
-        <!-- Time Span Configuration -->
-        <Border Grid.Row="2" Grid.ColumnSpan="2" BorderBrush="#2E8B57" BorderThickness="2" CornerRadius="10" Padding="10" Margin="0,20,0,0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-                <Label Content="Time Risk:" VerticalAlignment="Center" Width="100"/>
-                <TextBox Text="{Binding TimeRisk}" VerticalAlignment="Center"/>
-                <Button Content="Update Time Risk" Click="btnUpdateTimeSpan_Click" VerticalAlignment="Center"/>
-            </StackPanel>
-        </Border>
+        <!-- תוכן ראשי -->
+        <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" Padding="10">
+            <StackPanel>
+                <Border Style="{StaticResource ModernCard}">
+                    <Grid>
+                        <Label Content="{Binding CurrentTime}" HorizontalAlignment="Right" 
+                               FontSize="16" Foreground="#606060" Padding="0"/>
+                        <TextBlock Text="Call Management Dashboard" 
+                                  FontSize="22" FontWeight="Medium"/>
+                    </Grid>
+                </Border>
 
-        <!-- List Buttons -->
-        <Border Grid.Row="3" Grid.Column="0" BorderBrush="#2E8B57" BorderThickness="2" CornerRadius="10" Padding="10" Margin="0,20,10,0">
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top">
-                <Button Content="List Volunteers" Click="btnListVolunteers_Click" Width="200"/>
-                <Button Content="List Calls" Click="btnListCalls_Click" Width="200"/>
-            </StackPanel>
-        </Border>
+                <UniformGrid Columns="3" Margin="0 15 0 0" Height="216">
+                    <Border Style="{StaticResource ModernCard}">
+                        <StackPanel>
+                            <TextBlock Text="Open Calls" FontSize="16" Foreground="#666"/>
+                            <Button Click="btnOpenCalls_Click" Background="Transparent" BorderThickness="0">
+                                <TextBlock Text="{Binding OpenCallsCount}" 
+                                  FontSize="28" 
+                                  FontWeight="Bold" 
+                                  Foreground="#333333"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
 
-        <!-- Initialization and Reset Buttons -->
-        <Border Grid.Row="3" Grid.Column="1" BorderBrush="#2E8B57" BorderThickness="2" CornerRadius="10" Padding="10" Margin="10,20,0,0">
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top">
-                <Button Content="Initialize All the System" Click="btnInitialize_Click" Width="200"/>
-                <Button Content="Reset All the System" Click="btnReset_Click" Width="200"/>
+                    <Border Style="{StaticResource ModernCard}">
+                        <StackPanel>
+                            <TextBlock Text="In Progress Calls" FontSize="16" Foreground="#666"/>
+                            <Button Click="btnInProgressCalls_Click" Background="Transparent" BorderThickness="0">
+                                <TextBlock Text="{Binding InProgressCallsCount}" 
+                                  FontSize="28" 
+                                  FontWeight="Bold" 
+                                  Foreground="#333333"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource ModernCard}">
+                        <StackPanel>
+                            <TextBlock Text="Open In Risk" FontSize="16" Foreground="#666"/>
+                            <Button Click="btnOpenInRiskCalls_Click" Background="Transparent" BorderThickness="0">
+                                <TextBlock Text="{Binding OpenInRiskCallsCount}" 
+                                  FontSize="28" 
+                                  FontWeight="Bold" 
+                                  Foreground="#333333"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource ModernCard}">
+                        <StackPanel>
+                            <TextBlock Text="In Progress In Risk" FontSize="16" Foreground="#666"/>
+                            <Button Click="btnInProgressInRiskCalls_Click" Background="Transparent" BorderThickness="0">
+                                <TextBlock Text="{Binding InProgressInRiskCallsCount}" 
+                                  FontSize="28" 
+                                  FontWeight="Bold" 
+                                  Foreground="#333333"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource ModernCard}">
+                        <StackPanel>
+                            <TextBlock Text="Treated Calls" FontSize="16" Foreground="#666"/>
+                            <Button Click="btnTreatedCalls_Click" Background="Transparent" BorderThickness="0">
+                                <TextBlock Text="{Binding TreatedCallsCount}" 
+                                  FontSize="28" 
+                                  FontWeight="Bold" 
+                                  Foreground="#333333"
+                                  Width="43"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource ModernCard}">
+                        <StackPanel>
+                            <TextBlock Text="Expired Calls" FontSize="16" Foreground="#666"/>
+                            <Button Click="btnExpiredCalls_Click" Background="Transparent" BorderThickness="0">
+                                <TextBlock Text="{Binding ExpiredCallsCount}" 
+                                  FontSize="28" 
+                                  FontWeight="Bold" 
+                                  Foreground="#333333"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+
+                <Expander Header="Time Configuration" IsExpanded="True" Margin="0 15 0 0">
+                    <StackPanel>
+                        <WrapPanel Margin="0 10" HorizontalAlignment="Center">
+                            <Button Content="+1 Minute" Click="btnAddOneMinute_Click" Width="120"
+                                    IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                            <Button Content="+1 Hour" Click="btnAddOneHour_Click" Width="120"
+                                    IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                            <Button Content="+1 Day" Click="btnAddOneDay_Click" Width="120"
+                                    IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                            <Button Content="+1 Month" Click="btnAddOneMonth_Click" Width="120"
+                                    IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                            <Button Content="+1 Year" Click="btnAddOneYear_Click" Width="120"
+                                    IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                        </WrapPanel>
+
+                        <Border Style="{StaticResource ModernCard}" Margin="0 10">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <TextBox Text="{Binding TimeRisk}" Width="120" Margin="0 0 10 0"
+                                         IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                                <Button Content="Update Risk" Click="btnUpdateTimeSpan_Click" Width="120"
+                                        IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Expander>
+
+                <Border Style="{StaticResource ModernCard}" Margin="0 15 0 0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Simulator Interval (min):" VerticalAlignment="Center" Margin="0 0 10 0"/>
+                        <TextBox Text="{Binding Interval}" Width="80" Margin="0 0 20 0"
+                                 IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Button Content="{Binding IsSimulatorRunning, Converter={StaticResource SimulatorButtonTextConverter}}" 
+                                Click="btnToggleSimulator_Click" Width="150"/>
+                    </StackPanel>
+                </Border>
             </StackPanel>
-        </Border>
+        </ScrollViewer>
     </Grid>
 </Window>

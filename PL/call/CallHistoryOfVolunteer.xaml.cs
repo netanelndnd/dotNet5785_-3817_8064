@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PL.call
 {
@@ -45,7 +46,19 @@ namespace PL.call
         private void queryCallHistory() =>
             CallHistory = (callType == BO.CallType.None) ?
             s_bl.Call.GetClosedCallsByVolunteer(_volunteerId, null, null)! : s_bl?.Call.GetClosedCallsByVolunteer(_volunteerId, callType, null)!;
-        private void callsHistoryObserver() => queryCallHistory();
+
+        private volatile DispatcherOperation? _observerOperation = null; //stage 7
+
+        private void callsHistoryObserver()
+        {
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    queryCallHistory();
+                });
+        }
+
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
             => s_bl.Call.AddObserver(callsHistoryObserver);
 

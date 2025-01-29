@@ -11,6 +11,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using FontAwesome.WPF;
+
 
 namespace PL.call
 {
@@ -51,7 +54,7 @@ namespace PL.call
         // Property to store the type of call. It is initialized to 'None' by default.
         public BO.CallType callType { get; set; } = BO.CallType.None;
 
-       
+
         // Method to handle the selection of a call type in the ComboBox.
         // This method is triggered when the selection in the ComboBox changes.
         private void CallTyps_CB(object sender, SelectionChangedEventArgs e)
@@ -71,9 +74,18 @@ namespace PL.call
             => CallList = (callType == BO.CallType.None) ?
                s_bl?.Call.GetCallList(null, null, null)! : s_bl?.Call.GetCallList(BO.CallInListFields.CallType, callType, null)!;
 
+
+        private volatile DispatcherOperation? _observerOperation = null; //stage 7
+
         // Observer method to update the call list when changes occur.
         private void callListObserver()
-            => queryCallList();
+        {
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    queryCallList();
+                });
+        }
 
         // Event handler for when the window is loaded.
         // Adds the callListObserver as an observer to the Call service.
