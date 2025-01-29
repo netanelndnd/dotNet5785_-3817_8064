@@ -20,14 +20,17 @@ namespace PL.call
     public partial class CallInListWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        public CallInListWindow()
+        public CallInListWindow(int userId = 0)
         {
+            CurrentManager = userId;
             InitializeComponent();
 
             // Register event handlers for loading and closing the window
             this.Loaded += Window_Loaded;
             this.Closed += Window_Closed;
         }
+
+        int CurrentManager = 0;
 
         // Property to store and retrieve the list of calls.
         // This property uses a DependencyProperty to enable data binding in WPF.
@@ -98,7 +101,7 @@ namespace PL.call
         private void lsvCallsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (SelectedCall != null)
-                new WindowCall(SelectedCall.CallId).Show();
+                new WindowCall(SelectedCall.CallId, CurrentManager).Show();
         }
 
         // Event handler for clicking the Add button.

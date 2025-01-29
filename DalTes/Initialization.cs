@@ -19,6 +19,8 @@ public static class Initialization
 
     private static readonly Random s_rand = new();
 
+    static int CallOpenDuration = 200; // כמות הזמן שאנחנו נותנים לכל קריאה שתהיה פתוחה
+
     /// <summary>
     /// Creates a list of volunteers with random data and adds them to the DAL.
     /// </summary>
@@ -108,7 +110,7 @@ public static class Initialization
             int id = validIDs[idIndex];
             idIndex = (idIndex + 1) % validIDs.Length; // מעבר לתעודת הזהות הבאה במעגליות
 
-            double? maxDistance = s_rand.NextDouble() * 100; // מרחק מקסימלי רנדומלי
+            double? maxDistance = 100 + s_rand.NextDouble() * 100; // מרחק מקסימלי רנדומלי עם מינימום 100 ועד מקסימום 200
             Role role = i == 0 ? Role.Manager : Role.Volunteer; // המתנדב הראשון הוא מנהל
             int addressIndex = 10;
 
@@ -202,30 +204,11 @@ public static class Initialization
             34.8618141278376, 35.19590856003538, 34.743271985523506, 34.752186728407715, 34.74362385383784, 34.747229546496264, 34.745333810322535, 34.748627700497515, 34.77308048033317, 34.784702171018964, 34.78533897059906, 34.77990632146705, 34.78262253224672, 34.80778224155118, 34.96942136688308, 34.98523717981069, 34.98876182539728, 34.99657405678095, 34.99240903307264, 35.01498376162042, 35.008282393139794, 35.12234042641816, 35.1139504148565, 35.11011456487845, 35.10917157396484, 35.10525108926754, 35.112780076486196, 35.10462231648692, 35.101859943618564, 35.10342631423813, 35.10634890958312, 35.204097845199364, 35.20240377805922, 35.20038113098719, 35.18947099850603, 35.1864233661719, 35.187628477045756, 35.19075423337481, 35.18204009422545, 35.18112523364712, 34.99378563017565, 34.99482705774016, 34.98983391964748, 34.982859631374865, 34.9808196442101, 34.99371105686167, 34.98401323833724, 34.991448806063076, 34.99613311692805, 34.998070548696916
         };
 
-        //for (int i = 0; i < 5; i++) // create 5 calls Expired
-        //{
-        //    int addressIndex = i < 50 ? i : s_rand.Next(0, 50); // Use existing addresses randomly for the additional 20 calls
-        //    DateTime openTime = s_dal?.Config.Clock.AddMinutes(-s_rand.Next(1, 1000)) ?? throw new InvalidOperationException("s_dalConfig is null");
-        //    DateTime? maxCompletionTime = openTime + s_dal?.Config.RiskRange;
-
-        //    Call call = new Call(
-        //        0, // ID will be auto-generated
-        //        (CallType)s_rand.Next(Enum.GetValues(typeof(CallType)).Length),
-        //        addresses[addressIndex],
-        //        latitudes[addressIndex],
-        //        longitudes[addressIndex],
-        //        openTime,
-        //        "Description " + i,
-        //        maxCompletionTime
-        //    );
-
-        //    s_dal?.Call.Create(call);
-        //}
-        for (int i = 0; i < 65; i++) // Changed to 70 to create 20 more calls
+        for (int i = 0; i < 65; i++) // Changed to 65 to create 15 more calls
         {
             int addressIndex = i < 50 ? i : s_rand.Next(0, 50); // Use existing addresses randomly for the additional 20 calls
-            DateTime openTime = s_dal?.Config.Clock.AddMinutes(-s_rand.Next(0, 200)) ?? throw new InvalidOperationException("s_dalConfig is null");
-            DateTime? maxCompletionTime = openTime.AddMinutes(200);
+            DateTime openTime = s_dal?.Config.Clock.AddMinutes(-s_rand.Next(0, CallOpenDuration)) ?? throw new InvalidOperationException("s_dalConfig is null");
+            DateTime? maxCompletionTime = openTime.AddMinutes(CallOpenDuration);
 
             Call call = new Call(
                 0, // ID will be auto-generated
@@ -281,15 +264,18 @@ public static class Initialization
         assignableCalls = assignableCalls.Skip(expiredCallsCount).ToList();
         foreach (var call in expiredCalls)
         {
-            var volunteer1 = volunteers.ElementAt(s_rand.Next(volunteers.Count()));
-            assignments.Add(new Assignment(
-                0,
-                call.Id,
-                volunteer1.Id,
-                call.OpenTime,
-                call.MaxCompletionTime?.AddMinutes(s_rand.Next(1, 210)),//שמתי 210 כך זה בטוח יהיה גדול מ200
-                CompletionType.Expired
-            ));
+            var volunteer1 = volunteers.FirstOrDefault(v => GeoUtils.CalculateDistance(v.Latitude, v.Longitude, call.Latitude, call.Longitude) <= v.MaxDistance);
+            if (volunteer1 != null)
+            {
+                assignments.Add(new Assignment(
+                    0,
+                    call.Id,
+                    volunteer1.Id,
+                    call.OpenTime,
+                    call.MaxCompletionTime?.AddMinutes(s_rand.Next(1, CallOpenDuration + 30)),
+                    CompletionType.Expired
+                ));
+            }
         }
 
         // Closed calls
@@ -303,56 +289,57 @@ public static class Initialization
         // טיפול בקבוצה הראשונה: קריאות שבוטלו ברבע השעה הראשונה
         foreach (var call in closedCallsCancelled)
         {
-            var volunteer5 = volunteers.ElementAt(s_rand.Next(volunteers.Count()));
+            var volunteer5 = volunteers.FirstOrDefault(v => GeoUtils.CalculateDistance(v.Latitude, v.Longitude, call.Latitude, call.Longitude) <= v.MaxDistance);
+            if (volunteer5 != null)
+            {
+                DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, 15));
+                CompletionType completionType = (CompletionType)s_rand.Next(1, 2);
 
-            // יצירת זמן כניסה מוקדם (בתוך רבע שעה)
-            DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, 15));
+                assignments.Add(new Assignment(
+                    0,
+                    call.Id,
+                    volunteer5.Id,
+                    entryTime,
+                    call.OpenTime.AddMinutes(15),
+                    completionType
+                ));
 
-            // הקריאה מסומנת כ"מבוטלת" (בחירה אקראית בין שני סוגי ביטול)
-            CompletionType completionType = (CompletionType)s_rand.Next(1, 2);
+                var volunteer6 = volunteers.FirstOrDefault(v => GeoUtils.CalculateDistance(v.Latitude, v.Longitude, call.Latitude, call.Longitude) <= v.MaxDistance);
+                if (volunteer6 != null)
+                {
+                    DateTime completionEntryTime = entryTime.AddMinutes(s_rand.Next(15, 25));
+                    DateTime? completionTime = completionEntryTime.AddMinutes(s_rand.Next(1, (int)((call.MaxCompletionTime - completionEntryTime)?.TotalMinutes ?? 0)));
 
-            // הוספת הקריאה לרשימת ההקצאות כקריאה שבוטלה
-            assignments.Add(new Assignment(
-                0,                  // מזהה המשימה
-                call.Id,            // מזהה הקריאה
-                volunteer5.Id,       
-                entryTime,          // זמן הכניסה
-                call.OpenTime.AddMinutes(15), // זמן השלמה - רבע שעה אחרי הפתיחה
-                completionType      // סוג הביטול
-            ));
-
-            // טיפול נוסף באותן קריאות - כעת עם מתנדב והשלמה
-            var volunteer6 = volunteers.ElementAt(s_rand.Next(volunteers.Count())); // בחירת מתנדב אקראי
-            DateTime completionEntryTime = entryTime.AddMinutes(s_rand.Next(15, 25)); // זמן התחלה חדש אחרי הביטול
-            DateTime? completionTime = completionEntryTime.AddMinutes(s_rand.Next(1, (int)((call.MaxCompletionTime - completionEntryTime)?.TotalMinutes ?? 0)));
-
-            // הוספת הקריאה כמשימה חדשה שהושלמה
-            assignments.Add(new Assignment(
-                0,                  // מזהה המשימה
-                call.Id,            // מזהה הקריאה
-                volunteer6.Id,       // מזהה המתנדב
-                completionEntryTime, // זמן הכניסה החדש
-                completionTime,     // זמן ההשלמה
-                CompletionType.Treated // הקריאה טופלה בהצלחה
-            ));
+                    assignments.Add(new Assignment(
+                        0,
+                        call.Id,
+                        volunteer6.Id,
+                        completionEntryTime,
+                        completionTime,
+                        CompletionType.Treated
+                    ));
+                }
+            }
         }
 
         // טיפול בקבוצה השנייה: קריאות שמוקצות כרגיל למתנדבים
         foreach (var call in closedCallsWithVolunteers)
         {
-            var volunteer = volunteers.ElementAt(s_rand.Next(volunteers.Count())); // בחירת מתנדב אקראי
-            DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
-            DateTime? completionTime = entryTime.AddMinutes(s_rand.Next(1, (int)((call.MaxCompletionTime - entryTime)?.TotalMinutes ?? 0)));
+            var volunteer = volunteers.FirstOrDefault(v => GeoUtils.CalculateDistance(v.Latitude, v.Longitude, call.Latitude, call.Longitude) <= v.MaxDistance);
+            if (volunteer != null)
+            {
+                DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
+                DateTime? completionTime = entryTime.AddMinutes(s_rand.Next(1, (int)((call.MaxCompletionTime - entryTime)?.TotalMinutes ?? 0)));
 
-            // הוספת הקריאה לרשימת המשימות כקריאה שהושלמה כרגיל
-            assignments.Add(new Assignment(
-                0,                  // מזהה המשימה
-                call.Id,            // מזהה הקריאה
-                volunteer.Id,       // מזהה המתנדב
-                entryTime,          // זמן הכניסה
-                completionTime,     // זמן ההשלמה
-                CompletionType.Treated // הקריאה טופלה בהצלחה
-            ));
+                assignments.Add(new Assignment(
+                    0,
+                    call.Id,
+                    volunteer.Id,
+                    entryTime,
+                    completionTime,
+                    CompletionType.Treated
+                ));
+            }
         }
 
         // In-progress calls
@@ -362,42 +349,40 @@ public static class Initialization
 
         foreach (var call in inProgressCalls)
         {
-            var volunteer3 = volunteers.ElementAt(s_rand.Next(volunteers.Count()));
-            inProgressVolunteers.Add(volunteer3);
-            DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
+            var volunteer3 = volunteers.FirstOrDefault(v => GeoUtils.CalculateDistance(v.Latitude, v.Longitude, call.Latitude, call.Longitude) <= v.MaxDistance);
+            if (volunteer3 != null)
+            {
+                inProgressVolunteers.Add(volunteer3);
+                DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
 
-            assignments.Add(new Assignment(
-                0,
-                call.Id,
-                volunteer3.Id,
-                entryTime,
-                null,
-                null
-            ));
+                assignments.Add(new Assignment(
+                    0,
+                    call.Id,
+                    volunteer3.Id,
+                    entryTime,
+                    null,
+                    null
+                ));
 
-            // Remove the assigned volunteer from the list
-            volunteers = volunteers.Where(v => v.Id != volunteer3.Id).ToList();
+                volunteers = volunteers.Where(v => v.Id != volunteer3.Id).ToList();
+            }
         }
 
         // Open risk calls
         var openRiskCalls = assignableCalls.Take(openRiskCallsCount).ToList();
         assignableCalls = assignableCalls.Skip(openRiskCallsCount).ToList();
         var remainingVolunteers = volunteers.Except(inProgressVolunteers).ToList();
-        var riskRange = s_dal?.Config.RiskRange ?? TimeSpan.FromMinutes(30); // Default risk range if not set
+        var riskRange = s_dal?.Config.RiskRange ?? TimeSpan.FromMinutes(30);
 
         foreach (var call in openRiskCalls)
         {
-            var volunteer4 = remainingVolunteers.ElementAt(s_rand.Next(remainingVolunteers.Count()));
-
-            if (call.MaxCompletionTime.HasValue)
+            var volunteer4 = remainingVolunteers.FirstOrDefault(v => GeoUtils.CalculateDistance(v.Latitude, v.Longitude, call.Latitude, call.Longitude) <= v.MaxDistance);
+            if (volunteer4 != null && call.MaxCompletionTime.HasValue)
             {
                 DateTime riskStartTime = call.MaxCompletionTime.Value - riskRange;
                 DateTime riskEndTime = call.MaxCompletionTime.Value;
-
-                // Generate an entry time that is always within the risk range
                 DateTime entryTime = riskStartTime.AddMinutes(s_rand.Next(0, (int)(riskEndTime - riskStartTime).TotalMinutes));
 
-                // Add the assignment with the calculated entry time
                 assignments.Add(new Assignment(
                     0,
                     call.Id,
@@ -407,7 +392,6 @@ public static class Initialization
                     null
                 ));
 
-                // Remove the assigned volunteer from the list
                 remainingVolunteers = remainingVolunteers.Where(v => v.Id != volunteer4.Id).ToList();
             }
         }
@@ -417,8 +401,33 @@ public static class Initialization
         {
             s_dal?.Assignment.Create(assignment);
         }
-
     }
+
+    public static class GeoUtils
+    {
+        public static double CalculateDistance(double? lat1, double? lon1, double? lat2, double? lon2)
+        {
+            if (lat1 == null || lon1 == null || lat2 == null || lon2 == null)
+            {
+                throw new ArgumentNullException("Latitude and longitude values cannot be null");
+            }
+
+            const double R = 6371; // Radius of the Earth in kilometers
+            double latDistance = ToRadians(lat2.Value - lat1.Value);
+            double lonDistance = ToRadians(lon2.Value - lon1.Value);
+            double a = Math.Sin(latDistance / 2) * Math.Sin(latDistance / 2) +
+                       Math.Cos(ToRadians(lat1.Value)) * Math.Cos(ToRadians(lat2.Value)) *
+                       Math.Sin(lonDistance / 2) * Math.Sin(lonDistance / 2);
+            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            return R * c; // Distance in kilometers
+        }
+
+        private static double ToRadians(double angle)
+        {
+            return angle * (Math.PI / 180);
+        }
+    }
+
 
     //public static void Do(IDal dal) //stage 2
     public static void Do() //stage 4

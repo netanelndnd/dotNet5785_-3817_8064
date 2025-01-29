@@ -17,39 +17,68 @@ namespace PL.Volunteer
             this.Loaded += Window_Loaded;
             this.Closed += Window_Closed;
         }
+
         private void UpdateMapImage(int _volunteerId)
         {
+            // שליפת פרטי המתנדב
             var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(_volunteerId);
             string apiKey = "AIzaSyBnuV561P8tA08Y7DQDH0GAu5AhQ86m5xs";
+
+            // בדיקה אם אין קריאה פעילה
             if (volunteerDetails.CurrentCall == null)
             {
-                VolunteerImageMap.Source = null;
+                VolunteerImageMap = null;
                 return;
             }
-            // Create a list to store the coordinates of the calls
-            var call = Helpers.Tools.GetCoordinates(volunteerDetails.CurrentCall!.FullAddress);
 
-            // Create the marker parameters for the map URL
-            // Create the marker parameters for the call (blue marker)
+            // קבלת קואורדינטות של הקריאה
+            var call = Helpers.Tools.GetCoordinates(volunteerDetails.CurrentCall.FullAddress);
+
+            // חישוב גבולות, מרכז המפה, והבדלים גיאוגרפיים
+            double minLatitude = Math.Min(volunteerDetails.Latitude.Value, call.Latitude);
+            double maxLatitude = Math.Max(volunteerDetails.Latitude.Value, call.Latitude);
+            double minLongitude = Math.Min(volunteerDetails.Longitude.Value, call.Longitude);
+            double maxLongitude = Math.Max(volunteerDetails.Longitude.Value, call.Longitude);
+            double centerLatitude = (minLatitude + maxLatitude) / 2;
+            double centerLongitude = (minLongitude + maxLongitude) / 2;
+            double latDiff = maxLatitude - minLatitude;
+            double lngDiff = maxLongitude - minLongitude;
+
+            // חישוב זום (מוגדל יותר)
+            double maxDiff = Math.Max(latDiff, lngDiff);
+            int zoom = (int)(Math.Log(360 / maxDiff) / Math.Log(2)) + 1; // זום מוגדל יותר
+            zoom = Math.Clamp(zoom, 1, 20);
+
+            // חישוב גודל התמונה (סטטי בגבולות פשוטים)
+            double distance = Helpers.Tools.CalculateDistance(
+                volunteerDetails.Latitude.Value,
+                volunteerDetails.Longitude.Value,
+                call.Latitude,
+                call.Longitude
+            );
+            int size = (int)Math.Clamp(distance * 20, 800, 1200); // גודל סטטי יותר
+
+            // יצירת פרמטרים למפה
             string markerParams = $"markers=color:blue|label:Call|{call.Latitude},{call.Longitude}";
-
-            // Create the special marker parameter for the volunteer's location (red marker)
             string specialMarkerParams = $"markers=color:red|label:★|{volunteerDetails.Latitude},{volunteerDetails.Longitude}";
-
-            // Create the path parameter for the line between the call and the volunteer (green path)
             string pathParams = $"path=color:green|weight:3|{call.Latitude},{call.Longitude}|{volunteerDetails.Latitude},{volunteerDetails.Longitude}";
-            double distance = Helpers.CallManager.CalculateDistance(call.Latitude, call.Longitude, (double)volunteerDetails.Latitude, (double)volunteerDetails.Longitude);
-            int zoomLevel = (distance < 1) ? 15 : (distance < 5) ? 12 : 9; // רמות זום שונות
-            // Construct the map URL with all the parameters
-            string mapUrl = $"https://maps.googleapis.com/maps/api/staticmap?center={volunteerDetails.Latitude},{volunteerDetails.Longitude}&zoom={zoomLevel}&size=600x400&maptype=roadmap&{markerParams}&{specialMarkerParams}&{pathParams}&key={apiKey}";
 
-            // Check if the URL is valid and set the map image source
+            // בניית URL
+            string mapUrl = $"https://maps.googleapis.com/maps/api/staticmap?center={centerLatitude},{centerLongitude}&zoom={zoom}&size={size}x{size}&maptype=roadmap&{markerParams}&{specialMarkerParams}&{pathParams}&key={apiKey}";
+
+            // בדיקת URL והגדרת המפה
             if (Uri.TryCreate(mapUrl, UriKind.Absolute, out Uri uriResult) &&
                (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
             {
-                VolunteerImageMap.Source = new BitmapImage(uriResult);
+                VolunteerImageMap = new BitmapImage(uriResult);
             }
         }
+
+
+
+
+
+
         // CLR wrapper for the Dependency Property
         public BO.Volunteer? CurrentVolunteer
         {
@@ -60,6 +89,17 @@ namespace PL.Volunteer
         // Define the Dependency Property
         public static readonly DependencyProperty CurrentVolunteerProperty =
             DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(WindowMyVolunteer), new PropertyMetadata(null));
+
+        // CLR wrapper for the Dependency Property
+        public BitmapImage VolunteerImageMap
+        {
+            get { return (BitmapImage)GetValue(VolunteerImageMapProperty); }
+            set { SetValue(VolunteerImageMapProperty, value); }
+        }
+
+        // Define the Dependency Property
+        public static readonly DependencyProperty VolunteerImageMapProperty =
+            DependencyProperty.Register("VolunteerImageMap", typeof(BitmapImage), typeof(WindowMyVolunteer), new PropertyMetadata(null));
 
         // Event handler for window loaded event
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -144,7 +184,7 @@ namespace PL.Volunteer
         // Observer method to refresh the volunteer details
         private void VolunteerObserver()
         {
-            int id =CurrentVolunteer!.Id;
+            int id = CurrentVolunteer!.Id;
             CurrentVolunteer = null;
             CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(id);
         }
@@ -172,7 +212,6 @@ namespace PL.Volunteer
                     MessageBox.Show("An error occurred while completing the call: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-
         }
 
         // Event handler for canceling a call
@@ -184,16 +223,13 @@ namespace PL.Volunteer
                 {
                     s_bl.Call.CancelCallHandling(CurrentVolunteer.Id, CurrentVolunteer.CurrentCall.Id);
                     UpdateMapImage(CurrentVolunteer!.Id);
-
                     MessageBox.Show("Call canceled successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred while canceling the call: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-
         }
 
         // Event handler for selecting a call

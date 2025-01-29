@@ -162,4 +162,33 @@ public static class Tools
 
         return false; // לא נמצאה ישראל
     }
+
+    // פונקציה לחישוב המרחק בין שתי נקודות על פי קו רוחב וקו אורך
+    public static double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
+    {
+
+        // קבועים עבור חישוב המרחק
+        double R = 6371; // רדיוס כדור הארץ בקילומטרים
+        double dLat = DegreesToRadians(lat2 - lat1); // שינוי בקו הרוחב
+        double dLon = DegreesToRadians(lon2 - lon1); // שינוי בקו האורך
+
+        // חישוב המרחק באמצעות נוסחת Haversine
+        double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                   Math.Cos(DegreesToRadians(lat1)) * Math.Cos(DegreesToRadians(lat2)) *
+                   Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+        double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+        double distance = R * c; // המרחק בקילומטרים
+
+        return distance;
+    }
+
+
+    // פונקציה להמיר מעלות לרדיאנים
+    private static double DegreesToRadians(double degrees)
+    {
+        return degrees * (Math.PI / 180);
+    }
+
+
+
 }

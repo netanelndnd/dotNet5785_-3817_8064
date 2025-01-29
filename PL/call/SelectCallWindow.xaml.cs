@@ -32,44 +32,62 @@ namespace PL.Volunteer
             this.Loaded += Window_Loaded;
             this.Closed += Window_Closed;
         }
-        
+
         private void UpdateMapImage(int _volunteerId)
         {
+            // שליפת פרטי המתנדב
             var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(_volunteerId);
             string apiKey = "AIzaSyBnuV561P8tA08Y7DQDH0GAu5AhQ86m5xs";
 
-            // Create a list to store the coordinates of the calls
-            var markers = new List<(double? Latitude, double? Longitude)>();
-            if (OpenCalls == null)
-                return;
-            foreach (var call in OpenCalls)
+            // בדיקה אם אין קריאה פעילה
+            if (SelectedCall == null)
             {
-                // Get the coordinates of the call's address
-                var callCoordinates = Helpers.Tools.GetCoordinates(call.FullAddress);
-                markers.Add((callCoordinates.Latitude, callCoordinates.Longitude));
+                MapImageSource = null;
+                return;
             }
 
-            // Create the marker parameters for the map URL
-            string markerParams = string.Join("&", markers.Select(m =>
-                $"markers=color:blue|label:Call|{m.Latitude},{m.Longitude}"));
+            // קבלת קואורדינטות של הקריאה
+            var call = Helpers.Tools.GetCoordinates(SelectedCall.FullAddress);
 
-            // Create the special marker parameter for the volunteer's location
+            // חישוב גבולות, מרכז המפה, והבדלים גיאוגרפיים
+            double minLatitude = Math.Min(volunteerDetails.Latitude.Value, call.Latitude);
+            double maxLatitude = Math.Max(volunteerDetails.Latitude.Value, call.Latitude);
+            double minLongitude = Math.Min(volunteerDetails.Longitude.Value, call.Longitude);
+            double maxLongitude = Math.Max(volunteerDetails.Longitude.Value, call.Longitude);
+            double centerLatitude = (minLatitude + maxLatitude) / 2;
+            double centerLongitude = (minLongitude + maxLongitude) / 2;
+            double latDiff = maxLatitude - minLatitude;
+            double lngDiff = maxLongitude - minLongitude;
+
+            // חישוב זום (מוגדל יותר)
+            double maxDiff = Math.Max(latDiff, lngDiff);
+            int zoom = (int)(Math.Log(360 / maxDiff) / Math.Log(2)) + 1; // זום מוגדל יותר
+            zoom = Math.Clamp(zoom, 1, 20);
+
+            // חישוב גודל התמונה (סטטי בגבולות פשוטים)
+            double distance = Helpers.Tools.CalculateDistance(
+                volunteerDetails.Latitude.Value,
+                volunteerDetails.Longitude.Value,
+                call.Latitude,
+                call.Longitude
+            );
+            int size = (int)Math.Clamp(distance * 20, 800, 1200); // גודל סטטי יותר
+
+            // יצירת פרמטרים למפה
+            string markerParams = $"markers=color:blue|label:Call|{call.Latitude},{call.Longitude}";
             string specialMarkerParams = $"markers=color:red|label:★|{volunteerDetails.Latitude},{volunteerDetails.Longitude}";
+            string pathParams = $"path=color:green|weight:3|{call.Latitude},{call.Longitude}|{volunteerDetails.Latitude},{volunteerDetails.Longitude}";
 
-            string pathParams = string.Join("&", markers.Select(m =>
-      $"path=color:green|weight:2|{m.Latitude},{m.Longitude}|{volunteerDetails.Latitude},{volunteerDetails.Longitude}"));
+            // בניית URL
+            string mapUrl = $"https://maps.googleapis.com/maps/api/staticmap?center={centerLatitude},{centerLongitude}&zoom={zoom}&size={size}x{size}&maptype=roadmap&{markerParams}&{specialMarkerParams}&{pathParams}&key={apiKey}";
 
-            // Construct the map URL
-            string mapUrl = $"https://maps.googleapis.com/maps/api/staticmap?center={volunteerDetails.Latitude},{volunteerDetails.Longitude}&zoom=9&size=600x400&maptype=roadmap&{markerParams}&{specialMarkerParams}&{pathParams}&key={apiKey}";
-
-            // Check if the URL is valid and set the map image source
+            // בדיקת URL והגדרת המפה
             if (Uri.TryCreate(mapUrl, UriKind.Absolute, out Uri uriResult) &&
                (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
             {
-                MapImage.Source = new BitmapImage(uriResult);
+                MapImageSource = new BitmapImage(uriResult);
             }
         }
-
 
         // Property to store and retrieve the list of open calls.
         // This property uses a DependencyProperty to enable data binding in WPF.
@@ -92,7 +110,6 @@ namespace PL.Volunteer
             => OpenCalls = (callType == BO.CallType.None) ?
             s_bl.Call.GetOpenCallsForVolunteer(_volunteerId, null, null)! : s_bl?.Call.GetOpenCallsForVolunteer(_volunteerId, callType, null)!;
 
-
         // Observer method to update the open calls list when changes occur.
         private void openCallsObserver()
             => queryOpenCalls();
@@ -110,7 +127,6 @@ namespace PL.Volunteer
         // Property to store the type of call. It is initialized to 'None' by default.
         public BO.CallType callType { get; set; } = BO.CallType.None;
 
-
         // Method to handle the selection of a call type in the ComboBox.
         // This method is triggered when the selection in the ComboBox changes.
         private void CallTyps_CB(object sender, SelectionChangedEventArgs e)
@@ -124,7 +140,7 @@ namespace PL.Volunteer
         }
 
         public static readonly DependencyProperty SelectedCallProperty =
-            DependencyProperty.Register("SelectedCall", typeof(BO.OpenCallInList), typeof(SelectCallWindow), new PropertyMetadata(null));
+            DependencyProperty.Register("SelectedCall", typeof(BO.OpenCallInList), typeof(SelectCallWindow), new PropertyMetadata(null, OnSelectedCallChanged));
 
         public BO.OpenCallInList? SelectedCall
         {
@@ -132,6 +148,11 @@ namespace PL.Volunteer
             set { SetValue(SelectedCallProperty, value); }
         }
 
+        private static void OnSelectedCallChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var window = d as SelectCallWindow;
+            window?.UpdateMapImage(window._volunteerId);
+        }
 
         // Event handler for double-clicking on a call in the list.
         private void CallsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -151,7 +172,6 @@ namespace PL.Volunteer
                 }
             }
         }
-
 
         private void BtnUpdateAddress_Click(object sender, RoutedEventArgs e)
         {
@@ -186,6 +206,16 @@ namespace PL.Volunteer
                     MessageBox.Show("Invalid address. Please enter a valid address in Israel.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        // DependencyProperty for MapImageSource
+        public static readonly DependencyProperty MapImageSourceProperty =
+            DependencyProperty.Register("MapImageSource", typeof(ImageSource), typeof(SelectCallWindow), new PropertyMetadata(null));
+
+        public ImageSource MapImageSource
+        {
+            get { return (ImageSource)GetValue(MapImageSourceProperty); }
+            set { SetValue(MapImageSourceProperty, value); }
         }
     }
 

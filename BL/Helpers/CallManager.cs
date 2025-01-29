@@ -56,7 +56,7 @@ public static class CallManager
             OpenedAt = callDetails.OpenTime,
             StartedAt = assignment.EntryTime,
             MaxCompletionTime = callDetails.MaxCompletionTime,
-            DistanceFromVolunteer = CalculateDistance(volunteer.Latitude ?? throw new InvalidOperationException("Volunteer latitude is null."),
+            DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude ?? throw new InvalidOperationException("Volunteer latitude is null."),
                                                   volunteer.Longitude ?? throw new InvalidOperationException("Volunteer longitude is null."),
                                                   callDetails.Latitude, callDetails.Longitude),
             Status = GetCallStatus(callId)
@@ -65,24 +65,6 @@ public static class CallManager
         return callInProgress;
     }
 
-    // פונקציה לחישוב המרחק בין שתי נקודות על פי קו רוחב וקו אורך
-    public static double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
-    {
-
-        // קבועים עבור חישוב המרחק
-        double R = 6371; // רדיוס כדור הארץ בקילומטרים
-        double dLat = DegreesToRadians(lat2 - lat1); // שינוי בקו הרוחב
-        double dLon = DegreesToRadians(lon2 - lon1); // שינוי בקו האורך
-
-        // חישוב המרחק באמצעות נוסחת Haversine
-        double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-                   Math.Cos(DegreesToRadians(lat1)) * Math.Cos(DegreesToRadians(lat2)) *
-                   Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
-        double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-        double distance = R * c; // המרחק בקילומטרים
-
-        return distance;
-    }
 
     // פונקציה להמיר מעלות לרדיאנים
     private static double DegreesToRadians(double degrees)
@@ -104,12 +86,36 @@ public static class CallManager
             CallId = call.Id,
             CallType = (BO.CallType)call.CallType,
             OpeningTime = call.OpenTime,
-            RemainingTime = call.MaxCompletionTime.HasValue ? call.MaxCompletionTime.Value - AdminManager.Now : (TimeSpan?)null,
+            RemainingTime = GetRemainingTimeIfOpenOrInRisk(call.Id),
             LastVolunteerName = AssignmentManager.GetVolunteerNameByCallId(call.Id),
             CompletionDuration = AssignmentManager.GetTimeDifferenceForLastAssignment(call.Id),
             Status = GetCallStatus(call.Id),
             TotalAssignments = AssignmentManager.CountAssignmentsByCallId(call.Id)
         });
+    }
+
+
+    /// <summary>
+    /// Checks if the status of a specific call is either Open or OpenInRisk and returns the remaining time.
+    /// </summary>
+    /// <param name="callId">The identifier of the call.</param>
+    /// <returns>The remaining time if the call status is Open or OpenInRisk, otherwise null.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the call with the specified ID is not found.</exception>
+    public static TimeSpan? GetRemainingTimeIfOpenOrInRisk(int callId)
+    {
+        var callDetails = s_dal.Call.Read(a => a.Id == callId);
+        if (callDetails == null)
+        {
+            throw new InvalidOperationException($"Call with ID {callId} not found.");
+        }
+
+        var callStatus = GetCallStatus(callId);
+        if (callStatus == BO.CallStatus.Open || callStatus == BO.CallStatus.OpenInRisk || callStatus == BO.CallStatus.InProgressInRisk || callStatus == BO.CallStatus.InProgress)
+        {
+            return callDetails.MaxCompletionTime.HasValue ? callDetails.MaxCompletionTime.Value - AdminManager.Now : (TimeSpan?)null;
+        }
+
+        return (TimeSpan?)null;
     }
 
     /// <summary>
@@ -129,20 +135,18 @@ public static class CallManager
             throw new InvalidOperationException($"Call with ID {callId} not found.");
         }
         // Get the assignment details
-        var assignment = s_dal.Assignment.ReadAll()
+        var assignments = s_dal.Assignment.ReadAll()
             .Where(a => a.CallId == callId)
-            .OrderByDescending(a => a.EntryTime)
-            .FirstOrDefault();
+            .OrderByDescending(a => a.EntryTime);
+
         var now = AdminManager.Now;
         var riskRange = s_dal.Config.RiskRange;
 
-
-        //מדבור בקיראה שעדיין לא הוקצאה למתנדב
-        //לכן גם אין הקצאה
-        if (assignment == null)
+        // Check if there are no assignments
+        var latestAssignment = assignments.FirstOrDefault();
+        if (latestAssignment == null)
         {
             // Check if the call has expired
-            //הזמן כרגע גדול יותר מזמן הסיום של הקיראה
             if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value)
             {
                 return BO.CallStatus.Expired;
@@ -155,27 +159,56 @@ public static class CallManager
             // The call is open and not in risk
             return BO.CallStatus.Open;
         }
-        //מדובר בקריאה שהוקצתה למתנדב
-        else
+
+        // Check if the latest assignment has a completion status of Expired or Treated
+        if (latestAssignment.CompletionStatus == DO.CompletionType.Expired)
         {
-            // Check if the call has expired
-            if (callDetails.MaxCompletionTime.HasValue && assignment.CompletionTime.HasValue && assignment.CompletionTime > callDetails.MaxCompletionTime.Value)
-            {
-                return BO.CallStatus.Expired;
-            }
-            // Check if the call has been treated within the maximum completion time
-            if (assignment.CompletionTime.HasValue && callDetails.MaxCompletionTime.HasValue && assignment.CompletionTime.Value <= callDetails.MaxCompletionTime.Value)
-            {
-                return BO.CallStatus.Treated;
-            }
-            // Check if the call is in progress and in risk of expiring
-            if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value - riskRange)
-            {
-                return BO.CallStatus.InProgressInRisk;
-            }
-            // The call is in progress
-            return BO.CallStatus.InProgress;
+            return BO.CallStatus.Expired;
         }
+        if (latestAssignment.CompletionStatus == DO.CompletionType.Treated)
+        {
+            return BO.CallStatus.Treated;
+        }
+
+        // Check if the latest assignment has a completion status of ManagerCancellation or SelfCancellation
+        if (latestAssignment.CompletionStatus == DO.CompletionType.ManagerCancellation || latestAssignment.CompletionStatus == DO.CompletionType.SelfCancellation)
+        {
+            // Check if there are other assignments that are still open or in progress
+            var otherAssignments = assignments.Skip(1).FirstOrDefault(a => a.CompletionStatus == null);
+            if (otherAssignments != null)
+            {
+                // Check if the call is in progress and in risk of expiring
+                if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value - riskRange)
+                {
+                    return BO.CallStatus.InProgressInRisk;
+                }
+                // The call is in progress
+                return BO.CallStatus.InProgress;
+            }
+            else
+            {
+                // Check if the call has expired
+                if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value)
+                {
+                    return BO.CallStatus.Expired;
+                }
+                // Check if the call is open and in risk of expiring
+                if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value - riskRange)
+                {
+                    return BO.CallStatus.OpenInRisk;
+                }
+                // The call is open and not in risk
+                return BO.CallStatus.Open;
+            }
+        }
+
+        // Check if the call is in progress and in risk of expiring
+        if (callDetails.MaxCompletionTime.HasValue && now > callDetails.MaxCompletionTime.Value - riskRange)
+        {
+            return BO.CallStatus.InProgressInRisk;
+        }
+        // The call is in progress
+        return BO.CallStatus.InProgress;
     }
 
     /// <summary>
@@ -275,7 +308,7 @@ public static class CallManager
     {
         var Calls = s_dal.Call.ReadAll();
         var volunteer = s_dal.Volunteer.Read(volunteerId);
-        var openCalls = Calls.Where(c => (GetCallStatus(c.Id)==BO.CallStatus.OpenInRisk|| GetCallStatus(c.Id) == BO.CallStatus.Open)&&(volunteer.MaxDistance>= CalculateDistance((double)volunteer.Latitude
+        var openCalls = Calls.Where(c => (GetCallStatus(c.Id)==BO.CallStatus.OpenInRisk|| GetCallStatus(c.Id) == BO.CallStatus.Open)&&(volunteer.MaxDistance>= Tools.CalculateDistance((double)volunteer.Latitude
             , (double)volunteer.Longitude
             , c.Latitude, c.Longitude)));
         
@@ -293,7 +326,7 @@ public static class CallManager
             FullAddress = call.Address,
             OpenedAt = call.OpenTime,
             MaxCompletionTime =call.MaxCompletionTime,
-            DistanceFromVolunteer = CalculateDistance((double)volunteer.Latitude
+            DistanceFromVolunteer = Tools.CalculateDistance((double)volunteer.Latitude
             , (double)volunteer.Longitude
             , call.Latitude, call.Longitude),
         });

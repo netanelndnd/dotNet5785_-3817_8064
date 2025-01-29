@@ -155,5 +155,24 @@ namespace PL
                 throw new NotImplementedException();
             }
         }
-    
+
+
+    public class ActiveAssignmentExistsConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var call = value as BO.Call;
+            if (call == null || call.Assignments == null)
+                return false;
+
+            // Check if there is any assignment without an end time
+            return call.Assignments.Any(a => a.EndTime == null);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }
