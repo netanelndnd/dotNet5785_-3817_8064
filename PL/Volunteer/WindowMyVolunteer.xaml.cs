@@ -38,9 +38,10 @@ namespace PL.Volunteer
 
             // Create the path parameter for the line between the call and the volunteer (green path)
             string pathParams = $"path=color:green|weight:3|{call.Latitude},{call.Longitude}|{volunteerDetails.Latitude},{volunteerDetails.Longitude}";
-
+            double distance = Helpers.CallManager.CalculateDistance(call.Latitude, call.Longitude, (double)volunteerDetails.Latitude, (double)volunteerDetails.Longitude);
+            int zoomLevel = (distance < 1) ? 15 : (distance < 5) ? 12 : 9; // רמות זום שונות
             // Construct the map URL with all the parameters
-            string mapUrl = $"https://maps.googleapis.com/maps/api/staticmap?center={volunteerDetails.Latitude},{volunteerDetails.Longitude}&zoom=10&size=600x400&maptype=roadmap&{markerParams}&{specialMarkerParams}&{pathParams}&key={apiKey}";
+            string mapUrl = $"https://maps.googleapis.com/maps/api/staticmap?center={volunteerDetails.Latitude},{volunteerDetails.Longitude}&zoom={zoomLevel}&size=600x400&maptype=roadmap&{markerParams}&{specialMarkerParams}&{pathParams}&key={apiKey}";
 
             // Check if the URL is valid and set the map image source
             if (Uri.TryCreate(mapUrl, UriKind.Absolute, out Uri uriResult) &&
