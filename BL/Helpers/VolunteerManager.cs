@@ -349,17 +349,18 @@ public static class VolunteerManager
 
 
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+
+    private static int s_simulatorCounter = 0;
+
     /// <summary>
     /// Simulates volunteer activity over the system's lifetime.
     /// </summary>
     internal static void VolunteerActivitySimulation()
     {
 
+        Thread.CurrentThread.Name = $"Simulator{++s_simulatorCounter}";
 
-        Task.Run(() =>
-        {
-            while (true)
-            {
+
                 lock (AdminManager.BlMutex) //stage 7
                 {
                     var activeVolunteers = s_dal.Volunteer.ReadAll().Where(v => v.IsActive).ToList();
@@ -385,7 +386,7 @@ public static class VolunteerManager
                             var assignment = s_dal.Assignment.Read(pendingAssignmentId.Value);
                             var call = s_bl.Call.GetCallDetails(assignment.CallId);
                             var timeElapsed = DateTime.Now - assignment.EntryTime;
-                            var requiredTime = CalculateRequiredTime(volunteer, call); // Implement this method based on your logic
+                            var requiredTime = CalculateRequiredTime(volunteer, call); 
 
                             if (timeElapsed >= requiredTime)
                             {
@@ -396,12 +397,9 @@ public static class VolunteerManager
                                 s_bl.Call.CancelCallHandling(volunteer.Id, assignment.Id);
                             }
                         }
-                    }
+                    }//lock
                 }
                 Observers.NotifyListUpdated();
-                Task.Delay(1000).Wait(); // Wait for 1 second
-            }
-        });
     }
 
     /// <summary>
