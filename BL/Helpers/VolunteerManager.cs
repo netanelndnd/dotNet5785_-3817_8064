@@ -16,11 +16,12 @@ public static class VolunteerManager
     /// <returns>The number of completed assignments</returns>
     public static int GetCompletedAssignmentsCount(int volunteerId)
     {
-        lock (AdminManager.BlMutex) //stage 7
+        IEnumerable<DO.Assignment> assignments;
+        lock (AdminManager.BlMutex)
         {
-            var assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId);
-            return assignments.Count(a => a.CompletionStatus.ToString() == "Treated");
+            assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId);
         }
+        return assignments.Count(a => a.CompletionStatus.ToString() == "Treated");
     }
 
     /// <summary>
@@ -30,11 +31,12 @@ public static class VolunteerManager
     /// <returns>The number of canceled calls</returns>
     public static int GetTotalCallsCancelled(int volunteerId)
     {
-        lock (AdminManager.BlMutex) //stage 7
+        IEnumerable<DO.Assignment> assignments;
+        lock (AdminManager.BlMutex)
         {
-            var assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId);
-            return assignments.Count(a => a.CompletionStatus.ToString() == "SelfCancellation");
+            assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId);
         }
+        return assignments.Count(a => a.CompletionStatus.ToString() == "SelfCancellation");
     }
 
     /// <summary>
@@ -44,11 +46,12 @@ public static class VolunteerManager
     /// <returns>The number of expired assignments</returns>
     public static int GetExpiredAssignmentsCount(int volunteerId)
     {
-        lock (AdminManager.BlMutex) //stage 7
+        IEnumerable<DO.Assignment> assignments;
+        lock (AdminManager.BlMutex)
         {
-            var assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId);
-            return assignments.Count(a => a.CompletionStatus.ToString() == "Expired");
+            assignments = s_dal.Assignment.ReadAll().Where(a => a.VolunteerId == volunteerId);
         }
+        return assignments.Count(a => a.CompletionStatus.ToString() == "Expired");
     }
 
     /// <summary>
@@ -58,11 +61,12 @@ public static class VolunteerManager
     /// <returns>The ID of the pending assignment, or null if none exists</returns>
     public static int? GetPendingAssignmentId(int volunteerId)
     {
-        lock (AdminManager.BlMutex) //stage 7
+        DO.Assignment? assignment;
+        lock (AdminManager.BlMutex)
         {
-            var assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.VolunteerId == volunteerId && a.CompletionStatus == null);
-            return assignment?.Id;
+            assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.VolunteerId == volunteerId && a.CompletionStatus == null);
         }
+        return assignment?.Id;
     }
 
     /// <summary>
@@ -72,11 +76,12 @@ public static class VolunteerManager
     /// <returns>The call ID of the pending assignment, or null if none exists</returns>
     public static int? GetPendingAssignmentCallId(int volunteerId)
     {
-        lock (AdminManager.BlMutex) //stage 7
+        DO.Assignment? assignment;
+        lock (AdminManager.BlMutex)
         {
-            var assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.VolunteerId == volunteerId && a.CompletionStatus == null);
-            return assignment != null ? assignment.CallId : (int?)null;
+            assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.VolunteerId == volunteerId && a.CompletionStatus == null);
         }
+        return assignment != null ? assignment.CallId : (int?)null;
     }
 
     /// <summary>
@@ -132,31 +137,32 @@ public static class VolunteerManager
     /// <returns>A BO.Volunteer object</returns>
     public static BO.Volunteer ConvertVolunteerIdToBO(int volunteerId)
     {
-        lock (AdminManager.BlMutex) //stage 7
+        DO.Volunteer volunteer;
+        lock (AdminManager.BlMutex)
         {
-            var volunteer = s_dal.Volunteer.Read(volunteerId);
-            return new BO.Volunteer
-            {
-                Id = volunteerId,
-                FullName = volunteer.FullName,
-                PhoneNumber = volunteer.PhoneNumber,
-                Email = volunteer.Email,
-                Password = volunteer.Password,
-                CurrentAddress = volunteer.CurrentAddress,
-                Latitude = volunteer.Latitude,
-                Longitude = volunteer.Longitude,
-                Role = (BO.VolunteerRole)volunteer.VolunteerRole,
-                IsActive = volunteer.IsActive,
-                MaxDistance = volunteer.MaxDistance,
-                DistanceType = (BO.DistanceType)volunteer.DistanceType,
-                TotalCallsHandled = GetCompletedAssignmentsCount(volunteerId),
-                TotalCallsCancelled = GetTotalCallsCancelled(volunteerId),
-                TotalExpiredCalls = GetExpiredAssignmentsCount(volunteerId),
-                CurrentCall = GetPendingAssignmentCallId(volunteerId) != null ?
-                              CallManager.ConvertCallIdToCallInProgress((int)GetPendingAssignmentCallId(volunteerId), volunteerId) :
-                              null
-            };
+            volunteer = s_dal.Volunteer.Read(volunteerId);
         }
+        return new BO.Volunteer
+        {
+            Id = volunteerId,
+            FullName = volunteer.FullName,
+            PhoneNumber = volunteer.PhoneNumber,
+            Email = volunteer.Email,
+            Password = volunteer.Password,
+            CurrentAddress = volunteer.CurrentAddress,
+            Latitude = volunteer.Latitude,
+            Longitude = volunteer.Longitude,
+            Role = (BO.VolunteerRole)volunteer.VolunteerRole,
+            IsActive = volunteer.IsActive,
+            MaxDistance = volunteer.MaxDistance,
+            DistanceType = (BO.DistanceType)volunteer.DistanceType,
+            TotalCallsHandled = GetCompletedAssignmentsCount(volunteerId),
+            TotalCallsCancelled = GetTotalCallsCancelled(volunteerId),
+            TotalExpiredCalls = GetExpiredAssignmentsCount(volunteerId),
+            CurrentCall = GetPendingAssignmentCallId(volunteerId) != null ?
+                          CallManager.ConvertCallIdToCallInProgress((int)GetPendingAssignmentCallId(volunteerId), volunteerId) :
+                          null
+        };
     }
 
     /// <summary>
@@ -166,11 +172,12 @@ public static class VolunteerManager
     /// <returns>True if the volunteer is a manager, otherwise false</returns>
     public static bool IsManager(int volunteerId)
     {
-        lock (AdminManager.BlMutex) //stage 7
+        DO.Volunteer volunteer;
+        lock (AdminManager.BlMutex)
         {
-            var volunteer = s_dal.Volunteer.Read(volunteerId);
-            return volunteer.VolunteerRole == 0;
+            volunteer = s_dal.Volunteer.Read(volunteerId);
         }
+        return volunteer.VolunteerRole == 0;
     }
 
     /// <summary>
@@ -305,21 +312,22 @@ public static class VolunteerManager
     /// <returns>A BO.VolunteerInList object</returns>
     public static BO.VolunteerInList ConvertVolunteerIdToVolunteerInList(int volunteerId)
     {
-        lock (AdminManager.BlMutex) //stage 7
+        DO.Volunteer volunteer;
+        lock (AdminManager.BlMutex)
         {
-            var volunteer = s_dal.Volunteer.Read(volunteerId);
-            return new BO.VolunteerInList
-            {
-                Id = volunteerId,
-                FullName = volunteer.FullName,
-                IsActive = volunteer.IsActive,
-                TotalCallsHandled = GetCompletedAssignmentsCount(volunteerId),
-                TotalCallsCancelled = GetTotalCallsCancelled(volunteerId),
-                TotalExpiredCalls = GetExpiredAssignmentsCount(volunteerId),
-                CurrentCallId = GetPendingAssignmentCallId(volunteerId),
-                CurrentCallType = GetPendingAssignmentCallType(volunteerId) ?? BO.CallType.None
-            };
+            volunteer = s_dal.Volunteer.Read(volunteerId);
         }
+        return new BO.VolunteerInList
+        {
+            Id = volunteerId,
+            FullName = volunteer.FullName,
+            IsActive = volunteer.IsActive,
+            TotalCallsHandled = GetCompletedAssignmentsCount(volunteerId),
+            TotalCallsCancelled = GetTotalCallsCancelled(volunteerId),
+            TotalExpiredCalls = GetExpiredAssignmentsCount(volunteerId),
+            CurrentCallId = GetPendingAssignmentCallId(volunteerId),
+            CurrentCallType = GetPendingAssignmentCallType(volunteerId) ?? BO.CallType.None
+        };
     }
 
     /// <summary>
@@ -328,21 +336,22 @@ public static class VolunteerManager
     /// <returns>A list of VolunteerInList</returns>
     public static IEnumerable<BO.VolunteerInList> GetAllVolunteers()
     {
-        lock (AdminManager.BlMutex) //stage 7
+        IEnumerable<DO.Volunteer> volunteers;
+        lock (AdminManager.BlMutex)
         {
-            var volunteers = s_dal.Volunteer.ReadAll();
-            return volunteers.Select(v => new BO.VolunteerInList
-            {
-                Id = v.Id,
-                FullName = v.FullName,
-                IsActive = v.IsActive,
-                TotalCallsHandled = GetCompletedAssignmentsCount(v.Id),
-                TotalCallsCancelled = GetTotalCallsCancelled(v.Id),
-                TotalExpiredCalls = GetExpiredAssignmentsCount(v.Id),
-                CurrentCallId = GetPendingAssignmentCallId(v.Id),
-                CurrentCallType = GetPendingAssignmentCallType(v.Id) ?? BO.CallType.None
-            }).ToList();
+            volunteers = s_dal.Volunteer.ReadAll();
         }
+        return volunteers.Select(v => new BO.VolunteerInList
+        {
+            Id = v.Id,
+            FullName = v.FullName,
+            IsActive = v.IsActive,
+            TotalCallsHandled = GetCompletedAssignmentsCount(v.Id),
+            TotalCallsCancelled = GetTotalCallsCancelled(v.Id),
+            TotalExpiredCalls = GetExpiredAssignmentsCount(v.Id),
+            CurrentCallId = GetPendingAssignmentCallId(v.Id),
+            CurrentCallType = GetPendingAssignmentCallType(v.Id) ?? BO.CallType.None
+        });
     }
 
 
@@ -360,46 +369,53 @@ public static class VolunteerManager
 
         Thread.CurrentThread.Name = $"Simulator{++s_simulatorCounter}";
 
+        List<DO.Volunteer> activeVolunteers;
 
-                lock (AdminManager.BlMutex) //stage 7
+        lock (AdminManager.BlMutex) //stage 7
+        {
+            activeVolunteers = s_dal.Volunteer.ReadAll().Where(v => v.IsActive).ToList();
+        }
+
+        foreach (var volunteer in activeVolunteers)
+        {
+            lock (AdminManager.BlMutex) //stage 7
+            {
+
+                int? pendingAssignmentId = GetPendingAssignmentId(volunteer.Id);
+                if (pendingAssignmentId == null)
                 {
-                    var activeVolunteers = s_dal.Volunteer.ReadAll().Where(v => v.IsActive).ToList();
-                    foreach (var volunteer in activeVolunteers)
+                    // No current assignment, randomly select a new call to handle
+                    if (new Random().NextDouble() < 0.2) // 20% chance
                     {
-                        int? pendingAssignmentId = GetPendingAssignmentId(volunteer.Id);
-                        if (pendingAssignmentId == null)
+                        var openCalls = CallManager.GetOpenCallsForVolunteer(volunteer.Id)?.ToList();
+                        if (openCalls != null && openCalls.Count != 0)
                         {
-                            // No current assignment, randomly select a new call to handle
-                            if (new Random().NextDouble() < 0.2) // 20% chance
-                            {
-                                var openCalls = CallManager.GetOpenCallsForVolunteer(volunteer.Id).ToList();
-                                if (openCalls.Any())
-                                {
-                                    var selectedCall = openCalls[new Random().Next(openCalls.Count)];
-                                    s_bl.Call.AssignCallToVolunteer(volunteer.Id, selectedCall.Id);
-                                }
-                            }
+                            var selectedCall = openCalls[new Random().Next(openCalls.Count)];
+                            s_bl.Call.AssignCallToVolunteer(volunteer.Id, selectedCall.Id);
                         }
-                        else
-                        {
-                            // There is a current assignment
-                            var assignment = s_dal.Assignment.Read(pendingAssignmentId.Value);
-                            var call = s_bl.Call.GetCallDetails(assignment.CallId);
-                            var timeElapsed = DateTime.Now - assignment.EntryTime;
-                            var requiredTime = CalculateRequiredTime(volunteer, call); 
-
-                            if (timeElapsed >= requiredTime)
-                            {
-                                s_bl.Call.CompleteCallHandling(volunteer.Id, assignment.Id);
-                            }
-                            else if (new Random().NextDouble() < 0.1) // 10% chance
-                            {
-                                s_bl.Call.CancelCallHandling(volunteer.Id, assignment.Id);
-                            }
-                        }
-                    }//lock
+                    }
                 }
-                Observers.NotifyListUpdated();
+                else
+                {
+                    // There is a current assignment
+                    var assignment = s_dal.Assignment.Read(pendingAssignmentId.Value);
+                    var call = s_bl.Call.GetCallDetails(assignment.CallId);
+                    var timeElapsed = AdminManager.Now - assignment.EntryTime;
+                    var requiredTime = CalculateRequiredTime(volunteer, call);
+
+                    if (timeElapsed >= requiredTime)
+                    {
+                        s_bl.Call.CompleteCallHandling(volunteer.Id, assignment.Id);
+                    }
+                    else if (new Random().NextDouble() < 0.1) // 10% chance
+                    {
+                        s_bl.Call.CancelCallHandling(volunteer.Id, assignment.Id);
+                    }
+                }
+
+            }//lock
+        }
+        Observers.NotifyListUpdated();
     }
 
     /// <summary>

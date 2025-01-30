@@ -82,11 +82,11 @@ namespace BlImplementation
                     };
                     lock (AdminManager.BlMutex)//stage 7
                         _dal.Volunteer.Create(volunteerD);
-        VolunteerManager.Observers.NotifyListUpdated();
+                    VolunteerManager.Observers.NotifyListUpdated();
 
                     // Compute the coordinates asynchronously without waiting for the results
                     _ = VolunteerManager.UpdateCoordinatesForVolunteerAddressAsync(volunteerD);
-    }
+                }
                 else
                 {
                     throw new BO.BlValidationException($"Validation failed for the following details: {string.Join(", ", invalidDetails)}");
@@ -117,15 +117,28 @@ namespace BlImplementation
             try
             {
                 DO.Volunteer? volunteer;
-                lock (AdminManager.BlMutex)//stage 7
-                    volunteer = _dal.Volunteer.Read(id) ??
+                lock (AdminManager.BlMutex) //stage 7
+                {
+                    volunteer = _dal.Volunteer.Read(id);
+                }
+
+                if (volunteer == null)
+                {
                     throw new BO.BlDoesNotExistException($"Volunteer with ID={id} does not exist.");
+                }
+
                 var CallVolunteer = CallManager.GetClosedCallsByVolunteer(id);
-                if (CallVolunteer != null) { CallVolunteer = CallVolunteer.Where(c => c.CompletionStatus == BO.CompletionType.Treated); }
+                if (CallVolunteer != null)
+                {
+                    CallVolunteer = CallVolunteer.Where(c => c.CompletionStatus == BO.CompletionType.Treated);
+                }
+
                 if (volunteer.IsActive == false && CallVolunteer == null)
                 {
-                    lock (AdminManager.BlMutex)//stage 7
+                    lock (AdminManager.BlMutex) //stage 7
+                    {
                         _dal.Volunteer.Delete(id);
+                    }
                     VolunteerManager.Observers.NotifyListUpdated();
                 }
                 else
@@ -156,9 +169,15 @@ namespace BlImplementation
             try
             {
                 DO.Volunteer? volunteer;
-                lock (AdminManager.BlMutex)//stage 7
-                    volunteer = _dal.Volunteer.Read(id) ??
+                lock (AdminManager.BlMutex) //stage 7
+                {
+                    volunteer = _dal.Volunteer.Read(id);
+                }
+
+                if (volunteer == null)
+                {
                     throw new BO.BlDoesNotExistException($"Volunteer with ID={id} does not exist.");
+                }
 
                 return VolunteerManager.ConvertVolunteerIdToBO(id);
             }
@@ -226,9 +245,15 @@ namespace BlImplementation
             try
             {
                 DO.Volunteer? volunteer;
-                lock (AdminManager.BlMutex)//stage 7
-                    volunteer = _dal.Volunteer.Read(v => v.Email == password) ??
+                lock (AdminManager.BlMutex) //stage 7
+                {
+                    volunteer = _dal.Volunteer.Read(v => v.Email == password);
+                }
+
+                if (volunteer == null)
+                {
                     throw new BO.BlLoginException("Invalid username.");
+                }
 
                 if (volunteer.Password != password)
                 {
@@ -242,7 +267,7 @@ namespace BlImplementation
                 throw new BO.BlSystemException("An error occurred during login.", ex);
             }
         }
-        
+
         /// <summary>
         /// Updates the details of an existing volunteer.
         /// </summary>
@@ -268,7 +293,7 @@ namespace BlImplementation
                 if (!isIdValid) invalidDetails.Add("ID");
                 if (!isPhoneNumberValid) invalidDetails.Add("Phone Number");
 
-                if (isEmailValid && isPhoneNumberValid &&  isIdValid)
+                if (isEmailValid && isPhoneNumberValid && isIdValid)
                 {
                     BO.Volunteer volunteerB = new()
                     {

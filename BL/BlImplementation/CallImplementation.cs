@@ -74,12 +74,15 @@ namespace BlImplementation
         /// <exception cref="BlOperationException">Thrown when the call cannot be assigned due to invalid status or expiration.</exception>
         public void AssignCallToVolunteer(int volunteerId, int callId)
         {
-            AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
+            //AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
             DO.Call? call;
             lock (AdminManager.BlMutex) //stage 7
+            {
                 call = _dal.Call.Read(callId);
+            }
+
             var callStatus = CallManager.GetCallStatus(callId);
-            
+
             // Check if the call is open or open in risk and the maximum completion time has not passed
             if ((callStatus == CallStatus.Open || callStatus == CallStatus.OpenInRisk) && call.MaxCompletionTime > AdminManager.Now)
             {
@@ -89,8 +92,10 @@ namespace BlImplementation
                     VolunteerId = volunteerId,
                     EntryTime = AdminManager.Now
                 };
-                lock (AdminManager.BlMutex)//stage 7
+                lock (AdminManager.BlMutex) //stage 7
+                {
                     _dal.Assignment.Create(newAssignment);
+                }
                 VolunteerManager.Observers.NotifyItemUpdated(newAssignment.VolunteerId);
                 CallManager.Observers.NotifyListUpdated();
             }
@@ -108,15 +113,16 @@ namespace BlImplementation
         /// <exception cref="BlUnauthorizedAccessException">Thrown when the requester does not have permission to cancel the call handling or the assignment has already been completed.</exception>
         public void CancelCallHandling(int requesterId, int assignmentId)
         {
-            AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
+            //AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
             DO.Assignment? assignment;
             DO.Volunteer? requester;
             // Read the requester and assignment details from the data layer
-            lock (AdminManager.BlMutex)//stage 7
+            lock (AdminManager.BlMutex) //stage 7
             {
                 requester = _dal.Volunteer.Read(requesterId);
                 assignment = _dal.Assignment.Read(assignmentId);
             }
+
             // Check if the CompletionStatus is open(null) or not
             if (assignment.CompletionStatus == null)
             {
@@ -133,12 +139,12 @@ namespace BlImplementation
                         CompletionStatus = (DO.CompletionType)CompletionType.SelfCancellation,
                         CompletionTime = AdminManager.Now
                     };
-                    lock (AdminManager.BlMutex)//stage 7
+                    lock (AdminManager.BlMutex) //stage 7
+                    {
                         _dal.Assignment.Update(newAssignment);
+                    }
                     VolunteerManager.Observers.NotifyItemUpdated(assignment.VolunteerId);
                     CallManager.Observers.NotifyListUpdated();
-
-
                 }
                 // If the requester is a manager
                 else if (requester.VolunteerRole == DO.Role.Manager)
@@ -153,11 +159,12 @@ namespace BlImplementation
                         CompletionStatus = (DO.CompletionType)CompletionType.ManagerCancellation,
                         CompletionTime = AdminManager.Now
                     };
-                    lock (AdminManager.BlMutex)//stage 7
+                    lock (AdminManager.BlMutex) //stage 7
+                    {
                         _dal.Assignment.Update(newAssignment);
+                    }
                     VolunteerManager.Observers.NotifyItemUpdated(assignment.VolunteerId);
                     CallManager.Observers.NotifyListUpdated();
-
                 }
             }
             else
@@ -176,17 +183,18 @@ namespace BlImplementation
         /// <exception cref="BlDoesNotExistException">Thrown when the assignment or volunteer is not found.</exception>
         public void CompleteCallHandling(int volunteerId, int assignmentId)
         {
-            AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
+            //AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
             try
             {
                 // Read the requester and assignment details from the data layer
                 DO.Volunteer? volunteer;
                 DO.Assignment? assignment;
-                lock (AdminManager.BlMutex)//stage 7
+                lock (AdminManager.BlMutex) //stage 7
                 {
                     volunteer = _dal.Volunteer.Read(volunteerId);
                     assignment = _dal.Assignment.Read(assignmentId);
                 }
+
                 // Check if the CompletionStatus is open(null) or not
                 if (assignment.CompletionStatus == null)
                 {
@@ -203,8 +211,10 @@ namespace BlImplementation
                             CompletionStatus = (DO.CompletionType)CompletionType.Treated,
                             CompletionTime = AdminManager.Now
                         };
-                        lock (AdminManager.BlMutex)//stage 7
+                        lock (AdminManager.BlMutex) //stage 7
+                        {
                             _dal.Assignment.Update(newAssignment);
+                        }
                         VolunteerManager.Observers.NotifyItemUpdated(assignment.VolunteerId);
                         CallManager.Observers.NotifyListUpdated();
                     }
@@ -236,8 +246,11 @@ namespace BlImplementation
             AdminManager.ThrowOnSimulatorIsRunning(); //stage 7
             // Retrieve the call details from the data layer
             DO.Call? callEntity;
-            lock (AdminManager.BlMutex)//stage 7
+            lock (AdminManager.BlMutex) //stage 7
+            {
                 callEntity = _dal.Call.Read(id);
+            }
+
             if (callEntity == null)
             {
                 throw new BlDoesNotExistException($"Call with ID {id} not found.");
@@ -252,11 +265,12 @@ namespace BlImplementation
             try
             {
                 // Attempt to delete the call in the data layer
-                lock (AdminManager.BlMutex)//stage 7
+                lock (AdminManager.BlMutex) //stage 7
+                {
                     _dal.Call.Delete(id);
+                }
 
                 CallManager.Observers.NotifyListUpdated();
-                
             }
             catch (Exception ex)
             {
@@ -277,8 +291,11 @@ namespace BlImplementation
             {
                 // Retrieve the call details from the data layer
                 DO.Call? callEntity;
-                lock (AdminManager.BlMutex)//stage 7
+                lock (AdminManager.BlMutex) //stage 7
+                {
                     callEntity = _dal.Call.Read(id);
+                }
+
                 if (callEntity == null)
                 {
                     throw new BlDoesNotExistException($"Call with ID {id} not found.");
