@@ -5,6 +5,7 @@ using System.Windows.Data;
 using BO;
 using Helpers;
 using FontAwesome.WPF;
+using System.Windows.Media;
 
 
 namespace PL
@@ -338,6 +339,35 @@ namespace PL
         }
     }
 
+
+    public class AllocationCountToColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int count = (int)value;
+            if (count < 5) return Brushes.LightCoral;
+            if (count < 10) return Brushes.LightYellow;
+            return Brushes.LightGreen;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class IsActiveToColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? Brushes.LightGreen : Brushes.LightCoral;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
 
 

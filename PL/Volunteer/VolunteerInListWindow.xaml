@@ -3,64 +3,307 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PL.Volunteer"
+        xmlns:local="clr-namespace:PL"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
         Title="Volunteer List" Height="640" Width="800"
-        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+
     <Window.Resources>
-        <Style TargetType="Label">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="#2E8B57"/>
+        <!-- ממירים -->
+        <local:StatusToColorConverter x:Key="StatusToColorConverter"/>
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <local:CurrentCallAndActiveEnabledConverter x:Key="CurrentCallAndActiveEnabledConverter"/>
+        <local:CallTypeToIconConverter x:Key="CallTypeToIconConverter"/>
+
+        <local:AllocationCountToColorConverter x:Key="AllocationCountToColorConverter"/>
+        <local:IsActiveToColorConverter x:Key="IsActiveToColorConverter"/>
+
+        <!-- סגנונות -->
+        <Style x:Key="FontAwesome" TargetType="TextBlock">
+            <Setter Property="FontFamily" 
+                    Value="pack://application:,,,/FontAwesome.WPF;component/#FontAwesome"/>
         </Style>
-        <Style TargetType="Button">
+
+        <Style x:Key="CenterAlignStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="DataGridRowStyle" TargetType="DataGridRow">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#F0FFF0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- סגנון כפתור -->
+        <Style x:Key="ModernButton" TargetType="Button">
             <Setter Property="Background" Value="#2E8B57"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="10,5"/>
-            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="12 6"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3CB371"/>
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect BlurRadius="8" Opacity="0.2" ShadowDepth="2"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
-        <Style TargetType="ComboBox">
+
+        <!-- סגנון ComboBox -->
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Width" Value="200"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="Padding" Value="6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton"
+                                        Grid.Column="2"
+                                        Focusable="False"
+                                        IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                        ClickMode="Press">
+                                <ToggleButton.Template>
+                                    <ControlTemplate>
+                                        <Border Background="Transparent"
+                                                Padding="0"
+                                                SnapsToDevicePixels="True">
+                                            <Path x:Name="Arrow"
+                                                  Fill="#666"
+                                                  HorizontalAlignment="Right"
+                                                  VerticalAlignment="Center"
+                                                  Margin="0,0,5,0"
+                                                  Data="M0,0 L4,4 8,0 Z"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                            <ContentPresenter Name="ContentSite"
+                                            Content="{TemplateBinding SelectedItem}"
+                                            Margin="3,3,23,3"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Left"/>
+                            <Popup Name="Popup"
+                                 Placement="Bottom"
+                                 IsOpen="{TemplateBinding IsDropDownOpen}"
+                                 AllowsTransparency="True"
+                                 Focusable="False"
+                                 PopupAnimation="Slide">
+                                <Border BorderThickness="1"
+                                      BorderBrush="#E0E0E0"
+                                      Background="White">
+                                    <ScrollViewer SnapsToDevicePixels="True">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- סגנונות DataGrid -->
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F8F8F8"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#2E8B57"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="10 5"/>
         </Style>
     </Window.Resources>
-    <Grid Background="#F0F0F0">
+
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
-        <!-- Header Section -->
-        <Grid Grid.Row="0" Background="#2E8B57" Margin="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Label Content="Filter by Call Type:" Foreground="White" VerticalAlignment="Center" Grid.Column="0" Margin="5"/>
-            <ComboBox ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}" 
-                      SelectedValue="{Binding Path=callType, Mode=TwoWay}" 
-                      SelectionChanged="CallTyps_CB" 
-                      VerticalAlignment="Center" Grid.Column="1" Margin="5"/>
-        </Grid>
-        
+
+        <!-- Filter Section -->
+        <Border Grid.Row="0" Background="White" Margin="10" CornerRadius="4" Padding="15">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="🔍 Filter by Call Type:" Margin="0 0 10 0" FontWeight="SemiBold"/>
+                <ComboBox ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}" 
+                        SelectedValue="{Binding Path=callType, Mode=TwoWay}" 
+                        SelectionChanged="CallTyps_CB"
+                        Style="{StaticResource ModernComboBox}"/>
+            </StackPanel>
+        </Border>
+
         <!-- DataGrid Section -->
-        <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Margin="10" Grid.Row="1" Background="White" BorderBrush="#2E8B57" BorderThickness="1" ItemsSource="{Binding VolunteerList}" SelectedItem="{Binding SelectedVolunteer}" MouseDoubleClick="lsvVolunteersList_MouseDoubleClick">
+        <DataGrid Grid.Row="1" 
+                AutoGenerateColumns="False" 
+                ItemsSource="{Binding VolunteerList}" 
+                SelectedItem="{Binding SelectedVolunteer}"
+                MouseDoubleClick="lsvVolunteersList_MouseDoubleClick">
+
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow" BasedOn="{StaticResource DataGridRowStyle}"/>
+            </DataGrid.RowStyle>
+
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="Auto"/>
-                <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="Auto"/>
-                <DataGridCheckBoxColumn Header="Is Active" Binding="{Binding IsActive}" Width="Auto" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Total Calls Handled" Binding="{Binding TotalCallsHandled}" Width="Auto"/>
-                <DataGridTextColumn Header="Total Calls Cancelled" Binding="{Binding TotalCallsCancelled}" Width="Auto"/>
-                <DataGridTextColumn Header="Total Expired Calls" Binding="{Binding TotalExpiredCalls}" Width="Auto"/>
-                <DataGridTextColumn Header="Current Call Type" Binding="{Binding CurrentCallType}" Width="Auto"/>
+                <!-- Id -->
+                <DataGridTextColumn Header="Id" 
+                                  Binding="{Binding Id}" 
+                                  Width="Auto"
+                                  ElementStyle="{StaticResource CenterAlignStyle}"/>
+
+                <!-- Full Name -->
+                <DataGridTextColumn Header="Full Name" 
+                                  Binding="{Binding FullName}" 
+                                  Width="*"
+                                  ElementStyle="{StaticResource CenterAlignStyle}"/>
+
+                <!-- Is Active -->
+                <DataGridTemplateColumn Header="Is Active" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsActive}" 
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    IsEnabled="False"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" 
+                                  Value="{Binding IsActive, Converter={StaticResource IsActiveToColorConverter}}"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTemplateColumn.CellStyle>
+                </DataGridTemplateColumn>
+
+                <!-- Total Calls Handled -->
+                <DataGridTemplateColumn Header="Total Calls Handled" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding TotalCallsHandled}" 
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" 
+                                  Value="{Binding TotalCallsHandled, Converter={StaticResource AllocationCountToColorConverter}}"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTemplateColumn.CellStyle>
+                </DataGridTemplateColumn>
+
+                <!-- Total Calls Cancelled -->
+                <DataGridTemplateColumn Header="Total Calls Cancelled" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding TotalCallsCancelled}" 
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" 
+                                  Value="{Binding TotalCallsCancelled, Converter={StaticResource AllocationCountToColorConverter}}"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTemplateColumn.CellStyle>
+                </DataGridTemplateColumn>
+
+                <!-- Total Expired Calls -->
+                <DataGridTemplateColumn Header="Total Expired Calls" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding TotalExpiredCalls}" 
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" 
+                                  Value="{Binding TotalExpiredCalls, Converter={StaticResource AllocationCountToColorConverter}}"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTemplateColumn.CellStyle>
+                </DataGridTemplateColumn>
+
+                <!-- Current Call -->
+                <DataGridTemplateColumn Header="Current Call" MinWidth="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource FontAwesome}" 
+                                         Text="{Binding CurrentCallType, Converter={StaticResource CallTypeToIconConverter}}"
+                                         FontSize="16"
+                                         VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding CurrentCallType}" 
+                                         Margin="5,0,0,0"
+                                         VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        
+
         <!-- Footer Section -->
-        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Add Volunteer" Click="btnAdd_Click"/>
-        </StackPanel>
+        <Border Grid.Row="2" Background="#F8F8F8" Padding="10">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="➕ Add Volunteer" 
+                      Click="btnAdd_Click" 
+                      Width="150" 
+                      Style="{StaticResource ModernButton}"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

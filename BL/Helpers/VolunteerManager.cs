@@ -391,7 +391,8 @@ public static class VolunteerManager
                         if (openCalls != null && openCalls.Count != 0)
                         {
                             var selectedCall = openCalls[new Random().Next(openCalls.Count)];
-                            s_bl.Call.AssignCallToVolunteer(volunteer.Id, selectedCall.Id);
+                            if (AdminManager.Now > selectedCall.MaxCompletionTime)
+                                s_bl.Call.AssignCallToVolunteer(volunteer.Id, selectedCall.Id);
                         }
                     }
                 }
