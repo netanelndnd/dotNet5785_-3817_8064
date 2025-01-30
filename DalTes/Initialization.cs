@@ -100,6 +100,8 @@ public static class Initialization
     271468613, 625830781, 817591332, 129652475, 353771595,
         };
 
+        int addressIndex = 10;
+
         // אינדקס עוקב כדי לבחור מזהים בסדר
         int idIndex = 0;
 
@@ -112,7 +114,6 @@ public static class Initialization
 
             double? maxDistance = 100 + s_rand.NextDouble() * 100; // מרחק מקסימלי רנדומלי עם מינימום 100 ועד מקסימום 200
             Role role = i == 0 ? Role.Manager : Role.Volunteer; // המתנדב הראשון הוא מנהל
-            int addressIndex = 10;
 
             Volunteer volunteer = new Volunteer(
                 id,

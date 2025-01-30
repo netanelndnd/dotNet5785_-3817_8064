@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Policy;
@@ -34,59 +35,79 @@ namespace PL.Volunteer
             this.Closed += Window_Closed;
         }
 
-        private void UpdateMapImage(int _volunteerId)
+        private async void UpdateMapImage(int _volunteerId)
         {
-            // שליפת פרטי המתנדב
-            var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(_volunteerId);
-            string apiKey = "AIzaSyBnuV561P8tA08Y7DQDH0GAu5AhQ86m5xs";
+            IsMapLoading = true; // הצג ProgressBar
 
-            // בדיקה אם אין קריאה פעילה
-            if (SelectedCall == null)
+            try
             {
-                MapImageSource = null;
-                return;
+                var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(_volunteerId);
+                string apiKey = "AIzaSyBnuV561P8tA08Y7DQDH0GAu5AhQ86m5xs";
+
+                if (SelectedCall == null)
+                {
+                    MapImageSource = null;
+                    return;
+                }
+
+                var call = s_bl.Call.GetCallDetails(SelectedCall.Id);
+
+                // חישוב גבולות, מרכז המפה, והבדלים גיאוגרפיים
+                double minLatitude = Math.Min(volunteerDetails.Latitude.Value, call.Latitude);
+                double maxLatitude = Math.Max(volunteerDetails.Latitude.Value, call.Latitude);
+                double minLongitude = Math.Min(volunteerDetails.Longitude.Value, call.Longitude);
+                double maxLongitude = Math.Max(volunteerDetails.Longitude.Value, call.Longitude);
+                double centerLatitude = (minLatitude + maxLatitude) / 2;
+                double centerLongitude = (minLongitude + maxLongitude) / 2;
+                double latDiff = maxLatitude - minLatitude;
+                double lngDiff = maxLongitude - minLongitude;
+
+                // חישוב זום (מוגדל יותר)
+                double maxDiff = Math.Max(latDiff, lngDiff);
+                int zoom = (int)(Math.Log(360 / maxDiff) / Math.Log(2)) + 1; // זום מוגדל יותר
+                zoom = Math.Clamp(zoom, 1, 20);
+
+                // חישוב גודל התמונה (סטטי בגבולות פשוטים)
+                double distance = Helpers.Tools.CalculateDistance(
+                    volunteerDetails.Latitude.Value,
+                    volunteerDetails.Longitude.Value,
+                    call.Latitude,
+                    call.Longitude
+                );
+                int size = (int)Math.Clamp(distance * 20, 800, 1200); // גודל סטטי יותר
+
+                // יצירת פרמטרים למפה
+                string markerParams = $"markers=color:blue|label:Call|{call.Latitude},{call.Longitude}";
+                string specialMarkerParams = $"markers=color:red|label:★|{volunteerDetails.Latitude},{volunteerDetails.Longitude}";
+                string pathParams = $"path=color:green|weight:3|{call.Latitude},{call.Longitude}|{volunteerDetails.Latitude},{volunteerDetails.Longitude}";
+
+                // בניית URL
+                string mapUrl = $"https://maps.googleapis.com/maps/api/staticmap?center={centerLatitude},{centerLongitude}&zoom={zoom}&size={size}x{size}&maptype=roadmap&{markerParams}&{specialMarkerParams}&{pathParams}&key={apiKey}";
+
+                await Task.Run(async () =>
+                {
+                    // טען את הנתונים כ-bytes
+                    using (var client = new WebClient())
+                    {
+                        var imageBytes = await client.DownloadDataTaskAsync(mapUrl);
+                        return imageBytes;
+                    }
+                }).ContinueWith(task =>
+                {
+                    if (task.IsCompletedSuccessfully)
+                    {
+                        var bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.StreamSource = new MemoryStream(task.Result);
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.EndInit();
+                        MapImageSource = bitmap;
+                    }
+                }, TaskScheduler.FromCurrentSynchronizationContext());
             }
-
-            // קבלת קואורדינטות של הקריאה
-            var call = s_bl.Call.GetCallDetails(SelectedCall.Id);
-
-            // חישוב גבולות, מרכז המפה, והבדלים גיאוגרפיים
-            double minLatitude = Math.Min(volunteerDetails.Latitude.Value, call.Latitude);
-            double maxLatitude = Math.Max(volunteerDetails.Latitude.Value, call.Latitude);
-            double minLongitude = Math.Min(volunteerDetails.Longitude.Value, call.Longitude);
-            double maxLongitude = Math.Max(volunteerDetails.Longitude.Value, call.Longitude);
-            double centerLatitude = (minLatitude + maxLatitude) / 2;
-            double centerLongitude = (minLongitude + maxLongitude) / 2;
-            double latDiff = maxLatitude - minLatitude;
-            double lngDiff = maxLongitude - minLongitude;
-
-            // חישוב זום (מוגדל יותר)
-            double maxDiff = Math.Max(latDiff, lngDiff);
-            int zoom = (int)(Math.Log(360 / maxDiff) / Math.Log(2)) + 1; // זום מוגדל יותר
-            zoom = Math.Clamp(zoom, 1, 20);
-
-            // חישוב גודל התמונה (סטטי בגבולות פשוטים)
-            double distance = Helpers.Tools.CalculateDistance(
-                volunteerDetails.Latitude.Value,
-                volunteerDetails.Longitude.Value,
-                call.Latitude,
-                call.Longitude
-            );
-            int size = (int)Math.Clamp(distance * 20, 800, 1200); // גודל סטטי יותר
-
-            // יצירת פרמטרים למפה
-            string markerParams = $"markers=color:blue|label:Call|{call.Latitude},{call.Longitude}";
-            string specialMarkerParams = $"markers=color:red|label:★|{volunteerDetails.Latitude},{volunteerDetails.Longitude}";
-            string pathParams = $"path=color:green|weight:3|{call.Latitude},{call.Longitude}|{volunteerDetails.Latitude},{volunteerDetails.Longitude}";
-
-            // בניית URL
-            string mapUrl = $"https://maps.googleapis.com/maps/api/staticmap?center={centerLatitude},{centerLongitude}&zoom={zoom}&size={size}x{size}&maptype=roadmap&{markerParams}&{specialMarkerParams}&{pathParams}&key={apiKey}";
-
-            // בדיקת URL והגדרת המפה
-            if (Uri.TryCreate(mapUrl, UriKind.Absolute, out Uri uriResult) &&
-               (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+            finally
             {
-                MapImageSource = new BitmapImage(uriResult);
+                IsMapLoading = false; // הסתר ProgressBar
             }
         }
 
@@ -215,6 +236,16 @@ namespace PL.Volunteer
         {
             get { return (ImageSource)GetValue(MapImageSourceProperty); }
             set { SetValue(MapImageSourceProperty, value); }
+        }
+
+        // DependencyProperty for IsMapLoading
+        public static readonly DependencyProperty IsMapLoadingProperty =
+            DependencyProperty.Register("IsMapLoading", typeof(bool), typeof(SelectCallWindow), new PropertyMetadata(false));
+
+        public bool IsMapLoading
+        {
+            get { return (bool)GetValue(IsMapLoadingProperty); }
+            set { SetValue(IsMapLoadingProperty, value); }
         }
     }
 

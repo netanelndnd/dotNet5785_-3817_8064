@@ -230,10 +230,13 @@ namespace PL
 
             return value switch
             {
-                "OpenInRisk" => "#FFA500",
-                "Expired" => "#FF4444",
-                "Open" => "#2E8B57",
-                _ => "#E0E0E0"
+                "Open" => "#2E8B57",             // Green
+                "InProgress" => "#1E90FF",       // DodgerBlue
+                "OpenInRisk" => "#FFA500",       // Orange
+                "InProgressInRisk" => "#FF8C00", // DarkOrange
+                "Treated" => "#32CD32",          // LimeGreen
+                "Expired" => "#FF4444",          // Red
+                _ => "#E0E0E0"                   // LightGray
             };
         }
 
@@ -311,6 +314,30 @@ namespace PL
             throw new NotImplementedException();
         }
     }
+
+
+
+    public class BooleanToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            => (value is bool b && b) ? Visibility.Visible : Visibility.Collapsed;
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class InverseBooleanToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            => (value is bool b && !b) ? Visibility.Visible : Visibility.Collapsed;
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 
 
 

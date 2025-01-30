@@ -79,9 +79,7 @@ namespace PL
                     return;
                 }
 
-                string email = s_bl.Volunteer.GetVolunteerDetails(userId).Email;
-
-                var role = s_bl.Volunteer.Login(email, PasswordValue);
+                var role = s_bl.Volunteer.Login(UserID, PasswordValue);
 
                 switch (role)
                 {

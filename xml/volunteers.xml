@@ -9,7 +9,7 @@
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
     <Latitude>31.261355773950353</Latitude>
     <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>118.85000644974309</MaxDistance>
+    <MaxDistance>130.97302257444412</MaxDistance>
     <VolunteerRole>Manager</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -20,10 +20,10 @@
     <PhoneNumber>0501234568</PhoneNumber>
     <Email>rivka.levi@gmail.com</Email>
     <Password>rivka.levi@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>105.79734709128893</MaxDistance>
+    <CurrentAddress>יעקב דורי 27, באר שבע</CurrentAddress>
+    <Latitude>31.26599817239094</Latitude>
+    <Longitude>34.77990632146705</Longitude>
+    <MaxDistance>174.69130743122298</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -34,10 +34,10 @@
     <PhoneNumber>0501234569</PhoneNumber>
     <Email>moshe.mizrahi@gmail.com</Email>
     <Password>moshe.mizrahi@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>175.97438490059906</MaxDistance>
+    <CurrentAddress>מרדכי מקלף 24, באר שבע</CurrentAddress>
+    <Latitude>31.26810025342388</Latitude>
+    <Longitude>34.78262253224672</Longitude>
+    <MaxDistance>144.9492822660824</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -48,10 +48,10 @@
     <PhoneNumber>0501234570</PhoneNumber>
     <Email>yael.katz@gmail.com</Email>
     <Password>yael.katz@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>128.37513811445297</MaxDistance>
+    <CurrentAddress>ח"ן 2, באר שבע</CurrentAddress>
+    <Latitude>31.270759076690847</Latitude>
+    <Longitude>34.80778224155118</Longitude>
+    <MaxDistance>107.37876164004386</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -62,10 +62,10 @@
     <PhoneNumber>0501234571</PhoneNumber>
     <Email>david.peretz@gmail.com</Email>
     <Password>david.peretz@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>163.53398312769258</MaxDistance>
+    <CurrentAddress>חרוב 8, חיפה</CurrentAddress>
+    <Latitude>32.8145186081906</Latitude>
+    <Longitude>34.96942136688308</Longitude>
+    <MaxDistance>158.6026693316715</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -76,10 +76,10 @@
     <PhoneNumber>0501234572</PhoneNumber>
     <Email>sara.ben-david@gmail.com</Email>
     <Password>sara.ben-david@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>166.41504776535913</MaxDistance>
+    <CurrentAddress>יפה נוף 61, חיפה</CurrentAddress>
+    <Latitude>32.8116315773075</Latitude>
+    <Longitude>34.98523717981069</Longitude>
+    <MaxDistance>136.80905142375377</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -90,10 +90,10 @@
     <PhoneNumber>0501234573</PhoneNumber>
     <Email>avi.shalom@gmail.com</Email>
     <Password>avi.shalom@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>139.6686067737232</MaxDistance>
+    <CurrentAddress>שדרות בן גוריון 50, חיפה</CurrentAddress>
+    <Latitude>32.81798598644384</Latitude>
+    <Longitude>34.98876182539728</Longitude>
+    <MaxDistance>159.79469597946178</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -104,10 +104,10 @@
     <PhoneNumber>0501234574</PhoneNumber>
     <Email>miriam.gold@gmail.com</Email>
     <Password>miriam.gold@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>137.35847778567168</MaxDistance>
+    <CurrentAddress>שמריהו לוין 25, חיפה</CurrentAddress>
+    <Latitude>32.81117266997046</Latitude>
+    <Longitude>34.99657405678095</Longitude>
+    <MaxDistance>184.37053133584882</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -118,10 +118,10 @@
     <PhoneNumber>0501234575</PhoneNumber>
     <Email>daniel.azulay@gmail.com</Email>
     <Password>daniel.azulay@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>151.8791010379533</MaxDistance>
+    <CurrentAddress>שדרות אליהו גולומב 47, חיפה</CurrentAddress>
+    <Latitude>32.80613804310656</Latitude>
+    <Longitude>34.99240903307264</Longitude>
+    <MaxDistance>133.31065629342964</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -132,10 +132,10 @@
     <PhoneNumber>0501234576</PhoneNumber>
     <Email>leah.bar@gmail.com</Email>
     <Password>leah.bar@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>177.29259203917906</MaxDistance>
+    <CurrentAddress>שלום עליכם 4, חיפה</CurrentAddress>
+    <Latitude>32.78278227095474</Latitude>
+    <Longitude>35.01498376162042</Longitude>
+    <MaxDistance>189.9984947134777</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -146,10 +146,10 @@
     <PhoneNumber>0501234577</PhoneNumber>
     <Email>yitzhak.shimon@gmail.com</Email>
     <Password>yitzhak.shimon@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>109.80379338856912</MaxDistance>
+    <CurrentAddress>זלמן שניאור 1, חיפה</CurrentAddress>
+    <Latitude>32.77623531406369</Latitude>
+    <Longitude>35.008282393139794</Longitude>
+    <MaxDistance>153.64327596749513</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -160,10 +160,10 @@
     <PhoneNumber>0501234578</PhoneNumber>
     <Email>esther.malka@gmail.com</Email>
     <Password>esther.malka@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>112.22755423899194</MaxDistance>
+    <CurrentAddress>הפלמ"ח 11, קרית אתא</CurrentAddress>
+    <Latitude>32.81065288451351</Latitude>
+    <Longitude>35.12234042641816</Longitude>
+    <MaxDistance>112.90850004316056</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -174,10 +174,10 @@
     <PhoneNumber>0501234579</PhoneNumber>
     <Email>ronen.alon@gmail.com</Email>
     <Password>ronen.alon@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>175.44455645753578</MaxDistance>
+    <CurrentAddress>וינגייט 17, קרית אתא</CurrentAddress>
+    <Latitude>32.815870631371325</Latitude>
+    <Longitude>35.1139504148565</Longitude>
+    <MaxDistance>133.25925196687288</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -188,10 +188,10 @@
     <PhoneNumber>0501234580</PhoneNumber>
     <Email>tamar.shani@gmail.com</Email>
     <Password>tamar.shani@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>180.28377167695012</MaxDistance>
+    <CurrentAddress>נורדאו 72, קרית אתא</CurrentAddress>
+    <Latitude>32.812499553433696</Latitude>
+    <Longitude>35.11011456487845</Longitude>
+    <MaxDistance>159.8149995783819</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -202,10 +202,10 @@
     <PhoneNumber>0501234581</PhoneNumber>
     <Email>elior.ben-ami@gmail.com</Email>
     <Password>elior.ben-ami@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>192.29648875683952</MaxDistance>
+    <CurrentAddress>חנקין 20, קרית אתא</CurrentAddress>
+    <Latitude>32.81180658026046</Latitude>
+    <Longitude>35.10917157396484</Longitude>
+    <MaxDistance>146.89215104082663</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -216,10 +216,10 @@
     <PhoneNumber>0501234582</PhoneNumber>
     <Email>shira.tal@gmail.com</Email>
     <Password>shira.tal@gmail.com</Password>
-    <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.261355773950353</Latitude>
-    <Longitude>34.78533897059906</Longitude>
-    <MaxDistance>102.26743057171639</MaxDistance>
+    <CurrentAddress>חנקין 1, קרית אתא</CurrentAddress>
+    <Latitude>32.81275577804192</Latitude>
+    <Longitude>35.10525108926754</Longitude>
+    <MaxDistance>116.24986110339562</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>

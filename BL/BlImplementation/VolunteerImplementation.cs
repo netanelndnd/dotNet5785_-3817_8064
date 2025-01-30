@@ -227,7 +227,7 @@ namespace BlImplementation
             {
                 DO.Volunteer? volunteer;
                 lock (AdminManager.BlMutex)//stage 7
-                    volunteer = _dal.Volunteer.Read(v => v.Email == username) ??
+                    volunteer = _dal.Volunteer.Read(v => v.Email == password) ??
                     throw new BO.BlLoginException("Invalid username.");
 
                 if (volunteer.Password != password)
@@ -277,6 +277,8 @@ namespace BlImplementation
                         Password = volunteer.Password,
                         PhoneNumber = volunteer.PhoneNumber,
                         CurrentAddress = volunteer.CurrentAddress,
+                        Latitude = 0,
+                        Longitude = 0,
                         FullName = volunteer.FullName,
                         MaxDistance = volunteer.MaxDistance,
                         IsActive = volunteer.IsActive,
