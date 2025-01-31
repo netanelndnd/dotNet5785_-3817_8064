@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using System.IO;
 using System.Net;
+using System.Text.RegularExpressions;
 
 
 namespace PL.Volunteer
@@ -210,9 +211,58 @@ namespace PL.Volunteer
                 MessageBox.Show("Max distance must be a valid number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
+            if (!HasLowerCase(CurrentVolunteer.Password))
+            {
+                MessageBox.Show("Password must be with lowercase.", "Weak Password", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (!HasUpperCase(CurrentVolunteer.Password))
+            {
+                MessageBox.Show("Password must be with a uppercase.", "Weak Password", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (!HasDigit(CurrentVolunteer.Password))
+            {
+                MessageBox.Show("Password must be with a number.", "Weak Password", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (!HasSpecialCharacter(CurrentVolunteer.Password))
+            {
+                MessageBox.Show("Password must be with a special character (like @ or #).", "Weak Password", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (!HasNumPas(CurrentVolunteer.Password))
+            {
+                MessageBox.Show("Password must be between 8 and 15 characters long.", "Weak Password", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
 
             return true;
         }
+        public static bool HasLowerCase(string password)
+        {
+            return Regex.IsMatch(password, @"[a-z]");
+        }
+
+        public static bool HasUpperCase(string password)
+        {
+            return Regex.IsMatch(password, @"[A-Z]");
+        }
+
+        public static bool HasDigit(string password)
+        {
+            return Regex.IsMatch(password, @"\d");
+        }
+
+        public static bool HasSpecialCharacter(string password)
+        {
+            return Regex.IsMatch(password, @"[^\da-zA-Z]");
+        }
+        public static bool HasNumPas(string password)
+        {
+            return password.Length>=8&& password.Length<=15;
+        }
+
 
         // Observer method to refresh the volunteer details
         private volatile DispatcherOperation? _observerOperation = null; //stage 7
