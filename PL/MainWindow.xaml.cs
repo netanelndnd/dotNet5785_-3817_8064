@@ -22,6 +22,7 @@ namespace PL
     {
         public MainWindow(int userId = 0)
         {
+            Interval = 2;
             CurrentManager = userId;
             InitializeComponent();
         }
@@ -81,6 +82,16 @@ namespace PL
         }
         public static readonly DependencyProperty IsSimulatorRunningProperty =
             DependencyProperty.Register("IsSimulatorRunning", typeof(bool), typeof(MainWindow));
+
+        public double SimulationProgress
+        {
+            get { return (double)GetValue(SimulationProgressProperty); }
+            set { SetValue(SimulationProgressProperty, value); }
+        }
+        public static readonly DependencyProperty SimulationProgressProperty =
+            DependencyProperty.Register("SimulationProgress", typeof(double), typeof(MainWindow));
+
+        private int TotalInitialCalls { get; set; }
 
         private void btnAddOneMinute_Click(object sender, RoutedEventArgs e)
         {
@@ -210,6 +221,13 @@ namespace PL
             s_bl.Admin.AddClockObserver(clockObserver);
             s_bl.Admin.AddConfigObserver(configObserver);
             s_bl.Call.AddObserver(UpdateCallCountsObserver);
+
+            // Calculate initial total calls
+            int[] quantities = s_bl.Call.GetCallQuantitiesByStatus();
+            TotalInitialCalls = quantities[(int)BO.CallStatus.Open] +
+                                quantities[(int)BO.CallStatus.InProgress] +
+                                quantities[(int)BO.CallStatus.OpenInRisk] +
+                                quantities[(int)BO.CallStatus.InProgressInRisk];
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -319,6 +337,8 @@ namespace PL
                     InProgressInRiskCallsCount = quantities[(int)BO.CallStatus.InProgressInRisk];
                     TreatedCallsCount = quantities[(int)BO.CallStatus.Treated];
                     ExpiredCallsCount = quantities[(int)BO.CallStatus.Expired];
+
+                    UpdateSimulationProgress();
                 });
         }
 
@@ -333,6 +353,20 @@ namespace PL
             {
                 s_bl.Admin.StartSimulator(Interval);
                 IsSimulatorRunning = true;
+            }
+        }
+
+        private void UpdateSimulationProgress()
+        {
+            int remainingCalls = OpenCallsCount + InProgressCallsCount + OpenInRiskCallsCount + InProgressInRiskCallsCount;
+
+            if (TotalInitialCalls > 0)
+            {
+                SimulationProgress = ((double)(TotalInitialCalls - remainingCalls) / TotalInitialCalls) * 100;
+            }
+            else
+            {
+                SimulationProgress = 0;
             }
         }
     }

@@ -128,13 +128,13 @@
 
                 <Border Style="{StaticResource ModernCard}" Margin="0 20 0 0">
                     <StackPanel>
-                        <TextBlock Text="System Status" Style="{StaticResource SectionHeader}"/>
+                        <TextBlock Text="System Status Simulation" Style="{StaticResource SectionHeader}"/>
                         <TextBlock Text="{Binding CurrentTime}" Foreground="#606060"/>
                         <ProgressBar Value="{Binding SimulationProgress}" 
                                    Height="8" 
                                    Margin="0 10 0 5"
                                    Foreground="#2E8B57"
-                                   IsIndeterminate="{Binding IsSimulatorRunning}"/>
+                                   />
                         <TextBlock Text="{Binding SystemVersion}"
                                  FontSize="12"
                                  Foreground="#808080"/>

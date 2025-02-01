@@ -247,7 +247,7 @@ namespace BlImplementation
                 DO.Volunteer? volunteer;
                 lock (AdminManager.BlMutex) //stage 7
                 {
-                    volunteer = _dal.Volunteer.Read(v => v.Email == password);
+                    volunteer = _dal.Volunteer.Read(v => v.Password == password);
                 }
 
                 if (volunteer == null)
