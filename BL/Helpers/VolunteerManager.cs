@@ -385,13 +385,13 @@ public static class VolunteerManager
                 if (pendingAssignmentId == null)
                 {
                     // No current assignment, randomly select a new call to handle
-                    if (new Random().NextDouble() < 0.2) // 20% chance
+                    if (new Random().NextDouble() < 0.5) // 20% chance
                     {
                         var openCalls = CallManager.GetOpenCallsForVolunteer(volunteer.Id)?.ToList();
                         if (openCalls != null && openCalls.Count != 0)
                         {
                             var selectedCall = openCalls[new Random().Next(openCalls.Count)];
-                            if (AdminManager.Now > selectedCall.MaxCompletionTime)
+                            if (AdminManager.Now < selectedCall.MaxCompletionTime)
                                 s_bl.Call.AssignCallToVolunteer(volunteer.Id, selectedCall.Id);
                         }
                     }
@@ -401,7 +401,7 @@ public static class VolunteerManager
                     // There is a current assignment
                     var assignment = s_dal.Assignment.Read(pendingAssignmentId.Value);
                     var call = s_bl.Call.GetCallDetails(assignment.CallId);
-                    var timeElapsed = AdminManager.Now - assignment.EntryTime;
+                    var timeElapsed = (AdminManager.Now - assignment.EntryTime);
                     var requiredTime = CalculateRequiredTime(volunteer, call);
 
                     if (timeElapsed >= requiredTime)

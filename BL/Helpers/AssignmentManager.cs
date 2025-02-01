@@ -1,4 +1,5 @@
-﻿using DalApi;
+﻿using BO;
+using DalApi;
 
 namespace Helpers;
 
@@ -122,6 +123,7 @@ public static class AssignmentManager
     public static IEnumerable<BO.CallAssignInList>? GetCallAssignmentsByCallId(int callId)
     {
         IEnumerable<DO.Assignment> assignments;
+        IEnumerable<CallAssignInList>? callAssignInList;
 
         lock (AdminManager.BlMutex) //stage 7
         {
@@ -133,15 +135,17 @@ public static class AssignmentManager
         {
             return null;
         }
-
-        var callAssignInList = assignments.Select(a => new BO.CallAssignInList
+        lock (AdminManager.BlMutex) //stage 7
         {
-            VolunteerId = a.VolunteerId,
-            VolunteerName = s_dal.Volunteer.Read(a.VolunteerId)?.FullName,
-            StartTime = a.EntryTime,
-            EndTime = a.CompletionTime,
-            CompletionType = (BO.CompletionType?)a.CompletionStatus
-        });
+            callAssignInList = assignments.Select(a => new BO.CallAssignInList
+            {
+                VolunteerId = a.VolunteerId,
+                VolunteerName = s_dal.Volunteer.Read(a.VolunteerId)?.FullName,
+                StartTime = a.EntryTime,
+                EndTime = a.CompletionTime,
+                CompletionType = (BO.CompletionType?)a.CompletionStatus
+            });
+        }
 
         return callAssignInList;
     }
@@ -162,23 +166,26 @@ public static class AssignmentManager
             assignments = s_dal.Assignment.ReadAll().ToList();
             now = AdminManager.Now;
         }
-
-        foreach (var assignment in assignments)
+        lock (AdminManager.BlMutex) //stage 7
         {
-            var call = s_dal.Call.Read(assignment.CallId);
-            if (call == null)
+            foreach (var assignment in assignments)
             {
-                continue;
-            }
-
-            if (assignment.CompletionStatus == null && now > call.MaxCompletionTime)
-            {
-                var updatedAssignment = assignment with
+                var call = s_dal.Call.Read(assignment.CallId);
+                if (call == null)
                 {
-                    CompletionStatus = DO.CompletionType.Expired,
-                    CompletionTime = assignment.CompletionTime ?? now
-                };
-                s_dal.Assignment.Update(updatedAssignment);
+                    continue;
+                }
+
+                if (assignment.CompletionStatus == null && now > call.MaxCompletionTime)
+                {
+                    var updatedAssignment = assignment with
+                    {
+                        CompletionStatus = DO.CompletionType.Expired,
+                        CompletionTime = assignment.CompletionTime ?? now
+                    };
+
+                    s_dal.Assignment.Update(updatedAssignment);
+                }
             }
         }
 
