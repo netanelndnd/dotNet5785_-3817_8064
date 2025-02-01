@@ -2,6 +2,8 @@
 using BlApi;
 using DalApi;
 using Helpers;
+using System.Text;
+using System.Security.Cryptography;
 //using BO;
 
 namespace BlImplementation
@@ -71,7 +73,7 @@ namespace BlImplementation
                     {
                         Id = volunteerB.Id,
                         Email = volunteerB.Email,
-                        Password = volunteerB.Password,
+                        Password = PasswordHasher.HashPassword(volunteerB.Password!),
                         PhoneNumber = volunteerB.PhoneNumber,
                         CurrentAddress = volunteerB.CurrentAddress,
                         FullName = volunteerB.FullName,
@@ -244,10 +246,11 @@ namespace BlImplementation
         {
             try
             {
+                string passwardHasing = PasswordHasher.HashPassword(password);
                 DO.Volunteer? volunteer;
                 lock (AdminManager.BlMutex) //stage 7
                 {
-                    volunteer = _dal.Volunteer.Read(v => v.Password == password);
+                    volunteer = _dal.Volunteer.Read(v => v.Password == passwardHasing|| v.Password== password);
                 }
 
                 if (volunteer == null)
@@ -255,7 +258,7 @@ namespace BlImplementation
                     throw new BO.BlLoginException("Invalid username.");
                 }
 
-                if (volunteer.Password != password)
+                if (volunteer.Password != passwardHasing&& volunteer.Password != password)
                 {
                     throw new BO.BlLoginException("Invalid password.");
                 }
@@ -299,7 +302,7 @@ namespace BlImplementation
                     {
                         Id = volunteer.Id,
                         Email = volunteer.Email,
-                        Password = volunteer.Password,
+                        Password = PasswordHasher.HashPassword(volunteer.Password!),
                         PhoneNumber = volunteer.PhoneNumber,
                         CurrentAddress = volunteer.CurrentAddress,
                         Latitude = 0,
@@ -333,6 +336,20 @@ namespace BlImplementation
             catch (Exception ex)
             {
                 throw new BO.BlSystemException("An error occurred while updating the volunteer details.", ex);
+            }
+        }
+        // This class provides hashing functionality for passwords using SHA256.
+        public static class PasswordHasher
+        {
+            // Hashes the given password using SHA256 and returns the hashed value as a Base64 string.
+            public static string HashPassword(string password)
+            {
+                using (SHA256 sha256 = SHA256.Create())
+                {
+                    byte[] bytes = Encoding.UTF8.GetBytes(password); // Convert the password to a byte array.
+                    byte[] hash = sha256.ComputeHash(bytes); // Compute the hash of the byte array.
+                    return Convert.ToBase64String(hash); // Convert the hash to a Base64 string and return it.
+                }
             }
         }
     }
