@@ -5,11 +5,11 @@
     <FullName>Yossi Cohen</FullName>
     <PhoneNumber>0501234567</PhoneNumber>
     <Email>yossi.cohen@gmail.com</Email>
-    <Password>yossi.cohen@gmail.com</Password>
+    <Password>1aA@11111</Password>
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.2613119</Latitude>
-    <Longitude>34.7853607</Longitude>
-    <MaxDistance>182.56281537087582</MaxDistance>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>130.0303748019923</MaxDistance>
     <VolunteerRole>Manager</VolunteerRole>
     <IsActive>false</IsActive>
     <DistanceType>AirDistance</DistanceType>
