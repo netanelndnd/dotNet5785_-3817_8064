@@ -150,8 +150,10 @@
                 <!-- Password -->
                 <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
                     <Label Content="Password:" VerticalAlignment="Center" Width="100"/>
-                    <TextBox Text="{Binding CurrentVolunteer.Password, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" 
-                             HorizontalAlignment="Stretch"/>
+                    <TextBox 
+                        HorizontalAlignment="Stretch"
+                        IsReadOnly="True"
+                        Background="Transparent"/>
                 </StackPanel>
 
                 <!-- Current Address -->

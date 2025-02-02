@@ -157,19 +157,19 @@ namespace PL.Volunteer
                 {
                     s_bl.Volunteer.UpdateVolunteer(CurrentVolunteer!.Id, CurrentVolunteer);
                     UpdateMapImage(CurrentVolunteer!.Id);
-                    MessageBox.Show("Volunteer updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("המתנדב עודכן בהצלחה!", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (BO.BlDoesNotExistException ex)
                 {
-                    MessageBox.Show("Volunteer not found: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("המתנדב לא נמצא: " + ex.Message, "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 catch (BO.BlOperationException ex)
                 {
-                    MessageBox.Show("Operation failed: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("הפעולה נכשלה: " + ex.Message, "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("An unexpected error occurred: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("אירעה שגיאה בלתי צפויה: " + ex.Message, "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -180,87 +180,39 @@ namespace PL.Volunteer
             // Validate email format
             if (string.IsNullOrWhiteSpace(CurrentVolunteer?.Email) || !Helpers.VolunteerManager.IsValidEmail(CurrentVolunteer.Email))
             {
-                MessageBox.Show("Invalid email format.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("פורמט אימייל לא תקין.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
             // Validate phone number format
             if (string.IsNullOrWhiteSpace(CurrentVolunteer?.PhoneNumber) || !Helpers.VolunteerManager.IsValidPhoneNumber(CurrentVolunteer.PhoneNumber))
             {
-                MessageBox.Show("Invalid phone number format.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("פורמט מספר טלפון לא תקין.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
             // Validate full name is not null or empty
             if (string.IsNullOrWhiteSpace(CurrentVolunteer?.FullName))
             {
-                MessageBox.Show("Full name cannot be empty.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("שם מלא לא יכול להיות ריק.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
             // Validate current address is not null or empty
             if (string.IsNullOrWhiteSpace(CurrentVolunteer?.CurrentAddress))
             {
-                MessageBox.Show("Current address cannot be empty.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("כתובת נוכחית לא יכולה להיות ריקה.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
             // Validate max distance is not null and is a number
             if (CurrentVolunteer?.MaxDistance == null || !double.TryParse(CurrentVolunteer.MaxDistance.ToString(), out _))
             {
-                MessageBox.Show("Max distance must be a valid number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-            if (!HasLowerCase(CurrentVolunteer.Password))
-            {
-                MessageBox.Show("Password must be with lowercase.", "Weak Password", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (!HasUpperCase(CurrentVolunteer.Password))
-            {
-                MessageBox.Show("Password must be with a uppercase.", "Weak Password", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (!HasDigit(CurrentVolunteer.Password))
-            {
-                MessageBox.Show("Password must be with a number.", "Weak Password", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (!HasSpecialCharacter(CurrentVolunteer.Password))
-            {
-                MessageBox.Show("Password must be with a special character (like @ or #).", "Weak Password", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (!HasNumPas(CurrentVolunteer.Password))
-            {
-                MessageBox.Show("Password must be between 8 and 15 characters long.", "Weak Password", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("מרחק מקסימלי חייב להיות מספר תקין.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
             return true;
-        }
-        public static bool HasLowerCase(string password)
-        {
-            return Regex.IsMatch(password, @"[a-z]");
-        }
-
-        public static bool HasUpperCase(string password)
-        {
-            return Regex.IsMatch(password, @"[A-Z]");
-        }
-
-        public static bool HasDigit(string password)
-        {
-            return Regex.IsMatch(password, @"\d");
-        }
-
-        public static bool HasSpecialCharacter(string password)
-        {
-            return Regex.IsMatch(password, @"[^\da-zA-Z]");
-        }
-        public static bool HasNumPas(string password)
-        {
-            return password.Length>=8&& password.Length<=15;
         }
 
 
@@ -341,5 +293,80 @@ namespace PL.Volunteer
             CallHistoryOfVolunteer callHistory = new CallHistoryOfVolunteer(CurrentVolunteer!.Id);
             callHistory.ShowDialog();
         }
+
+
+        private void BtnUpdatePassword_Click(object sender, RoutedEventArgs e)
+        {
+            PasswordInputWindow passwordInputWindow = new PasswordInputWindow();
+            if (passwordInputWindow.ShowDialog() == true)
+            {
+                string newPassword = passwordInputWindow.Password;
+
+                if (ValidatePassword(newPassword))
+                {
+                    CurrentVolunteer.Password = newPassword;
+                    SaveVolunteerData();
+                    MessageBox.Show("Password updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+        }
+
+        private bool ValidatePassword(string password)
+        {
+            if (!HasLowerCase(password))
+            {
+                MessageBox.Show("הסיסמה חייבת לכלול אותיות קטנות.", "סיסמה חלשה", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (!HasUpperCase(password))
+            {
+                MessageBox.Show("הסיסמה חייבת לכלול אותיות גדולות.", "סיסמה חלשה", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (!HasDigit(password))
+            {
+                MessageBox.Show("הסיסמה חייבת לכלול מספרים.", "סיסמה חלשה", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (!HasSpecialCharacter(password))
+            {
+                MessageBox.Show("הסיסמה חייבת לכלול תווים מיוחדים (כמו @ או #).", "סיסמה חלשה", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (!HasNumPas(password))
+            {
+                MessageBox.Show("הסיסמה חייבת להיות באורך של בין 8 ל-15 תווים.", "סיסמה חלשה", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            return true;
+        }
+
+
+         
+        public static bool HasLowerCase(string password)
+        {
+            return Regex.IsMatch(password, @"[a-z]");
+        }
+
+        public static bool HasUpperCase(string password)
+        {
+            return Regex.IsMatch(password, @"[A-Z]");
+        }
+
+        public static bool HasDigit(string password)
+        {
+            return Regex.IsMatch(password, @"\d");
+        }
+
+        public static bool HasSpecialCharacter(string password)
+        {
+            return Regex.IsMatch(password, @"[^\da-zA-Z]");
+        }
+        public static bool HasNumPas(string password)
+        {
+            return password.Length >= 8 && password.Length <= 15;
+        }
+
+
     }
 }
