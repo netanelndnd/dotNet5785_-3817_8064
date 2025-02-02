@@ -354,7 +354,7 @@ public static class Initialization
             if (volunteer3 != null)
             {
                 inProgressVolunteers.Add(volunteer3);
-                DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((call.MaxCompletionTime - call.OpenTime)?.TotalMinutes ?? 0)));
+                DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((s_dal?.Config.Clock - call.OpenTime).Value.TotalMinutes)));
 
                 assignments.Add(new Assignment(
                     0,
@@ -382,7 +382,7 @@ public static class Initialization
             {
                 DateTime riskStartTime = call.MaxCompletionTime.Value - riskRange;
                 DateTime riskEndTime = call.MaxCompletionTime.Value;
-                DateTime entryTime = riskStartTime.AddMinutes(s_rand.Next(0, (int)(riskEndTime - riskStartTime).TotalMinutes));
+                DateTime entryTime = call.OpenTime.AddMinutes(s_rand.Next(0, (int)((s_dal?.Config.Clock - call.OpenTime).Value.TotalMinutes)));
 
                 assignments.Add(new Assignment(
                     0,

@@ -121,6 +121,7 @@
                              Width="80" Margin="5,0,0,0"/>
                 </StackPanel>
 
+
                 <!-- Max Completion Time -->
                 <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
                     <Label Content="Max Completion Time:" VerticalAlignment="Center" Width="120"/>
@@ -140,16 +141,18 @@
 
         <!-- Assignments GroupBox -->
         <GroupBox Header="Assignments" Grid.Row="1" Grid.ColumnSpan="2" Margin="10,10,10,10" Grid.RowSpan="2">
-            <ListView Background="Transparent" BorderBrush="Transparent" BorderThickness="1" ItemsSource="{Binding CurrentCall.Assignments}" IsHitTestVisible="False">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Volunteer Name" DisplayMemberBinding="{Binding VolunteerName}" Width="Auto"/>
-                        <GridViewColumn Header="Start Time" DisplayMemberBinding="{Binding StartTime}" Width="Auto"/>
-                        <GridViewColumn Header="End Time" DisplayMemberBinding="{Binding EndTime}" Width="Auto"/>
-                        <GridViewColumn Header="Completion Type" DisplayMemberBinding="{Binding CompletionType}" Width="Auto"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ListView Background="Transparent" BorderBrush="Transparent" BorderThickness="1" ItemsSource="{Binding CurrentCall.Assignments}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Volunteer Name" DisplayMemberBinding="{Binding VolunteerName}" Width="Auto"/>
+                            <GridViewColumn Header="Start Time" DisplayMemberBinding="{Binding StartTime}" Width="Auto"/>
+                            <GridViewColumn Header="End Time" DisplayMemberBinding="{Binding EndTime}" Width="Auto"/>
+                            <GridViewColumn Header="Completion Type" DisplayMemberBinding="{Binding CompletionType}" Width="Auto"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </ScrollViewer>
         </GroupBox>
 
         <!-- Add/Update/Delete Buttons -->

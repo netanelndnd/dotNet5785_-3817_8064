@@ -338,6 +338,7 @@ public static class CallManager
             openCallsEntities = Calls.Where(c => (GetCallStatus(c.Id) == BO.CallStatus.OpenInRisk || GetCallStatus(c.Id) == BO.CallStatus.Open) && (volunteer.MaxDistance >= Tools.CalculateDistance((double)volunteer.Latitude
                 , (double)volunteer.Longitude
                 , c.Latitude, c.Longitude)));
+
         }
 
         if (openCallsEntities == null || !openCallsEntities.Any())

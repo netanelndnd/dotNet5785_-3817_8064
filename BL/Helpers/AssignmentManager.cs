@@ -181,7 +181,7 @@ public static class AssignmentManager
                     var updatedAssignment = assignment with
                     {
                         CompletionStatus = DO.CompletionType.Expired,
-                        CompletionTime = assignment.CompletionTime ?? now
+                        CompletionTime = now
                     };
 
                     s_dal.Assignment.Update(updatedAssignment);
