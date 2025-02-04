@@ -5,11 +5,11 @@
     <FullName>Yossi Cohen</FullName>
     <PhoneNumber>0501234567</PhoneNumber>
     <Email>yossi.cohen@gmail.com</Email>
-    <Password>pPE4fjXAN7Aq8CztUwzEwYN7OTVJtH8rYYysw89gH2g=</Password>
+    <Password>yossi.cohen@gmail.com</Password>
     <CurrentAddress>מבצע חירם 1, באר שבע</CurrentAddress>
-    <Latitude>31.2613119</Latitude>
-    <Longitude>34.7853607</Longitude>
-    <MaxDistance>22.80401749622244</MaxDistance>
+    <Latitude>31.261355773950353</Latitude>
+    <Longitude>34.78533897059906</Longitude>
+    <MaxDistance>184.212906405233</MaxDistance>
     <VolunteerRole>Manager</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -23,7 +23,7 @@
     <CurrentAddress>יעקב דורי 27, באר שבע</CurrentAddress>
     <Latitude>31.26599817239094</Latitude>
     <Longitude>34.77990632146705</Longitude>
-    <MaxDistance>182.8535960704698</MaxDistance>
+    <MaxDistance>191.59785384308344</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -37,7 +37,7 @@
     <CurrentAddress>מרדכי מקלף 24, באר שבע</CurrentAddress>
     <Latitude>31.26810025342388</Latitude>
     <Longitude>34.78262253224672</Longitude>
-    <MaxDistance>154.56479544504535</MaxDistance>
+    <MaxDistance>130.99975836804887</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -51,7 +51,7 @@
     <CurrentAddress>ח"ן 2, באר שבע</CurrentAddress>
     <Latitude>31.270759076690847</Latitude>
     <Longitude>34.80778224155118</Longitude>
-    <MaxDistance>159.57854567534747</MaxDistance>
+    <MaxDistance>171.31591095005945</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -65,7 +65,7 @@
     <CurrentAddress>חרוב 8, חיפה</CurrentAddress>
     <Latitude>32.8145186081906</Latitude>
     <Longitude>34.96942136688308</Longitude>
-    <MaxDistance>152.61057001997602</MaxDistance>
+    <MaxDistance>184.62543997122248</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -79,7 +79,7 @@
     <CurrentAddress>יפה נוף 61, חיפה</CurrentAddress>
     <Latitude>32.8116315773075</Latitude>
     <Longitude>34.98523717981069</Longitude>
-    <MaxDistance>149.5934186576182</MaxDistance>
+    <MaxDistance>181.70454378130472</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -93,7 +93,7 @@
     <CurrentAddress>שדרות בן גוריון 50, חיפה</CurrentAddress>
     <Latitude>32.81798598644384</Latitude>
     <Longitude>34.98876182539728</Longitude>
-    <MaxDistance>197.59763958299882</MaxDistance>
+    <MaxDistance>195.4593185470538</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -107,7 +107,7 @@
     <CurrentAddress>שמריהו לוין 25, חיפה</CurrentAddress>
     <Latitude>32.81117266997046</Latitude>
     <Longitude>34.99657405678095</Longitude>
-    <MaxDistance>156.96542784606024</MaxDistance>
+    <MaxDistance>194.22986983191004</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -121,7 +121,7 @@
     <CurrentAddress>שדרות אליהו גולומב 47, חיפה</CurrentAddress>
     <Latitude>32.80613804310656</Latitude>
     <Longitude>34.99240903307264</Longitude>
-    <MaxDistance>185.62028387748677</MaxDistance>
+    <MaxDistance>186.68208001378449</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -135,7 +135,7 @@
     <CurrentAddress>שלום עליכם 4, חיפה</CurrentAddress>
     <Latitude>32.78278227095474</Latitude>
     <Longitude>35.01498376162042</Longitude>
-    <MaxDistance>176.8041996326661</MaxDistance>
+    <MaxDistance>178.32256461734795</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -149,7 +149,7 @@
     <CurrentAddress>זלמן שניאור 1, חיפה</CurrentAddress>
     <Latitude>32.77623531406369</Latitude>
     <Longitude>35.008282393139794</Longitude>
-    <MaxDistance>120.66789003671894</MaxDistance>
+    <MaxDistance>119.47138765722225</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -163,7 +163,7 @@
     <CurrentAddress>הפלמ"ח 11, קרית אתא</CurrentAddress>
     <Latitude>32.81065288451351</Latitude>
     <Longitude>35.12234042641816</Longitude>
-    <MaxDistance>167.1218534195794</MaxDistance>
+    <MaxDistance>182.88708045301752</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -177,7 +177,7 @@
     <CurrentAddress>וינגייט 17, קרית אתא</CurrentAddress>
     <Latitude>32.815870631371325</Latitude>
     <Longitude>35.1139504148565</Longitude>
-    <MaxDistance>159.6068166888663</MaxDistance>
+    <MaxDistance>120.2815125667974</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -191,7 +191,7 @@
     <CurrentAddress>נורדאו 72, קרית אתא</CurrentAddress>
     <Latitude>32.812499553433696</Latitude>
     <Longitude>35.11011456487845</Longitude>
-    <MaxDistance>118.94568653489061</MaxDistance>
+    <MaxDistance>120.30192126299292</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -205,7 +205,7 @@
     <CurrentAddress>חנקין 20, קרית אתא</CurrentAddress>
     <Latitude>32.81180658026046</Latitude>
     <Longitude>35.10917157396484</Longitude>
-    <MaxDistance>157.16911225458557</MaxDistance>
+    <MaxDistance>113.6466558662177</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>
@@ -219,7 +219,7 @@
     <CurrentAddress>חנקין 1, קרית אתא</CurrentAddress>
     <Latitude>32.81275577804192</Latitude>
     <Longitude>35.10525108926754</Longitude>
-    <MaxDistance>173.65562546621862</MaxDistance>
+    <MaxDistance>101.84695580153944</MaxDistance>
     <VolunteerRole>Volunteer</VolunteerRole>
     <IsActive>true</IsActive>
     <DistanceType>AirDistance</DistanceType>

@@ -26,16 +26,16 @@ namespace PL.call
         public WindowCall(int id = 0, int userId = 0)
         {
             // Assign the CurrentCall property based on the id parameter
-            CurrentCall = (id != 0) ? s_bl.Call.GetCallDetails(id) : new BO.Call();
+            CurrentCall = (id != 0) ? s_bl.Call.GetCallDetails(id) :
+                new BO.Call { OpenedAt = s_bl.Admin.GetSystemClock() };
             ButtonText = (id != 0) ? "Update" : "Add";
             CurrentManager = userId;
 
             InitializeComponent();
-            
+
             // Register event handlers for loading and closing the window
             this.Loaded += Window_Loaded;
             this.Closed += Window_Closed;
-            
         }
 
         int CurrentManager = 0;
@@ -71,7 +71,6 @@ namespace PL.call
                 }
                 else
                 {
-                    s_bl.Call.UpdateCall(CurrentCall!);
                     MessageBox.Show("Call updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 this.Close();

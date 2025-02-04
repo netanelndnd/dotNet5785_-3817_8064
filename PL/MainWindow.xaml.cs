@@ -210,6 +210,7 @@ namespace PL
                     finally
                     {
                         Mouse.OverrideCursor = null;
+                        UpdateCallCountsObserver();
                     }
                     break;
                 case MessageBoxResult.No:
@@ -323,9 +324,10 @@ namespace PL
         public static readonly DependencyProperty ExpiredCallsCountProperty =
             DependencyProperty.Register("ExpiredCallsCount", typeof(int), typeof(MainWindow));
 
-        private void UpdateCallCountsObserver()
+        private async void UpdateCallCountsObserver()
         {
-            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed || _observerOperation.Status == DispatcherOperationStatus.Aborted)
+            {
                 _observerOperation = Dispatcher.BeginInvoke(() =>
                 {
                     int[] quantities = s_bl.Call.GetCallQuantitiesByStatus();
@@ -338,6 +340,12 @@ namespace PL
 
                     UpdateSimulationProgress();
                 });
+            }
+            else if (_observerOperation.Status == DispatcherOperationStatus.Pending)
+            {
+                await _observerOperation.Task;
+                UpdateCallCountsObserver();
+            }
         }
 
         private void btnToggleSimulator_Click(object sender, RoutedEventArgs e)

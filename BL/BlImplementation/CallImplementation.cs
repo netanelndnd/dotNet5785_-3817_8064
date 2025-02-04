@@ -47,8 +47,20 @@ namespace BlImplementation
 
             // Convert BO.Call to DO.Call
             var doCall = CallManager.ConvertBOCallToDOCall(call);
+            if (!string.IsNullOrWhiteSpace(doCall.Address))
+            {
+                var coordinates = Tools.GetCoordinates(doCall.Address);
+                if (coordinates.IsInIsrael)
+                {
+                    doCall = doCall with { Latitude = coordinates.Latitude, Longitude = coordinates.Longitude };
+                }
+                else
+                {
+                    throw new BlInvalidAddressException("Address is not in Israel.");
+                }
+            }
 
-            try
+                    try
             {
                 // Attempt to add the call in the data layer
                 lock (AdminManager.BlMutex) //stage 7
@@ -61,8 +73,9 @@ namespace BlImplementation
                 throw new BlOperationException("Failed to add the call.", ex);
             }
 
-            // Compute the coordinates asynchronously without waiting for the results
-            _ = CallManager.UpdateCoordinatesForCallAsync(doCall);
+            //לא אפשרי לעשות זאת מכיוון שהפונקציה לא יכולה לקבל ID
+            //// Compute the coordinates asynchronously without waiting for the results
+            //_ = CallManager.UpdateCoordinatesForCallAsync(doCall);
         }
 
 

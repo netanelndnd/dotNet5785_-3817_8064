@@ -25,7 +25,7 @@ namespace PL
         public LoginWindow()
         {
             InitializeComponent();
-            //s_bl.Admin.InitializeDatabase(); // חייבים לאתחל את זה כי אם לא זה לא יעבוד
+            s_bl.Admin.InitializeDatabase(); // כאשר עובדים עם רשימה אז חייבים לאתחל את זה כי אם לא זה לא יעבוד
         }
 
      
