@@ -1,7 +1,7 @@
 whatsapp ell
 # dotNet5785_-3817_8064
 https://docs.google.com/document/d/1ob1pBOU1w7tDaA3XnIZDbeo74b6H-QWE/edit?usp=sharing&ouid=104392039778303708157&rtpof=true&sd=true
-[TryParse] https://github.com/MyUser/dotNet5785_-3817_8064/blob/main/BlTest/Program.cs#L27
+[TryParse] https://github.com/elyassaf30/dotNet5785_-3817_8064/blob/main/BlTest/Program.cs#L27
 [TryParse] https://github.com/MyUser/dotNet5785_-3817_8064/blob/main/DalTes/Program.cs#L276
 [Passward]https://github.com/MyUser/dotNet5785_-3817_8064/blob/main/DalTes/Initialization.cs#L123
 [Hard Passward]https://github.com/MyUser/dotNet5785_-3817_8064/blob/main/PL/volunteer/WindowMyVolunteer.xaml#L314-L342
