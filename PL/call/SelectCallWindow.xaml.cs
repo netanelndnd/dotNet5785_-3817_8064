@@ -42,7 +42,7 @@ namespace PL.Volunteer
             try
             {
                 var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(_volunteerId);
-                string apiKey = "AIzaSyBnuV561P8tA08Y7DQDH0GAu5AhQ86m5xs";
+                string apiKey = "";
 
                 if (SelectedCall == null)
                 {
